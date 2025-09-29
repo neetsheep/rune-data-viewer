@@ -11,20 +11,74 @@
             background-color: #f4f4f4;
             color: #333;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
         .container {
             max-width: 98%;
-            margin: auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow-x: auto;
+            margin: 0 auto;
+            padding: 0;
         }
+        
+        /* 상단 고정 영역 스타일 */
+        .fixed-header {
+            position: sticky;
+            top: 0;
+            background-color: #fff;
+            z-index: 1000;
+            width: 100%;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
         h1 {
             text-align: center;
             color: #2c3e50;
+            margin: 0;
+            padding: 20px 0;
+        }
+
+        .controls {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        /* 테이블 스타일 */
+        .table-container {
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+        }
+
+        th {
+            position: sticky;
+            top: 250px;  /* 상단 고정 영역 높이에 맞춰 조정 */
+            background-color: #4CAF50;
+            color: white;
+            z-index: 99;
+            padding: 12px 15px;
+        }
+
+        /* 모바일 대응 */
+        @media screen and (max-width: 768px) {
+            .fixed-header {
+                padding: 10px;
+            }
+            th {
+                top: 300px;  /* 모바일에서는 필터 영역이 더 높아짐 */
+            }
+            .filter-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
         .controls {
             margin-bottom: 15px;
@@ -294,59 +348,61 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="fixed-header">
         <h1>룬 정보 데이터</h1>
-        <div class="controls-container">
-            <div class="controls">
-                <div class="filter-section">
-                    <strong>종류 :</strong>
-                    <div id="type-filters" class="filter-group"></div>
-                </div>
-                <div class="filter-section">
-                    <strong>등급 :</strong>
-                    <div id="grade-filters" class="filter-group"></div>
-                </div>
-                <div class="filter-section">
-                    <strong>검색 키워드 :</strong>
-                    <div id="effect-filters" class="filter-group"></div>
-                </div>
-                <div class="filter-section">
-                    <strong>이름 검색 :</strong>
-                    <input type="text" id="name-search" placeholder="룬 이름을 입력하세요" style="padding: 8px; border-radius: 4px; border: 1px solid #ddd; width: 200px;">
-                </div>
-                <div class="control-buttons">
-                    <button id="clearFilterBtn" type="button" onclick="clearAllFilters(event)">필터 초기화</button>
-                    <button id="toggleDescBtn" type="button" onclick="toggleDescription(event)">설명 활성화</button>
-                </div>
+        <div class="controls">
+            <div class="filter-section">
+                <strong>종류 :</strong>
+                <div id="type-filters" class="filter-group"></div>
             </div>
-            <!-- 선택된 룬 수 표시 -->
-            <div class="selected-count">
-                선택된 룬: 무기 <span id="weapon-count">0</span>/1, 
-                방어구 <span id="armor-count">0</span>/5, 
-                앰블럼 <span id="emblem-count">0</span>/1
+            <div class="filter-section">
+                <strong>등급 :</strong>
+                <div id="grade-filters" class="filter-group"></div>
+            </div>
+            <div class="filter-section">
+                <strong>검색 키워드 :</strong>
+                <div id="effect-filters" class="filter-group"></div>
+            </div>
+            <div class="filter-section">
+                <strong>이름 검색 :</strong>
+                <input type="text" id="name-search" placeholder="룬 이름을 입력하세요" style="padding: 8px; border-radius: 4px; border: 1px solid #ddd; width: 200px;">
+            </div>
+            <div class="control-buttons">
+                <button id="clearFilterBtn" type="button" onclick="clearAllFilters(event)">필터 초기화</button>
+                <button id="toggleDescBtn" type="button" onclick="toggleDescription(event)">설명 활성화</button>
             </div>
         </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>선택</th>
-                    <th onclick="sortTable(1, 'str')">이름 <span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(2, 'str')">키워드 <span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(3, 'str')">효과 <span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(4, 'num')">수치 <span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(5, 'str')">조건부 효과 <span class="sort-indicator"></span></th>
-                    <th class="description-column" onclick="sortTable(6, 'str')">설명 <span class="sort-indicator"></span></th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- 데이터는 스크립트에서 동적으로 생성됩니다 -->
-            </tbody>
-        </table>
-        <!-- 계산 결과 표시 영역 -->
-        <div id="calculation-result" class="calculation-result" style="display: none;">
-            <h3>선택된 룬 효과 계산 결과</h3>
-            <div id="effect-sums">
-                <!-- 계산 결과는 스크립트에서 동적으로 생성됩니다 -->
+        <!-- 선택된 룬 수 표시 -->
+        <div class="selected-count">
+            선택된 룬: 무기 <span id="weapon-count">0</span>/1, 
+            방어구 <span id="armor-count">0</span>/5, 
+            앰블럼 <span id="emblem-count">0</span>/1
+        </div>
+    </div>
+    <div class="container">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>선택</th>
+                        <th onclick="sortTable(1, 'str')">이름 <span class="sort-indicator"></span></th>
+                        <th onclick="sortTable(2, 'str')">키워드 <span class="sort-indicator"></span></th>
+                        <th onclick="sortTable(3, 'str')">효과 <span class="sort-indicator"></span></th>
+                        <th onclick="sortTable(4, 'num')">수치 <span class="sort-indicator"></span></th>
+                        <th onclick="sortTable(5, 'str')">조건부 효과 <span class="sort-indicator"></span></th>
+                        <th class="description-column" onclick="sortTable(6, 'str')">설명 <span class="sort-indicator"></span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 데이터는 스크립트에서 동적으로 생성됩니다 -->
+                </tbody>
+            </table>
+            <!-- 계산 결과 표시 영역 -->
+            <div id="calculation-result" class="calculation-result" style="display: none;">
+                <h3>선택된 룬 효과 계산 결과</h3>
+                <div id="effect-sums">
+                    <!-- 계산 결과는 스크립트에서 동적으로 생성됩니다 -->
+                </div>
             </div>
         </div>
     </div>
