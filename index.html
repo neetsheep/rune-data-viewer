@@ -490,6 +490,10 @@
         // 더 안전한 초기화
         function initializePage() {
             try {
+                if (document.querySelector('#type-filters button')) {
+                    console.log('이미 초기화되어 있음, 중복 초기화 방지');
+                    return;
+                }
                 logEnvironmentInfo();
                 console.log('페이지 초기화 시작');
                 
@@ -519,6 +523,20 @@
             }
         }
 
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!isInitialized) {
+                isInitialized = true;
+                initializePage();
+            }
+        });
+
+        window.addEventListener('load', function() {
+            if (!isInitialized) {
+                isInitialized = true;
+                setTimeout(initializePage, 100);
+            }
+        });
+
         function setupButtonEvents() {
             // 버튼 텍스트 업데이트만 수행 (onclick은 HTML에서 직접 처리)
             const toggleBtn = document.getElementById('toggleDescBtn');
@@ -530,13 +548,6 @@
                 }
             }
         }
-
-        document.addEventListener('DOMContentLoaded', initializePage);
-        
-        // 백업 초기화 (일부 HTML 뷰어에서 DOMContentLoaded가 작동하지 않는 경우)
-        window.addEventListener('load', function() {
-            setTimeout(initializePage, 100);
-        });
 
         function initializeDescriptionToggle() {
             const toggleBtn = document.getElementById('toggleDescBtn');
