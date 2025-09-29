@@ -1067,16 +1067,24 @@
         }
 
         function applyFilters() {
+            console.log('Applying filters:', activeFilters);
+            
             const runeGroups = getRuneGroups();
             runeGroups.forEach(group => {
-                const rune = runeData.find(r => r.name === group.mainRow.cells[1].innerText); // 체크박스 열 때문에 인덱스 1로 변경
+                const rune = runeData.find(r => r.name === group.mainRow.cells[1].innerText);
                 if (!rune) return;
+
+                console.log('Checking rune:', rune.name);
 
                 const typeMatch = activeFilters.type.size === 0 || activeFilters.type.has(rune.type);
                 const gradeMatch = activeFilters.grade.size === 0 || activeFilters.grade.has(rune.grade);
-                const effectMatch = activeFilters.effect.size === 0 || Array.from(activeFilters.effect).every(category => 
-                    rune.effects.some(eff => checkEffectAgainstCategory(eff.effect, category))
-                );
+                
+                // 효과 필터 체크
+                const effectMatch = activeFilters.effect.size === 0 || Array.from(activeFilters.effect).every(category => {
+                    const match = rune.effects.some(eff => checkEffectAgainstCategory(eff.effect, category));
+                    console.log('Effect match for', category, ':', match);
+                    return match;
+                });
 
                 // 이름 검색 조건 추가
                 const nameSearch = document.getElementById('name-search').value.toLowerCase();
@@ -1084,6 +1092,13 @@
                 const nameMatch = !nameSearch || 
                     rune.name.toLowerCase().includes(nameSearch) || 
                     getInitialConsonant(rune.name.toLowerCase()).includes(initialValue);
+
+                console.log('Matches:', {
+                    type: typeMatch,
+                    grade: gradeMatch,
+                    effect: effectMatch,
+                    name: nameMatch
+                });
 
                 if (typeMatch && gradeMatch && effectMatch && nameMatch) {
                     group.rows.forEach(row => row.style.display = '');
@@ -1112,24 +1127,46 @@
         }
 
         function checkEffectAgainstCategory(effectText, category) {
+            console.log('Checking effect:', effectText, 'for category:', category);
+            
             const normalizedEffect = effectText.toUpperCase().split(' (')[0].trim();
             const categoryKeywords = effectCategories[category].map(e => e.toUpperCase());
             
+            console.log('Normalized effect:', normalizedEffect);
+            console.log('Category keywords:', categoryKeywords);
+            
             // 공격력 증가 카테고리 특별 처리
             if (category === '공격력 증가') {
-                // 효과 이름이 공격력 증가 관련 키워드와 일치하는지 먼저 확인
-                const isAttackPowerEffect = categoryKeywords.includes(normalizedEffect);
-                if (!isAttackPowerEffect) return false;
+                // 효과 이름이 '공격력 증가'를 포함하는지 확인
+                const isAttackPowerEffect = normalizedEffect === '공격력 증가'.toUpperCase() || 
+                                         normalizedEffect === '공격력 추가 증가'.toUpperCase() ||
+                                         normalizedEffect.includes('공격력'.toUpperCase());
+                
+                console.log('Is attack power effect:', isAttackPowerEffect);
+                
+                if (!isAttackPowerEffect) {
+                    console.log('Not an attack power effect');
+                    return false;
+                }
 
                 // 수치가 있는지 확인
-                const hasValue = effectText.match(/(\d+(?:\.\d+)?)/);
+                const hasValue = effectText.match(/\d+(?:\.\d+)?%/);
+                console.log('Has numeric value:', hasValue);
                 return hasValue !== null;
             }
             
+            // 일반적인 효과 체크
             if (normalizedEffect.includes(',')) { // For '영웅' rune
-                return categoryKeywords.some(keyword => normalizedEffect.includes(keyword.replace(/ 증가| 피해/g, '').trim()));
+                const result = categoryKeywords.some(keyword => 
+                    normalizedEffect.includes(keyword.replace(/ 증가| 피해/g, '').trim())
+                );
+                console.log('Comma check result:', result);
+                return result;
             }
-            return categoryKeywords.includes(normalizedEffect);
+            
+            const result = categoryKeywords.includes(normalizedEffect);
+            console.log('Final check result:', result);
+            return result;
         }
 
         function clearAllFilters(event) {
