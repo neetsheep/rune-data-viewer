@@ -809,19 +809,38 @@
                     checkbox.className = 'rune-checkbox';
                     checkbox.setAttribute('data-rune-type', rune.type);
                     checkbox.setAttribute('data-rune-name', rune.name);
-                    checkbox.onclick = function() {
-                        handleRuneSelection(this);
-                    };
+                    checkbox.onclick = handleRuneSelection;
                     checkboxCell.appendChild(checkbox);
 
                     mainRow.appendChild(checkboxCell);
-                    mainRow.innerHTML += 
-                        '<td rowspan="' + rowSpan + '">' + rune.name + '</td>' +
-                        '<td rowspan="' + rowSpan + '">' + rune.keyword + '</td>' +
-                        '<td>' + firstEffect.effect + '</td>' +
-                        '<td>' + firstEffect.value + '</td>' +
-                        '<td>' + (firstEffect.condition || rune.condition || '-') + '</td>' +
-                        '<td class="description-column" rowspan="' + rowSpan + '">' + description + '</td>';
+
+                    var nameCell = document.createElement('td');
+                    nameCell.rowSpan = rowSpan;
+                    nameCell.textContent = rune.name;
+                    mainRow.appendChild(nameCell);
+
+                    var keywordCell = document.createElement('td');
+                    keywordCell.rowSpan = rowSpan;
+                    keywordCell.textContent = rune.keyword;
+                    mainRow.appendChild(keywordCell);
+
+                    var effectCell = document.createElement('td');
+                    effectCell.textContent = firstEffect.effect;
+                    mainRow.appendChild(effectCell);
+
+                    var valueCell = document.createElement('td');
+                    valueCell.textContent = firstEffect.value;
+                    mainRow.appendChild(valueCell);
+
+                    var conditionCell = document.createElement('td');
+                    conditionCell.textContent = firstEffect.condition || rune.condition || '-';
+                    mainRow.appendChild(conditionCell);
+
+                    var descCell = document.createElement('td');
+                    descCell.className = 'description-column';
+                    descCell.rowSpan = rowSpan;
+                    descCell.textContent = description;
+                    mainRow.appendChild(descCell);
                     
                     tbody.appendChild(mainRow);
 
@@ -850,14 +869,16 @@
             앰블럼: []
         };
 
-        function handleRuneSelection(checkbox) {
+        const maxSelections = {
+            무기: 1,
+            방어구: 5,
+            앰블럼: 1
+        };
+
+        function handleRuneSelection(event) {
+            const checkbox = event.target;
             const type = checkbox.getAttribute('data-rune-type');
             const name = checkbox.getAttribute('data-rune-name');
-            const maxSelections = {
-                무기: 1,
-                방어구: 5,
-                앰블럼: 1
-            };
 
             if (checkbox.checked) {
                 // 최대 선택 개수 체크
@@ -905,8 +926,10 @@
                     if (!rune) return;
 
                     rune.effects.forEach(effect => {
+                        if (!effect.value) return;
                         const effectName = effect.effect;
-                        const value = parseFloat(effect.value) || 0;
+                        const valueMatch = effect.value.match(/(\d+(?:\.\d+)?)/);
+                        const value = valueMatch ? parseFloat(valueMatch[1]) : 0;
                         
                         if (!effectSums[effectName]) {
                             effectSums[effectName] = 0;
