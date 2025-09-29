@@ -1,0 +1,16 @@
+{
+  "name": "rune-data-viewer",
+  "version": "1.0.0",
+  "description": "룬 정보 데이터 뷰어",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "build": "echo 'No build step required for static site'"
+  },
+  "keywords": ["rune", "data", "viewer", "gaming"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.0.0"
+  }
+} 
