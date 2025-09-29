@@ -1117,8 +1117,13 @@
             
             // 공격력 증가 카테고리 특별 처리
             if (category === '공격력 증가') {
+                // 효과 이름이 공격력 증가 관련 키워드와 일치하는지 먼저 확인
+                const isAttackPowerEffect = categoryKeywords.includes(normalizedEffect);
+                if (!isAttackPowerEffect) return false;
+
+                // 수치가 있는지 확인
                 const hasValue = effectText.match(/(\d+(?:\.\d+)?)/);
-                if (!hasValue) return false;
+                return hasValue !== null;
             }
             
             if (normalizedEffect.includes(',')) { // For '영웅' rune
