@@ -1149,8 +1149,8 @@
                     return false;
                 }
 
-                // 수치가 있는지 확인
-                const hasValue = effectText.match(/\d+(?:\.\d+)?%/);
+                // 수치가 있는지 확인 (숫자만 체크)
+                const hasValue = effectText.match(/\d+(?:\.\d+)?/);
                 console.log('Has numeric value:', hasValue);
                 return hasValue !== null;
             }
