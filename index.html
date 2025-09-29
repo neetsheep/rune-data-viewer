@@ -1204,7 +1204,26 @@
             
             // 수치 열의 경우 숫자만 추출
             if (columnIndex === 4) {  // 수치 열
-                // 모든 효과의 수치 중 가장 큰 값을 찾음
+                // 활성화된 필터가 있는지 확인
+                const activeEffectFilters = Array.from(activeFilters.effect);
+                
+                // 공격력 증가 필터가 활성화된 경우
+                if (activeEffectFilters.includes('공격력 증가')) {
+                    // 공격력 증가 효과만 찾아서 수치 반환
+                    const attackPowerEffects = rune.effects.filter(effect => 
+                        effect.effect.includes('공격력') && 
+                        effect.effect.includes('증가') &&
+                        !effect.effect.includes('추가') &&  // "추가 증가"는 제외
+                        effect.value
+                    );
+                    
+                    if (attackPowerEffects.length > 0) {
+                        return Math.max(...attackPowerEffects.map(effect => getNumericValue(effect.value)));
+                    }
+                    return -Infinity;
+                }
+                
+                // 다른 경우는 모든 효과의 수치 중 가장 큰 값을 찾음
                 let maxValue = -Infinity;
                 rune.effects.forEach(effect => {
                     if (effect.value) {
