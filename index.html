@@ -294,12 +294,12 @@
             <thead>
                 <tr>
                     <th>선택</th>
-                    <th onclick="sortTable(0, 'str')">이름 <span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(1, 'str')">키워드 <span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(2, 'str')">효과 <span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(3, 'num')">수치 <span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(4, 'str')">조건부 효과 <span class="sort-indicator"></span></th>
-                    <th class="description-column" onclick="sortTable(5, 'str')">설명 <span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(1, 'str')">이름 <span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(2, 'str')">키워드 <span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(3, 'str')">효과 <span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(4, 'num')">수치 <span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(5, 'str')">조건부 효과 <span class="sort-indicator"></span></th>
+                    <th class="description-column" onclick="sortTable(6, 'str')">설명 <span class="sort-indicator"></span></th>
                 </tr>
             </thead>
             <tbody>
@@ -1152,24 +1152,18 @@
         }
         
         function getGroupSortValue(group, columnIndex) {
-            const runeName = group.mainRow.cells[0].innerText;
+            const runeName = group.mainRow.cells[1].innerText;  // 체크박스 열 고려
             const rune = runeData.find(r => r.name === runeName);
             if (!rune) return null;
             
-            if (columnIndex !== 3) {
-                 return group.mainRow.cells[columnIndex].innerText;
+            // 수치 열의 경우 숫자만 추출
+            if (columnIndex === 4) {  // 수치 열
+                const valueText = group.mainRow.cells[columnIndex].innerText;
+                const match = valueText.match(/(\d+(?:\.\d+)?)/);
+                return match ? parseFloat(match[1]) : -Infinity;
             }
             
-            let applicableValues = [];
-            const activeEffectFilters = Array.from(activeFilters.effect);
-            
-            rune.effects.forEach(eff => {
-                if (activeEffectFilters.length === 0 || activeEffectFilters.some(cat => checkEffectAgainstCategory(eff.effect, cat))) {
-                    applicableValues.push(parseNumericValue(eff.value));
-                }
-            });
-            
-            return applicableValues.length > 0 ? Math.max(...applicableValues) : -Infinity;
+            return group.mainRow.cells[columnIndex].innerText;
         }
 
         function sortTable(columnIndex, dataType, keepDirection = false) {
