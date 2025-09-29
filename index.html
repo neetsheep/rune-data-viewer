@@ -1317,10 +1317,24 @@
 
         function getNumericValue(text) {
             if (!text) return -Infinity;
+            
+            // "최대 X%" 형식 체크
+            const maxMatch = text.match(/최대\s*(\d+(?:\.\d+)?)/);
+            if (maxMatch) {
+                return parseFloat(maxMatch[1]);
+            }
+            
+            // "X% (최대 Y%)" 형식 체크
+            const maxInParenMatch = text.match(/\d+(?:\.\d+)?%\s*\(최대\s*(\d+(?:\.\d+)?)/);
+            if (maxInParenMatch) {
+                return parseFloat(maxInParenMatch[1]);
+            }
+
+            // 일반 숫자 추출
             const matches = text.match(/(\d+(?:\.\d+)?)/g);
             if (!matches) return -Infinity;
             
-            // 여러 숫자가 있을 경우 가장 큰 값 반환
+            // 여러 숫자 중 가장 큰 값 반환
             return Math.max(...matches.map(m => parseFloat(m)));
         }
     </script>
