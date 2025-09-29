@@ -479,7 +479,7 @@
             '침묵하는 산': '5초 동안 이동하지 않을 경우, 공격력이 22% 증가한다.',
             '필사+': '공격력이 10% 증가한다. 체력이 50% 이하로 감소하면 20초 동안 공격력이 20% 추가로 증가한다.(재사용 대기 시간: 15초)',
             '파멸+': '궁극기 사용 시, 20초 동안 공격력이 25% 증가한다.',
-            '집정관': '공격력이 23% 증가한다.\n결함: 스킬 사용 속도와 캐스팅 및 차지 속도가 8% 감소한다.',
+            '집정관': '공격력이 23% 증가한다.\n결함: 스킬 사용 속도와 캐스팅 및 차지 속도 감소',
             '새벽별': '누적: 스킬을 사용할 때마다 8초 동안 스킬 재사용 대기 시간 회복 속도가 3% 빨라진다.\n해당 효과는 최대 6회까지 중첩되며 지속 시간은 스택마다 개별로 가진다.',
             '눈 먼 예언자': '각성의 재사용 대기 시간이 38초 감소한다.',
             '압도적인 힘': '강타 피해가 6%, 공격력이 6%, 치명타 확률이 4% 증가한다. 엠블럼의 각성 효과가 활성화될 때, 20초간 이 룬으로 증가한 능력치가 두배가 된다.',
@@ -1051,12 +1051,13 @@
                 element.classList.add('active');
             }
             applyFilters();
+            sortTable(sortState.columnIndex, sortState.dataType, true);
         }
 
         function applyFilters() {
             const runeGroups = getRuneGroups();
             runeGroups.forEach(group => {
-                const rune = runeData.find(r => r.name === group.mainRow.cells[0].innerText);
+                const rune = runeData.find(r => r.name === group.mainRow.cells[1].innerText); // 체크박스 열 때문에 인덱스 1로 변경
                 if (!rune) return;
 
                 const typeMatch = activeFilters.type.size === 0 || activeFilters.type.has(rune.type);
@@ -1067,7 +1068,10 @@
 
                 // 이름 검색 조건 추가
                 const nameSearch = document.getElementById('name-search').value.toLowerCase();
-                const nameMatch = !nameSearch || rune.name.toLowerCase().includes(nameSearch);
+                const initialValue = getInitialConsonant(nameSearch);
+                const nameMatch = !nameSearch || 
+                    rune.name.toLowerCase().includes(nameSearch) || 
+                    getInitialConsonant(rune.name.toLowerCase()).includes(initialValue);
 
                 if (typeMatch && gradeMatch && effectMatch && nameMatch) {
                     group.rows.forEach(row => row.style.display = '');
@@ -1075,14 +1079,25 @@
                     group.rows.forEach(row => row.style.display = 'none');
                 }
             });
-            sortTable(sortState.columnIndex, sortState.dataType, true);
         }
 
-        // 이름 검색 이벤트 리스너 추가
-        document.addEventListener('DOMContentLoaded', function() {
-            const nameSearch = document.getElementById('name-search');
-            nameSearch.addEventListener('input', applyFilters);
-        });
+        function getRuneGroups() {
+            const rows = Array.from(document.querySelector('tbody').rows);
+            const runeGroups = [];
+            let currentGroup = null;
+
+            rows.forEach(row => {
+                // 체크박스 열이 있는 행이 메인 행
+                if (row.cells[0].hasAttribute('rowspan')) {
+                    if (currentGroup) runeGroups.push(currentGroup);
+                    currentGroup = { mainRow: row, rows: [row] };
+                } else if (currentGroup) {
+                    currentGroup.rows.push(row);
+                }
+            });
+            if (currentGroup) runeGroups.push(currentGroup);
+            return runeGroups;
+        }
 
         function checkEffectAgainstCategory(effectText, category) {
             const normalizedEffect = effectText.toUpperCase().split(' (')[0].trim();
@@ -1097,30 +1112,28 @@
             try {
                 console.log('필터 초기화 시작');
                 
-                // 터치 이벤트 중복 방지
                 if (event) {
                     event.preventDefault();
                     event.stopPropagation();
                 }
                 
-                // 이름 검색 초기화 추가
+                // 이름 검색 초기화
                 document.getElementById('name-search').value = '';
                 
-                // ES5 호환 방식으로 필터 초기화
+                // 필터 초기화
                 for (var key in activeFilters) {
                     if (activeFilters.hasOwnProperty(key)) {
                         activeFilters[key].clear();
                     }
                 }
                 
+                // 버튼 스타일 초기화
                 var activeButtons = document.querySelectorAll('.filter-btn.active');
                 for (var i = 0; i < activeButtons.length; i++) {
                     activeButtons[i].classList.remove('active');
                 }
                 
                 applyFilters();
-                // Reset sort state to default (by name, ascending)
-                sortState = { columnIndex: 0, direction: 'asc', dataType: 'str' };
                 sortTable(0, 'str', true);
                 
                 console.log('필터 초기화 완료');
@@ -1130,24 +1143,6 @@
             }
         }
         
-        function getRuneGroups() {
-            const rows = Array.from(document.querySelector('tbody').rows);
-            const runeGroups = [];
-            let currentGroup = null;
-            rows.forEach(row => {
-                if (row.cells.length > 4) {
-                    if (currentGroup) runeGroups.push(currentGroup);
-                    currentGroup = { mainRow: row, rows: [row] };
-                } else {
-                    if (currentGroup) currentGroup.rows.push(row);
-                }
-            });
-            if (currentGroup) runeGroups.push(currentGroup);
-            return runeGroups;
-        }
-
-
-
         function parseNumericValue(text) {
             if (typeof text !== 'string' || text === '-') return -Infinity;
             var maxMatch = text.match(/최대 ([\d.]+)/);
@@ -1219,6 +1214,16 @@
             const indicator = document.querySelector(`th:nth-child(${sortState.columnIndex + 1}) .sort-indicator`);
             if(indicator) indicator.textContent = sortState.direction === 'asc' ? '▲' : '▼';
         }
+
+        // 이름 검색 이벤트 리스너 추가
+        document.addEventListener('DOMContentLoaded', function() {
+            const nameSearch = document.getElementById('name-search');
+            if (nameSearch) {
+                nameSearch.addEventListener('input', function() {
+                    applyFilters();
+                });
+            }
+        });
     </script>
 </body>
 </html> 
