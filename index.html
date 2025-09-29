@@ -1082,7 +1082,7 @@
                 
                 // 효과 필터 체크
                 const effectMatch = activeFilters.effect.size === 0 || Array.from(activeFilters.effect).every(category => {
-                    const match = rune.effects.some(eff => checkEffectAgainstCategory(eff.effect, category));
+                    const match = rune.effects.some(eff => checkEffectAgainstCategory(eff.effect, eff.value, category));
                     console.log(`Effect match for ${category}:`, match);
                     return match;
                 });
@@ -1121,17 +1121,18 @@
             return runeGroups;
         }
 
-        function checkEffectAgainstCategory(effectText, category) {
-            console.log('Checking effect:', effectText, 'for category:', category);
+        function checkEffectAgainstCategory(effectText, effectValue, category) {
+            console.log('Checking effect:', effectText, 'value:', effectValue, 'for category:', category);
             
             // 공격력 증가 카테고리 특별 처리
             if (category === '공격력 증가') {
-                // 효과 이름에 '공격력'이 포함되어 있고, 숫자 값이 있는지 확인
+                // 효과 이름에 '공격력'이 포함되어 있고, 값에 숫자가 있는지 확인
                 const hasAttackPower = effectText.includes('공격력');
-                const hasNumber = /\d+/.test(effectText);
+                const hasNumber = effectValue && /\d+/.test(effectValue);
                 
                 console.log('Effect check:', {
                     text: effectText,
+                    value: effectValue,
                     hasAttackPower,
                     hasNumber
                 });
