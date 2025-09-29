@@ -425,10 +425,19 @@
 
         const effectCategories = {
             '공격력 증가': ['공격력 증가', '공격력 추가 증가', '공격력과 방어력 증가', '공격력과 방어력 추가 증가', '아군 공격력 증가'],
-            '피해 증가': ['연타 피해 증가', '강타 피해 증가', '콤보', '멀티 히트', '스킬', '적에게 주는 피해 증가', '치명타 피해 증가', 
-                       '무방비 피해 증가', '브레이크 스킬로 주는 피해 증가', '브레이크 피해 증가', '스킬 피해량 증가', 
-                       '원소 지속 피해를 보유한 적에게 주는 피해 증가', '적에게 주는 무방비 피해 증가', '차지 스킬의 피해량 증가', 
-                       '적에게 주는 스킬 피해 증가'],
+            '피해 증가': [
+                '적에게 주는 피해 증가',
+                '연타 피해 증가',
+                '강타 피해 증가',
+                '치명타 피해 증가',
+                '무방비 피해 증가',
+                '브레이크 스킬로 주는 피해 증가',
+                '브레이크 피해 증가',
+                '스킬 피해량 증가',
+                '차지 스킬의 피해량 증가',
+                '적에게 주는 스킬 피해 증가',
+                '적에게 주는 무방비 피해 증가'
+            ],
             '치명타 확률': ['치명타 확률 증가'],
             '추가타 확률': ['추가타 확률 증가', '기본 공격 추가타 확률 증가'],
             '유틸': ['캐스팅 및 차지 속도 증가', '재사용 대기 시간 회복 속도 증가', '모든 스킬의 재사용 대기 시간 감소', 
@@ -441,7 +450,7 @@
                    '치명타 확률 감소', '스킬 사용 속도와 캐스팅 및 차지 속도 감소', '보호막 생성', '이동 속도 감소', 
                    '누적 효과 추가 발생', '축적 횟수 추가', '죽음 방지 및 회복', '받는 피해 감소', '원소 화살 난사', 
                    '추가 피해', '받는 피해 증가', '모든 결함 효과 제거', '추가 공격 발생', '주기적인 광역 피해', 
-                   '광역 피해 및 끌어당김']
+                   '광역 피해 및 끌어당김', '콤보', '멀티 히트']
         };
         
         const allDescriptions = {
@@ -1219,6 +1228,22 @@
                     
                     if (attackPowerEffects.length > 0) {
                         return Math.max(...attackPowerEffects.map(effect => getNumericValue(effect.value)));
+                    }
+                    return -Infinity;
+                }
+
+                // 피해 증가 필터가 활성화된 경우
+                if (activeEffectFilters.includes('피해 증가')) {
+                    // 적에게 주는 피해 증가 효과만 찾아서 수치 반환
+                    const damageEffects = rune.effects.filter(effect => 
+                        effectCategories['피해 증가'].some(keyword => 
+                            effect.effect.toUpperCase() === keyword.toUpperCase()
+                        ) &&
+                        effect.value
+                    );
+                    
+                    if (damageEffects.length > 0) {
+                        return Math.max(...damageEffects.map(effect => getNumericValue(effect.value)));
                     }
                     return -Infinity;
                 }
