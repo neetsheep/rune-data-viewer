@@ -208,6 +208,10 @@
                 <strong>검색 키워드 :</strong>
                 <div id="effect-filters" class="filter-group"></div>
             </div>
+            <div class="filter-section">
+                <strong>이름 검색 :</strong>
+                <input type="text" id="name-search" placeholder="룬 이름을 입력하세요" style="padding: 8px; border-radius: 4px; border: 1px solid #ddd; width: 200px;">
+            </div>
             <div class="control-buttons">
                 <button id="clearFilterBtn" type="button" onclick="clearAllFilters(event)">필터 초기화</button>
                 <button id="toggleDescBtn" type="button" onclick="toggleDescription(event)">설명 활성화</button>
@@ -750,12 +754,15 @@
 
                 const typeMatch = activeFilters.type.size === 0 || activeFilters.type.has(rune.type);
                 const gradeMatch = activeFilters.grade.size === 0 || activeFilters.grade.has(rune.grade);
-                
                 const effectMatch = activeFilters.effect.size === 0 || Array.from(activeFilters.effect).every(category => 
                     rune.effects.some(eff => checkEffectAgainstCategory(eff.effect, category))
                 );
 
-                if (typeMatch && gradeMatch && effectMatch) {
+                // 이름 검색 조건 추가
+                const nameSearch = document.getElementById('name-search').value.toLowerCase();
+                const nameMatch = !nameSearch || rune.name.toLowerCase().includes(nameSearch);
+
+                if (typeMatch && gradeMatch && effectMatch && nameMatch) {
                     group.rows.forEach(row => row.style.display = '');
                 } else {
                     group.rows.forEach(row => row.style.display = 'none');
@@ -763,7 +770,13 @@
             });
             sortTable(sortState.columnIndex, sortState.dataType, true);
         }
-        
+
+        // 이름 검색 이벤트 리스너 추가
+        document.addEventListener('DOMContentLoaded', function() {
+            const nameSearch = document.getElementById('name-search');
+            nameSearch.addEventListener('input', applyFilters);
+        });
+
         function checkEffectAgainstCategory(effectText, category) {
             const normalizedEffect = effectText.toUpperCase().split(' (')[0].trim();
             const categoryKeywords = effectCategories[category].map(e => e.toUpperCase());
@@ -782,6 +795,9 @@
                     event.preventDefault();
                     event.stopPropagation();
                 }
+                
+                // 이름 검색 초기화 추가
+                document.getElementById('name-search').value = '';
                 
                 // ES5 호환 방식으로 필터 초기화
                 for (var key in activeFilters) {
