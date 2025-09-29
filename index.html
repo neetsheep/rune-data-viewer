@@ -1187,6 +1187,26 @@
                 for (var i = 0; i < activeButtons.length; i++) {
                     activeButtons[i].classList.remove('active');
                 }
+
+                // 체크박스 초기화
+                var checkboxes = document.querySelectorAll('.rune-checkbox');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                    checkbox.disabled = false;
+                });
+
+                // 선택된 룬 초기화
+                selectedRunes = {
+                    무기: [],
+                    방어구: [],
+                    앰블럼: []
+                };
+
+                // 선택 개수 표시 초기화
+                updateSelectedCounts();
+
+                // 계산 결과 숨기기
+                document.getElementById('calculation-result').style.display = 'none';
                 
                 applyFilters();
                 sortTable(0, 'str', true);
