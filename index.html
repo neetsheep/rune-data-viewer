@@ -11,7 +11,7 @@
             background-color: #f4f4f4;
             color: #333;
             margin: 0;
-            padding: 0;
+            padding: 20px;
         }
         .container {
             max-width: 98%;
@@ -19,117 +19,20 @@
             padding: 0;
         }
         
-        /* 상단 고정 영역 스타일 */
-        .fixed-header {
-            position: sticky;
-            top: 0;
-            background-color: #fff;
-            z-index: 1000;
-            width: 100%;
-            padding: 0 20px; /* 상하 패딩을 제거하여 높이 최소화 */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
         h1 {
             text-align: center;
             color: #2c3e50;
             margin: 0;
-            padding: 10px 0;
+            padding: 20px 0;
         }
 
         .controls {
             background: #fff;
-            padding: 8px 15px; /* 패딩을 더 줄임 */
+            padding: 15px;
             border-radius: 8px;
-            margin-bottom: 2px; /* 마진을 더 줄임 */
-        }
-
-        /* 테이블 스타일 */
-        .table-container {
-            margin-top: 5px;
-            padding-top: 0; /* 패딩 제거 */
-            background: #fff;
-            border-radius: 8px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            position: relative; /* 상대 위치 설정 */
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            border-spacing: 0;
-            margin: 0;
-            table-layout: fixed;
-        }
-
-        thead {
-            display: table-header-group;
-        }
-
-        th, td {
-            padding: 8px 15px;
-            border: 1px solid #ddd;
-            text-align: left;
-            vertical-align: top;
-            word-wrap: break-word;
-            line-height: 1.4;
-            box-sizing: border-box;
-        }
-
-        th {
-            position: relative; /* sticky 제거하고 relative로 변경 */
-            background-color: #4CAF50;
-            color: white;
-            z-index: 99;
-            white-space: nowrap;
-        }
-
-        /* 고정 헤더를 위한 새로운 클래스 */
-        .sticky-header {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            z-index: 999 !important;
-            background-color: #4CAF50 !important;
-            border-bottom: 2px solid #45a049 !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
-        }
-
-        /* 모바일 대응 */
-        @media screen and (max-width: 768px) {
-            .fixed-header {
-                padding: 0 10px;
-            }
-            h1 {
-                padding: 5px 0;
-            }
-            .controls {
-                padding: 5px 10px;
-                margin-bottom: 2px;
-            }
-            .selected-count {
-                padding: 3px 0;
-            }
-            .table-container {
-                padding-top: 0; /* 모바일에서도 패딩 제거 */
-            }
-            th {
-                position: relative; /* 모바일에서도 relative로 설정 */
-            }
-            .filter-section {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            th, td {
-                padding: 6px 10px;
-                font-size: 12px;
-            }
-        }
-        .controls {
             margin-bottom: 15px;
         }
+
         .filter-section {
             display: flex;
             align-items: center;
@@ -139,7 +42,7 @@
         .filter-section strong {
             white-space: nowrap;
             font-size: 15px;
-            min-width: 80px; /* 라벨 최소 너비 지정 */
+            min-width: 80px;
         }
         .filter-group {
             display: flex;
@@ -155,7 +58,7 @@
             border-radius: 16px;
             cursor: pointer;
             transition: background-color 0.3s;
-            min-width: 60px; /* 버튼 최소 너비 지정 */
+            min-width: 60px;
             text-align: center;
         }
         .filter-btn:hover {
@@ -173,7 +76,7 @@
             flex-wrap: wrap;
         }
         #clearFilterBtn, #toggleDescBtn {
-            flex-grow: 1; /* 버튼 너비 유동적으로 조정 */
+            flex-grow: 1;
             min-width: 120px;
             padding: 10px 15px;
             font-size: 15px;
@@ -224,45 +127,59 @@
             background-color: #757575;
             color: white !important;
         }
+
+        .selected-count {
+            font-size: 0.9em;
+            color: #666;
+            margin-left: 10px;
+            padding: 5px 0;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
             font-size: 14px;
         }
+
         th, td {
             padding: 8px 10px;
             border: 1px solid #ddd;
             text-align: left;
             vertical-align: middle;
         }
+        
         th {
             background-color: #4CAF50;
             color: white;
-            position: sticky;
-            top: 0;
-            z-index: 1;
             cursor: pointer;
             user-select: none;
             white-space: nowrap;
         }
+        
         th:hover {
             background-color: #45a049;
         }
+        
         .sort-indicator {
             display: inline-block;
             margin-left: 5px;
             opacity: 0.6;
         }
+        
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
+        
         tr:hover {
             background-color: #ddd;
         }
         
         /* 모바일 반응형 설정 */
         @media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
             .description-column:not(.force-show) {
                 display: none !important;
             }
@@ -295,6 +212,7 @@
         .description-column.force-hide {
             display: none !important;
         }
+        
         /* 자동완성 드롭다운 스타일 */
         .autocomplete-container {
             position: relative;
@@ -324,6 +242,7 @@
         .autocomplete-active {
             background-color: #e9e9e9 !important;
         }
+        
         /* 룬 선택 관련 스타일 */
         .rune-checkbox {
             width: 20px;
@@ -357,104 +276,62 @@
             font-size: 0.9em;
             margin-top: 5px;
         }
-        .selected-count {
-            font-size: 0.9em;
-            color: #666;
-            margin-left: 10px;
-            padding: 5px 0; /* 상하 패딩 추가 */
-        }
-
-        /* 상단 고정 영역 스타일 */
-        .controls-container {
-            position: sticky;
-            top: 0;
-            background: white;
-            z-index: 100;
-            padding: 20px 0;
-            border-bottom: 1px solid #eee;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        /* 테이블 상단 여백 조정 */
-        table {
-            margin-top: 20px;
-        }
-
-        /* 테이블 헤더 고정 위치 조정 */
-        th {
-            position: sticky;
-            top: 185px;  /* 상단 필터 영역 높이에 맞춰 조정 */
-            background-color: #4CAF50;
-            z-index: 99;
-        }
-
-        /* 모바일 대응 */
-        @media screen and (max-width: 768px) {
-            .controls-container {
-                padding: 10px 0;
-            }
-            th {
-                top: 240px;  /* 모바일에서는 필터 영역이 더 높아짐 */
-            }
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>룬 정보 데이터</h1>
-        <div class="fixed-header">
-            <div class="controls">
-                <div class="filter-section">
-                    <strong>종류 :</strong>
-                    <div id="type-filters" class="filter-group"></div>
-                </div>
-                <div class="filter-section">
-                    <strong>등급 :</strong>
-                    <div id="grade-filters" class="filter-group"></div>
-                </div>
-                <div class="filter-section">
-                    <strong>검색 키워드 :</strong>
-                    <div id="effect-filters" class="filter-group"></div>
-                </div>
-                <div class="filter-section">
-                    <strong>이름 검색 :</strong>
-                    <input type="text" id="name-search" placeholder="룬 이름을 입력하세요" style="padding: 8px; border-radius: 4px; border: 1px solid #ddd; width: 200px;">
-                </div>
-                <div class="control-buttons">
-                    <button id="clearFilterBtn" type="button" onclick="clearAllFilters(event)">필터 초기화</button>
-                    <button id="toggleDescBtn" type="button" onclick="toggleDescription(event)">설명 활성화</button>
-                </div>
+        <div class="controls">
+            <div class="filter-section">
+                <strong>종류 :</strong>
+                <div id="type-filters" class="filter-group"></div>
             </div>
-            <!-- 선택된 룬 수 표시 -->
-            <div class="selected-count">
-                선택된 룬: 무기 <span id="weapon-count">0</span>/1, 
-                방어구 <span id="armor-count">0</span>/5, 
-                앰블럼 <span id="emblem-count">0</span>/1
+            <div class="filter-section">
+                <strong>등급 :</strong>
+                <div id="grade-filters" class="filter-group"></div>
+            </div>
+            <div class="filter-section">
+                <strong>검색 키워드 :</strong>
+                <div id="effect-filters" class="filter-group"></div>
+            </div>
+            <div class="filter-section">
+                <strong>이름 검색 :</strong>
+                <input type="text" id="name-search" placeholder="룬 이름을 입력하세요" style="padding: 8px; border-radius: 4px; border: 1px solid #ddd; width: 200px;">
+            </div>
+            <div class="control-buttons">
+                <button id="clearFilterBtn" type="button" onclick="clearAllFilters(event)">필터 초기화</button>
+                <button id="toggleDescBtn" type="button" onclick="toggleDescription(event)">설명 활성화</button>
             </div>
         </div>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>선택</th>
-                        <th onclick="sortTable(1, 'str')">이름 <span class="sort-indicator"></span></th>
-                        <th onclick="sortTable(2, 'str')">키워드 <span class="sort-indicator"></span></th>
-                        <th onclick="sortTable(3, 'str')">효과 <span class="sort-indicator"></span></th>
-                        <th onclick="sortTable(4, 'num')">수치 <span class="sort-indicator"></span></th>
-                        <th onclick="sortTable(5, 'str')">조건부 효과 <span class="sort-indicator"></span></th>
-                        <th class="description-column" onclick="sortTable(6, 'str')">설명 <span class="sort-indicator"></span></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- 데이터는 스크립트에서 동적으로 생성됩니다 -->
-                </tbody>
-            </table>
-            <!-- 계산 결과 표시 영역 -->
-            <div id="calculation-result" class="calculation-result" style="display: none;">
-                <h3>선택된 룬 효과 계산 결과</h3>
-                <div id="effect-sums">
-                    <!-- 계산 결과는 스크립트에서 동적으로 생성됩니다 -->
-                </div>
+        <!-- 선택된 룬 수 표시 -->
+        <div class="selected-count">
+            선택된 룬: 무기 <span id="weapon-count">0</span>/1, 
+            방어구 <span id="armor-count">0</span>/5, 
+            앰블럼 <span id="emblem-count">0</span>/1
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>선택</th>
+                    <th onclick="sortTable(1, 'str')">이름 <span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(2, 'str')">키워드 <span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(3, 'str')">효과 <span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(4, 'num')">수치 <span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(5, 'str')">조건부 효과 <span class="sort-indicator"></span></th>
+                    <th class="description-column" onclick="sortTable(6, 'str')">설명 <span class="sort-indicator"></span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 데이터는 스크립트에서 동적으로 생성됩니다 -->
+            </tbody>
+        </table>
+        
+        <!-- 계산 결과 표시 영역 -->
+        <div id="calculation-result" class="calculation-result" style="display: none;">
+            <h3>선택된 룬 효과 계산 결과</h3>
+            <div id="effect-sums">
+                <!-- 계산 결과는 스크립트에서 동적으로 생성됩니다 -->
             </div>
         </div>
     </div>
@@ -1515,111 +1392,6 @@
             // 여러 숫자 중 가장 큰 값 반환
             return Math.max(...matches.map(m => parseFloat(m)));
         }
-
-        // 테이블 헤더 고정을 위한 스크롤 이벤트 처리
-        let stickyHeaderClone = null;
-        let originalThead = null;
-
-        function createStickyHeader() {
-            try {
-                const fixedHeader = document.querySelector('.fixed-header');
-                const table = document.querySelector('table');
-                const thead = table ? table.querySelector('thead') : null;
-                
-                if (!fixedHeader || !table || !thead) {
-                    console.log('필요한 요소를 찾을 수 없습니다:', { fixedHeader: !!fixedHeader, table: !!table, thead: !!thead });
-                    return;
-                }
-
-                // 기존 sticky 헤더가 있으면 제거
-                if (stickyHeaderClone) {
-                    stickyHeaderClone.remove();
-                    stickyHeaderClone = null;
-                }
-
-                // 원본 thead 복제
-                stickyHeaderClone = thead.cloneNode(true);
-                stickyHeaderClone.id = 'sticky-table-header';
-                stickyHeaderClone.style.position = 'fixed';
-                stickyHeaderClone.style.top = '0px';
-                stickyHeaderClone.style.left = '0px';
-                stickyHeaderClone.style.right = '0px';
-                stickyHeaderClone.style.zIndex = '998';
-                stickyHeaderClone.style.backgroundColor = '#4CAF50';
-                stickyHeaderClone.style.borderBottom = '2px solid #45a049';
-                stickyHeaderClone.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
-                stickyHeaderClone.style.display = 'none'; // 초기에는 숨김
-
-                // 테이블 구조 유지
-                const stickyTable = document.createElement('table');
-                stickyTable.style.width = '100%';
-                stickyTable.style.borderCollapse = 'collapse';
-                stickyTable.style.tableLayout = 'fixed';
-                stickyTable.appendChild(stickyHeaderClone);
-
-                // body에 추가
-                document.body.appendChild(stickyTable);
-                originalThead = thead;
-
-                console.log('Sticky 헤더 생성 완료');
-            } catch (error) {
-                console.error('Sticky 헤더 생성 오류:', error);
-            }
-        }
-
-        function handleTableHeaderScroll() {
-            try {
-                const fixedHeader = document.querySelector('.fixed-header');
-                const tableContainer = document.querySelector('.table-container');
-                const originalTable = document.querySelector('table');
-                
-                if (!fixedHeader || !tableContainer || !originalTable || !stickyHeaderClone) {
-                    return;
-                }
-
-                const fixedHeaderRect = fixedHeader.getBoundingClientRect();
-                const fixedHeaderBottom = fixedHeaderRect.bottom;
-                
-                const tableRect = originalTable.getBoundingClientRect();
-                const tableTop = tableRect.top;
-                const tableBottom = tableRect.bottom;
-
-                // 테이블이 fixed-header 아래로 스크롤되면 sticky 헤더 표시
-                if (tableTop <= fixedHeaderBottom && tableBottom > fixedHeaderBottom) {
-                    stickyHeaderClone.style.display = 'table-header-group';
-                    stickyHeaderClone.style.top = fixedHeaderBottom + 'px';
-                    
-                    // 원본 테이블 헤더의 너비와 일치시키기
-                    const originalThs = originalThead.querySelectorAll('th');
-                    const stickyThs = stickyHeaderClone.querySelectorAll('th');
-                    
-                    for (let i = 0; i < Math.min(originalThs.length, stickyThs.length); i++) {
-                        const originalWidth = originalThs[i].getBoundingClientRect().width;
-                        stickyThs[i].style.width = originalWidth + 'px';
-                    }
-                } else {
-                    stickyHeaderClone.style.display = 'none';
-                }
-            } catch (error) {
-                console.error('스크롤 처리 오류:', error);
-            }
-        }
-
-        // 페이지 로드 완료 후 sticky 헤더 초기화
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(() => {
-                createStickyHeader();
-                
-                // 스크롤 이벤트 리스너 추가
-                window.addEventListener('scroll', handleTableHeaderScroll);
-                window.addEventListener('resize', function() {
-                    // 화면 크기 변경 시 sticky 헤더 재생성
-                    setTimeout(createStickyHeader, 100);
-                });
-                
-                console.log('테이블 헤더 고정 기능 초기화 완료');
-            }, 500); // 테이블 생성 후 충분한 시간 대기
-        });
     </script>
 </body>
 </html> 
