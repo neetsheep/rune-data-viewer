@@ -47,6 +47,7 @@
         /* 테이블 스타일 */
         .table-container {
             margin-top: 5px;
+            padding-top: 68px; /* fixed-header 높이만큼 패딩 추가 */
             background: #fff;
             border-radius: 8px;
             overflow-x: auto;
@@ -77,7 +78,7 @@
 
         th {
             position: sticky;
-            top: 68px;  /* fixed-header 높이 재계산 (약 63px) + table-container margin-top (5px) */
+            top: 0;  /* fixed-header 바로 아래에 고정되도록 0으로 설정 */
             background-color: #4CAF50;
             color: white;
             z-index: 99;
@@ -99,8 +100,11 @@
             .selected-count {
                 padding: 3px 0; /* 모바일에서 더 작은 패딩 적용 */
             }
+            .table-container {
+                padding-top: 63px; /* 모바일에서 fixed-header 높이만큼 패딩 조정 */
+            }
             th {
-                top: 63px;  /* 모바일 fixed-header 높이 재계산 (약 58px) + table-container margin-top (5px) */
+                top: 0;  /* 모바일에서도 0으로 설정 */
             }
             .filter-section {
                 flex-direction: column;
