@@ -26,7 +26,7 @@
             background-color: #fff;
             z-index: 1000;
             width: 100%;
-            padding: 5px 20px; /* 패딩을 더 줄여 높이 최소화 */
+            padding: 5px 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
@@ -34,30 +34,35 @@
             text-align: center;
             color: #2c3e50;
             margin: 0;
-            padding: 10px 0; /* h1 패딩도 줄여 높이 최소화 */
+            padding: 10px 0;
         }
 
         .controls {
             background: #fff;
-            padding: 10px 15px; /* 컨트롤 패딩 줄임 */
+            padding: 10px 15px;
             border-radius: 8px;
-            margin-bottom: 5px; /* 마진 줄임 */
+            margin-bottom: 5px;
         }
 
         /* 테이블 스타일 */
         .table-container {
-            margin-top: 10px; /* 테이블 상단 마진 줄임 */
+            margin-top: 5px; /* 테이블 상단 마진을 더 줄임 */
             background: #fff;
             border-radius: 8px;
-            overflow-x: auto; /* 테이블이 넘칠 경우 스크롤 허용 */
+            overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            border-spacing: 0; /* 셀 간 간격 제거 */
             margin: 0;
-            table-layout: fixed; /* 테이블 레이아웃 고정 */
+            table-layout: fixed;
+        }
+
+        thead {
+            display: table-header-group; /* Thead를 명시적으로 테이블 헤더 그룹으로 설정 */
         }
 
         th, td {
@@ -72,7 +77,7 @@
 
         th {
             position: sticky;
-            top: 110px;  /* 상단 고정 영역 높이에 맞춰 더 줄임 */
+            top: 105px;  /* fixed-header의 높이를 고려하여 top 값 미세 조정 */
             background-color: #4CAF50;
             color: white;
             z-index: 99;
@@ -92,7 +97,7 @@
                 margin-bottom: 5px;
             }
             th {
-                top: 180px;  /* 모바일에서 필터 영역이 더 높아지므로 조정 */
+                top: 175px;  /* 모바일에서 fixed-header 높이 재조정에 따라 top 값 미세 조정 */
             }
             .filter-section {
                 flex-direction: column;
