@@ -49,13 +49,23 @@
             margin-top: 20px;
             background: #fff;
             border-radius: 8px;
-            overflow: hidden;
+            overflow-x: auto; /* 테이블이 넘칠 경우 스크롤 허용 */
+            -webkit-overflow-scrolling: touch;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 0;
+            table-layout: fixed; /* 테이블 레이아웃 고정 */
+        }
+
+        th, td {
+            padding: 12px 15px; /* 패딩 조정 */
+            border: 1px solid #ddd;
+            text-align: left;
+            vertical-align: top; /* 셀 내용 상단 정렬 */
+            word-wrap: break-word; /* 긴 텍스트 자동 줄바꿈 */
         }
 
         th {
@@ -65,6 +75,7 @@
             color: white;
             z-index: 99;
             padding: 12px 15px;
+            white-space: nowrap; /* 헤더 텍스트 줄바꿈 방지 */
         }
 
         /* 모바일 대응 */
@@ -79,6 +90,10 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+            th, td {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
         }
         .controls {
             margin-bottom: 15px;
@@ -92,6 +107,7 @@
         .filter-section strong {
             white-space: nowrap;
             font-size: 15px;
+            min-width: 80px; /* 라벨 최소 너비 지정 */
         }
         .filter-group {
             display: flex;
@@ -107,6 +123,8 @@
             border-radius: 16px;
             cursor: pointer;
             transition: background-color 0.3s;
+            min-width: 60px; /* 버튼 최소 너비 지정 */
+            text-align: center;
         }
         .filter-btn:hover {
             background-color: #ccc;
@@ -120,10 +138,13 @@
             display: flex;
             gap: 10px;
             margin-top: 10px;
+            flex-wrap: wrap;
         }
         #clearFilterBtn, #toggleDescBtn {
-            padding: 8px 15px;
-            font-size: 14px;
+            flex-grow: 1; /* 버튼 너비 유동적으로 조정 */
+            min-width: 120px;
+            padding: 10px 15px;
+            font-size: 15px;
             color: white !important;
             border: none;
             border-radius: 4px;
@@ -147,8 +168,6 @@
             -webkit-user-select: none;
             user-select: none;
             touch-action: manipulation;
-            min-height: 44px;
-            min-width: 44px;
         }
         #clearFilterBtn {
             background-color: #f44336;
@@ -911,6 +930,7 @@
                     var rune = runeData[runeIndex];
                     var rowSpan = rune.effects.length || 1;
                     var mainRow = document.createElement('tr');
+                    mainRow.setAttribute('data-rune-name', rune.name); // 메인 행에 룬 이름 추가
                     var firstEffect = rune.effects[0] || { effect: '-', value: '-' };
                     var description = allDescriptions[rune.name] || '설명 없음';
 
@@ -959,6 +979,7 @@
 
                     for (var i = 1; i < rowSpan; i++) {
                         var subRow = document.createElement('tr');
+                        subRow.setAttribute('data-rune-name', rune.name); // 서브 행에도 룬 이름 추가
                         var effect = rune.effects[i];
                         subRow.innerHTML = 
                             '<td>' + effect.effect + '</td>' +
@@ -1172,7 +1193,9 @@
             
             const runeGroups = getRuneGroups();
             runeGroups.forEach(group => {
-                const rune = runeData.find(r => r.name === group.mainRow.cells[1].innerText);
+                // group.mainRow 대신 data-rune-name을 사용하여 룬 데이터 찾기
+                const runeNameFromRow = group.mainRow.getAttribute('data-rune-name');
+                const rune = runeData.find(r => r.name === runeNameFromRow);
                 if (!rune) return;
 
                 console.log('\nChecking rune:', rune.name);
@@ -1210,11 +1233,14 @@
             let currentGroup = null;
 
             rows.forEach(row => {
-                // 체크박스 열이 있는 행이 메인 행
-                if (row.cells[0].hasAttribute('rowspan')) {
+                const runeName = row.getAttribute('data-rune-name');
+                if (!runeName) return; // data-rune-name이 없는 행은 무시
+
+                // 새로운 룬 그룹의 시작을 확인 (또는 첫 번째 행)
+                if (!currentGroup || currentGroup.mainRow.getAttribute('data-rune-name') !== runeName) {
                     if (currentGroup) runeGroups.push(currentGroup);
                     currentGroup = { mainRow: row, rows: [row] };
-                } else if (currentGroup) {
+                } else {
                     currentGroup.rows.push(row);
                 }
             });
@@ -1319,22 +1345,20 @@
         }
         
         function getGroupSortValue(group, columnIndex) {
-            const runeName = group.mainRow.cells[1].innerText;  // 체크박스 열 고려
+            const runeName = group.mainRow.getAttribute('data-rune-name'); // data-rune-name 사용
             const rune = runeData.find(r => r.name === runeName);
             if (!rune) return null;
             
             // 수치 열의 경우 숫자만 추출
             if (columnIndex === 4) {  // 수치 열
-                // 활성화된 필터가 있는지 확인
                 const activeEffectFilters = Array.from(activeFilters.effect);
                 
                 // 공격력 증가 필터가 활성화된 경우
                 if (activeEffectFilters.includes('공격력 증가')) {
-                    // 공격력 증가 효과만 찾아서 수치 반환
                     const attackPowerEffects = rune.effects.filter(effect => 
                         effect.effect.includes('공격력') && 
                         effect.effect.includes('증가') &&
-                        !effect.effect.includes('추가') &&  // "추가 증가"는 제외
+                        !effect.effect.includes('추가') &&
                         effect.value
                     );
                     
@@ -1346,7 +1370,6 @@
 
                 // 피해 증가 필터가 활성화된 경우
                 if (activeEffectFilters.includes('피해 증가')) {
-                    // 적에게 주는 피해 증가 효과만 찾아서 수치 반환
                     const damageEffects = rune.effects.filter(effect => 
                         effectCategories['피해 증가'].some(keyword => 
                             effect.effect.toUpperCase() === keyword.toUpperCase()
@@ -1369,6 +1392,16 @@
                     }
                 });
                 return maxValue;
+            }
+            
+            // 이름 열의 경우 룬 이름 직접 참조
+            if (columnIndex === 1) {
+                return rune.name;
+            }
+
+            // 키워드 열의 경우 룬 키워드 직접 참조
+            if (columnIndex === 2) {
+                return rune.keyword;
             }
             
             return group.mainRow.cells[columnIndex].innerText;
