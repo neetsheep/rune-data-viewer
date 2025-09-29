@@ -47,11 +47,12 @@
         /* 테이블 스타일 */
         .table-container {
             margin-top: 5px;
-            padding-top: 68px; /* fixed-header 높이만큼 패딩 추가 */
+            padding-top: 0; /* 패딩 제거 */
             background: #fff;
             border-radius: 8px;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
+            position: relative; /* 상대 위치 설정 */
         }
 
         table {
@@ -77,34 +78,45 @@
         }
 
         th {
-            position: sticky;
-            top: 0;  /* fixed-header 바로 아래에 고정되도록 0으로 설정 */
+            position: relative; /* sticky 제거하고 relative로 변경 */
             background-color: #4CAF50;
             color: white;
             z-index: 99;
             white-space: nowrap;
         }
 
+        /* 고정 헤더를 위한 새로운 클래스 */
+        .sticky-header {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            z-index: 999 !important;
+            background-color: #4CAF50 !important;
+            border-bottom: 2px solid #45a049 !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+        }
+
         /* 모바일 대응 */
         @media screen and (max-width: 768px) {
             .fixed-header {
-                padding: 0 10px; /* 상하 패딩 제거 */
+                padding: 0 10px;
             }
             h1 {
                 padding: 5px 0;
             }
             .controls {
-                padding: 5px 10px; /* 모바일 컨트롤 패딩 줄임 */
+                padding: 5px 10px;
                 margin-bottom: 2px;
             }
             .selected-count {
-                padding: 3px 0; /* 모바일에서 더 작은 패딩 적용 */
+                padding: 3px 0;
             }
             .table-container {
-                padding-top: 63px; /* 모바일에서 fixed-header 높이만큼 패딩 조정 */
+                padding-top: 0; /* 모바일에서도 패딩 제거 */
             }
             th {
-                top: 0;  /* 모바일에서도 0으로 설정 */
+                position: relative; /* 모바일에서도 relative로 설정 */
             }
             .filter-section {
                 flex-direction: column;
@@ -1503,6 +1515,111 @@
             // 여러 숫자 중 가장 큰 값 반환
             return Math.max(...matches.map(m => parseFloat(m)));
         }
+
+        // 테이블 헤더 고정을 위한 스크롤 이벤트 처리
+        let stickyHeaderClone = null;
+        let originalThead = null;
+
+        function createStickyHeader() {
+            try {
+                const fixedHeader = document.querySelector('.fixed-header');
+                const table = document.querySelector('table');
+                const thead = table ? table.querySelector('thead') : null;
+                
+                if (!fixedHeader || !table || !thead) {
+                    console.log('필요한 요소를 찾을 수 없습니다:', { fixedHeader: !!fixedHeader, table: !!table, thead: !!thead });
+                    return;
+                }
+
+                // 기존 sticky 헤더가 있으면 제거
+                if (stickyHeaderClone) {
+                    stickyHeaderClone.remove();
+                    stickyHeaderClone = null;
+                }
+
+                // 원본 thead 복제
+                stickyHeaderClone = thead.cloneNode(true);
+                stickyHeaderClone.id = 'sticky-table-header';
+                stickyHeaderClone.style.position = 'fixed';
+                stickyHeaderClone.style.top = '0px';
+                stickyHeaderClone.style.left = '0px';
+                stickyHeaderClone.style.right = '0px';
+                stickyHeaderClone.style.zIndex = '998';
+                stickyHeaderClone.style.backgroundColor = '#4CAF50';
+                stickyHeaderClone.style.borderBottom = '2px solid #45a049';
+                stickyHeaderClone.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+                stickyHeaderClone.style.display = 'none'; // 초기에는 숨김
+
+                // 테이블 구조 유지
+                const stickyTable = document.createElement('table');
+                stickyTable.style.width = '100%';
+                stickyTable.style.borderCollapse = 'collapse';
+                stickyTable.style.tableLayout = 'fixed';
+                stickyTable.appendChild(stickyHeaderClone);
+
+                // body에 추가
+                document.body.appendChild(stickyTable);
+                originalThead = thead;
+
+                console.log('Sticky 헤더 생성 완료');
+            } catch (error) {
+                console.error('Sticky 헤더 생성 오류:', error);
+            }
+        }
+
+        function handleTableHeaderScroll() {
+            try {
+                const fixedHeader = document.querySelector('.fixed-header');
+                const tableContainer = document.querySelector('.table-container');
+                const originalTable = document.querySelector('table');
+                
+                if (!fixedHeader || !tableContainer || !originalTable || !stickyHeaderClone) {
+                    return;
+                }
+
+                const fixedHeaderRect = fixedHeader.getBoundingClientRect();
+                const fixedHeaderBottom = fixedHeaderRect.bottom;
+                
+                const tableRect = originalTable.getBoundingClientRect();
+                const tableTop = tableRect.top;
+                const tableBottom = tableRect.bottom;
+
+                // 테이블이 fixed-header 아래로 스크롤되면 sticky 헤더 표시
+                if (tableTop <= fixedHeaderBottom && tableBottom > fixedHeaderBottom) {
+                    stickyHeaderClone.style.display = 'table-header-group';
+                    stickyHeaderClone.style.top = fixedHeaderBottom + 'px';
+                    
+                    // 원본 테이블 헤더의 너비와 일치시키기
+                    const originalThs = originalThead.querySelectorAll('th');
+                    const stickyThs = stickyHeaderClone.querySelectorAll('th');
+                    
+                    for (let i = 0; i < Math.min(originalThs.length, stickyThs.length); i++) {
+                        const originalWidth = originalThs[i].getBoundingClientRect().width;
+                        stickyThs[i].style.width = originalWidth + 'px';
+                    }
+                } else {
+                    stickyHeaderClone.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('스크롤 처리 오류:', error);
+            }
+        }
+
+        // 페이지 로드 완료 후 sticky 헤더 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                createStickyHeader();
+                
+                // 스크롤 이벤트 리스너 추가
+                window.addEventListener('scroll', handleTableHeaderScroll);
+                window.addEventListener('resize', function() {
+                    // 화면 크기 변경 시 sticky 헤더 재생성
+                    setTimeout(createStickyHeader, 100);
+                });
+                
+                console.log('테이블 헤더 고정 기능 초기화 완료');
+            }, 500); // 테이블 생성 후 충분한 시간 대기
+        });
     </script>
 </body>
 </html> 
