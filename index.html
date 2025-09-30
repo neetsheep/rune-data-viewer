@@ -866,6 +866,18 @@
                     var nameCell = document.createElement('td');
                     nameCell.rowSpan = rowSpan;
                     nameCell.textContent = rune.name;
+
+                    // 룬 등급에 따라 배경색과 글씨색 적용
+                    if (rune.grade === '신화') {
+                        nameCell.style.backgroundColor = 'rgba(213, 166, 0, 0.7)'; // 신화 룬 배경색 (투명도 0.7)
+                        nameCell.style.color = 'black'; // 글씨색
+                        nameCell.style.fontWeight = 'bold'; // 글씨 굵기
+                    } else if (rune.grade === '전설') {
+                        nameCell.style.backgroundColor = 'rgba(181, 73, 15, 0.7)'; // 전설 룬 배경색 (투명도 0.7)
+                        nameCell.style.color = 'white'; // 글씨색
+                        nameCell.style.fontWeight = 'bold'; // 글씨 굵기
+                    }
+                    
                     mainRow.appendChild(nameCell);
 
                     var keywordCell = document.createElement('td');
