@@ -119,6 +119,7 @@
         }
         #toggleDescBtn {
             background-color: #2196F3;
+            color: white !important;
         }
         #toggleDescBtn:hover {
             background-color: #1976D2;
@@ -126,55 +127,59 @@
             box-shadow: 0 4px 8px rgba(33,150,243,0.3);
         }
         #toggleDescBtn.inactive {
-            background-color: #9E9E9E;
+            background-color: #2196F3;
+            color: white !important;
+            opacity: 0.35; /* on 상태에서 투명도 적용 */
         }
         #toggleDescBtn.inactive:hover {
-            background-color: #757575;
+            background-color: #1976D2;
+            color: white !important;
+            opacity: 0.5; /* 호버 시 약간 더 진하게 */
         }
 
         .selected-count {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 20px;
-            border-radius: 12px;
-            margin: 20px 0;
+            padding: clamp(25px, 5vw, 40px) var(--padding-xlarge);
+            border-radius: clamp(8px, 2vw, 12px);
+            margin: var(--padding-xlarge) 0;
             display: flex;
-            justify-content: space-around;
-            align-items: center;
+            justify-content: space-evenly;
+            align-items: stretch; /* center에서 stretch로 변경 */
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             border: 1px solid #e0e0e0;
+            width: 100%;
+            box-sizing: border-box;
         }
         
         .count-item {
             text-align: center;
-            padding: 10px;
-            border-radius: 8px;
+            padding: var(--padding-large);
+            border-radius: clamp(6px, 1.5vw, 8px);
             background: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            min-width: 80px;
+            min-width: clamp(100px, 25vw, 140px);
+            flex: 0 0 auto;
+            max-width: clamp(120px, 30vw, 180px);
             transition: all 0.2s;
-        }
-        
-        .count-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin: clamp(15px, 3vw, 25px) 0; /* 위아래 마진 추가 */
         }
         
         .count-label {
-            font-size: 14px;
+            font-size: clamp(14px, 3vw, 16px);
             color: #666;
-            margin-bottom: 8px;
+            margin-bottom: clamp(12px, 3vw, 18px); /* 라벨과 값 사이의 간격도 더 크게 */
             font-weight: 500;
         }
         
         .count-value {
-            font-size: 18px;
+            font-size: clamp(18px, 4vw, 22px); /* 값 텍스트를 더 크게 */
             font-weight: bold;
             color: #4CAF50;
         }
         
         .count-value span {
-            font-size: 24px;
-            color: #f44336; /* 기본값을 붉은색으로 변경 */
+            font-size: clamp(22px, 5vw, 28px); /* 숫자 텍스트를 더 크게 */
+            color: #f44336;
             transition: color 0.3s;
         }
         
@@ -188,17 +193,57 @@
             font-weight: bold;
         }
         
-        /* 모바일에서 세로 배치 */
+        /* 모바일에서 세로 배치 제거하고 가로 유지 */
         @media screen and (max-width: 768px) {
             .selected-count {
-                flex-direction: column;
-                gap: 15px;
-                padding: 15px;
+                gap: clamp(15px, 4vw, 25px);
+                padding: clamp(10px, 2.5vw, 15px); /* 모바일에서는 기존 패딩 유지 */
             }
             
             .count-item {
-                width: 100%;
-                max-width: 200px;
+                min-width: clamp(80px, 20vw, 100px);
+                padding: clamp(10px, 2.5vw, 15px);
+                max-width: clamp(100px, 25vw, 120px);
+            }
+            
+            .count-label {
+                font-size: clamp(10px, 2.2vw, 12px);
+                margin-bottom: clamp(6px, 1.5vw, 8px);
+            }
+            
+            .count-value {
+                font-size: clamp(14px, 3vw, 16px);
+            }
+            
+            .count-value span {
+                font-size: clamp(16px, 3.5vw, 20px);
+            }
+        }
+
+        /* 매우 작은 화면 (480px 이하)에서 추가 조정 */
+        @media screen and (max-width: 480px) {
+            .selected-count {
+                gap: clamp(12px, 3vw, 20px); /* 작은 화면에서도 적당한 간격 유지 */
+                padding: clamp(8px, 2vw, 12px);
+            }
+            
+            .count-item {
+                min-width: clamp(70px, 18vw, 90px);
+                padding: clamp(8px, 2vw, 12px);
+                max-width: clamp(90px, 22vw, 110px);
+            }
+            
+            .count-label {
+                font-size: clamp(9px, 2vw, 11px);
+                margin-bottom: clamp(5px, 1.2vw, 7px);
+            }
+            
+            .count-value {
+                font-size: clamp(12px, 2.5vw, 14px);
+            }
+            
+            .count-value span {
+                font-size: clamp(14px, 3vw, 18px);
             }
         }
 
@@ -214,11 +259,12 @@
         }
 
         th, td {
-            padding: 12px 15px;
+            padding: clamp(6px, 1.5vw, 10px) clamp(8px, 2vw, 12px); /* 패딩을 더 작게 조정 */
             border: 1px solid #ddd;
-            text-align: left;
+            text-align: left; /* 원래대로 왼쪽 정렬 복원 */
             vertical-align: middle;
             transition: background-color 0.2s;
+            font-size: clamp(10px, 2vw, 14px); /* 셀 텍스트 크기도 조정 */
         }
         
         th {
@@ -228,6 +274,7 @@
             user-select: none;
             white-space: nowrap;
             font-weight: 600;
+            font-size: clamp(9px, 1.8vw, 12px); /* 헤더 텍스트를 더 작게 */
         }
         
         th:hover {
@@ -251,38 +298,39 @@
         /* 모바일 반응형 설정 */
         @media screen and (max-width: 768px) {
             body {
-                padding: 10px;
+                padding: var(--padding-small);
             }
             .description-column:not(.force-show) {
                 display: none !important;
             }
-            table {
-                font-size: 12px;
-            }
-            th, td {
-                padding: 8px 10px;
-            }
             .filter-section {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 8px;
+                gap: clamp(6px, 1.5vw, 8px);
             }
             .filter-section strong {
-                font-size: 14px;
+                font-size: var(--small-font-size);
             }
-            .filter-btn {
-                padding: 6px 12px;
-                font-size: 13px;
+            
+            /* 모바일에서 테이블 텍스트 크기 추가 조정 */
+            table {
+                font-size: clamp(8px, 1.8vw, 12px);
             }
-            #clearFilterBtn, #toggleDescBtn {
-                font-size: 13px;
-                padding: 10px 16px;
+            th, td {
+                padding: clamp(4px, 1vw, 8px) clamp(6px, 1.5vw, 10px);
+                font-size: clamp(8px, 1.8vw, 12px);
             }
-            .selected-count {
-                flex-direction: column;
-                gap: 8px;
-                text-align: center;
+            th {
+                font-size: clamp(7px, 1.5vw, 10px);
             }
+        }
+        
+        .description-column {
+            display: none !important;
+        }
+        
+        .description-column.force-show {
+            display: table-cell !important;
         }
         
         .description-column.force-hide {
@@ -401,7 +449,7 @@
             </div>
             <div class="control-buttons">
                 <button id="clearFilterBtn" type="button" onclick="clearAllFilters(event)">필터 초기화</button>
-                <button id="toggleDescBtn" type="button" onclick="toggleDescription(event)">설명 비활성화</button>
+                <button id="toggleDescBtn" type="button" onclick="toggleDescription(event)" class="inactive">설명</button>
             </div>
         </div>
         <!-- 선택된 룬 수 표시 -->
@@ -852,15 +900,7 @@
         });
 
         function setupButtonEvents() {
-            // 버튼 텍스트 업데이트만 수행 (onclick은 HTML에서 직접 처리)
-            const toggleBtn = document.getElementById('toggleDescBtn');
-            if (toggleBtn && toggleBtn.textContent === '설명 토글') {
-                const isMobile = window.innerWidth <= 768;
-                toggleBtn.textContent = isMobile ? '설명 비활성화' : '설명 활성화';
-                if (!isMobile) {
-                    toggleBtn.classList.add('inactive');
-                }
-            }
+            // 아무것도 하지 않음 (initializeDescriptionToggle에서 모든 것을 처리)
         }
 
         function initializeDescriptionToggle() {
@@ -870,16 +910,16 @@
                 return;
             }
             
-            const isMobile = window.innerWidth <= 768;
+            // 텍스트 설정
+            toggleBtn.textContent = '설명';
             
-            if (isMobile) {
-                toggleBtn.textContent = '설명 비활성화';
-                toggleBtn.classList.remove('inactive');
-            } else {
-                toggleBtn.textContent = '설명 활성화';
-                toggleBtn.classList.add('inactive');
-            }
-            console.log('버튼 초기화 완료:', toggleBtn.textContent);
+            // 모든 환경에서 동일하게: 설명 열이 숨겨진 상태로 시작하고 버튼은 진하게
+            const descColumns = document.querySelectorAll('.description-column');
+            descColumns.forEach(col => {
+                col.classList.remove('force-show');
+                col.classList.add('force-hide');
+            });
+            toggleBtn.classList.remove('inactive'); // 설명이 숨겨져도 버튼은 진하게
         }
 
         function toggleDescription(event) {
@@ -894,9 +934,8 @@
             
             if (!descColumns.length || !toggleBtn) return;
             
-            // 현재 상태 확인
-            const isHidden = descColumns[0].classList.contains('force-hide') || 
-                           (window.innerWidth <= 768 && !descColumns[0].classList.contains('force-show'));
+            // 현재 상태 확인 - force-hide 클래스가 있으면 설명이 숨겨진 상태
+            const isHidden = descColumns[0].classList.contains('force-hide');
             
             if (isHidden) {
                 // 설명 보이기
@@ -904,16 +943,14 @@
                     col.classList.remove('force-hide');
                     col.classList.add('force-show');
                 });
-                toggleBtn.textContent = '설명 활성화';
-                toggleBtn.classList.add('inactive');
+                toggleBtn.classList.add('inactive'); // 설명이 보이면 버튼이 연하게
             } else {
                 // 설명 숨기기
                 descColumns.forEach(col => {
                     col.classList.remove('force-show');
                     col.classList.add('force-hide');
                 });
-                toggleBtn.textContent = '설명 비활성화';
-                toggleBtn.classList.remove('inactive');
+                toggleBtn.classList.remove('inactive'); // 설명이 숨겨지면 버튼이 진하게
             }
         }
 
@@ -928,14 +965,8 @@
                 
                 if (!isForceShow && !isForceHide) {
                     // 자동 상태일 때만 버튼 상태 업데이트
-                    const isMobile = window.innerWidth <= 768;
-                    if (isMobile) {
-                        toggleBtn.textContent = '설명 비활성화';
-                        toggleBtn.classList.remove('inactive');
-                    } else {
-                        toggleBtn.textContent = '설명 활성화';
-                        toggleBtn.classList.add('inactive');
-                    }
+                    toggleBtn.textContent = '설명';
+                    toggleBtn.classList.remove('inactive'); // 초기 상태는 선명함
                 }
             }
         });
