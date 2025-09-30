@@ -24,31 +24,38 @@
             color: #2c3e50;
             margin: 0;
             padding: 20px 0;
-            font-size: 24px; /* 기존 h1보다 작게 */
+            font-size: 24px;
         }
         h1 small {
-            font-size: 16px; /* 더 작게 */
+            font-size: 16px;
             color: #666;
             margin-left: 10px;
         }
 
         .controls {
             background: #fff;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
 
         .filter-section {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .filter-section:last-child {
+            border-bottom: none;
         }
         .filter-section strong {
             white-space: nowrap;
             font-size: 15px;
             min-width: 80px;
+            font-weight: 600;
         }
         .filter-group {
             display: flex;
@@ -56,89 +63,143 @@
             gap: 8px;
         }
         .filter-btn {
-            padding: 8px 12px;
+            padding: 8px 16px;
             font-size: 14px;
-            background-color: #e0e0e0;
+            background-color: #f8f9fa;
             color: #333;
-            border: none;
-            border-radius: 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.2s;
             min-width: 60px;
             text-align: center;
+            font-weight: 500;
         }
         .filter-btn:hover {
-            background-color: #ccc;
+            background-color: #e9ecef;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .filter-btn.active {
             background-color: #4CAF50;
             color: white;
             font-weight: bold;
+            border-color: #4CAF50;
+        }
+        .filter-btn:active {
+            transform: scale(0.98);
         }
         .control-buttons {
             display: flex;
             gap: 10px;
-            margin-top: 10px;
+            margin-top: 15px;
             flex-wrap: wrap;
         }
         #clearFilterBtn, #toggleDescBtn {
             flex-grow: 1;
             min-width: 120px;
-            padding: 10px 15px;
+            padding: 12px 20px;
             font-size: 15px;
             color: white !important;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.4;
+            font-family: inherit;
+            font-weight: 600;
+            transition: all 0.2s;
             text-align: center;
-            white-space: nowrap;
-            display: inline-block;
-            vertical-align: middle;
-            text-decoration: none;
-            outline: none;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            font-weight: 500;
-            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-            touch-action: manipulation;
         }
         #clearFilterBtn {
             background-color: #f44336;
         }
         #clearFilterBtn:hover {
             background-color: #d32f2f;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(244,67,54,0.3);
         }
         #toggleDescBtn {
             background-color: #2196F3;
-            color: white !important;
-            text-shadow: none;
         }
         #toggleDescBtn:hover {
             background-color: #1976D2;
-            color: white !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(33,150,243,0.3);
         }
         #toggleDescBtn.inactive {
             background-color: #9E9E9E;
-            color: white !important;
         }
         #toggleDescBtn.inactive:hover {
             background-color: #757575;
-            color: white !important;
         }
 
         .selected-count {
-            font-size: 0.9em;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
+        }
+        
+        .count-item {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            min-width: 80px;
+            transition: all 0.2s;
+        }
+        
+        .count-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .count-label {
+            font-size: 14px;
             color: #666;
-            margin-left: 10px;
-            padding: 5px 0;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .count-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        
+        .count-value span {
+            font-size: 24px;
+            color: #f44336; /* 기본값을 붉은색으로 변경 */
+            transition: color 0.3s;
+        }
+        
+        .count-value span.completed {
+            color: #2e7d32 !important; /* 완료 시 초록색 */
+            font-weight: bold;
+        }
+        
+        .count-value span.zero-count {
+            color: #f44336 !important;
+            font-weight: bold;
+        }
+        
+        /* 모바일에서 세로 배치 */
+        @media screen and (max-width: 768px) {
+            .selected-count {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            .count-item {
+                width: 100%;
+                max-width: 200px;
+            }
         }
 
         table {
@@ -146,39 +207,45 @@
             border-collapse: collapse;
             margin-top: 10px;
             font-size: 14px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: white;
         }
 
         th, td {
-            padding: 8px 10px;
+            padding: 12px 15px;
             border: 1px solid #ddd;
             text-align: left;
             vertical-align: middle;
+            transition: background-color 0.2s;
         }
         
         th {
-            background-color: #4CAF50;
+            background-color: #3a7e3d;
             color: white;
             cursor: pointer;
             user-select: none;
             white-space: nowrap;
+            font-weight: 600;
         }
         
         th:hover {
-            background-color: #45a049;
+            background-color: #2e6b31;
         }
         
         .sort-indicator {
             display: inline-block;
             margin-left: 5px;
-            opacity: 0.6;
+            opacity: 0.8;
         }
         
         tr:nth-child(even) {
-            background-color: #f2f2f2;
+            background-color: #f8f9fa;
         }
         
         tr:hover {
-            background-color: #ddd;
+            background-color: #e3f2fd;
         }
         
         /* 모바일 반응형 설정 */
@@ -193,25 +260,28 @@
                 font-size: 12px;
             }
             th, td {
-                padding: 6px 8px;
+                padding: 8px 10px;
             }
             .filter-section {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 5px;
+                gap: 8px;
             }
             .filter-section strong {
                 font-size: 14px;
             }
             .filter-btn {
-                padding: 6px 10px;
-                font-size: 12px;
+                padding: 6px 12px;
+                font-size: 13px;
             }
             #clearFilterBtn, #toggleDescBtn {
                 font-size: 13px;
                 padding: 10px 16px;
-                -webkit-text-size-adjust: 100%;
-                -webkit-font-smoothing: antialiased;
+            }
+            .selected-count {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
             }
         }
         
@@ -232,21 +302,22 @@
             top: 100%;
             left: 0;
             right: 0;
-            border-radius: 0 0 4px 4px;
+            border-radius: 0 0 8px 8px;
             max-height: 150px;
             overflow-y: auto;
             background: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         .autocomplete-items div {
-            padding: 8px 10px;
+            padding: 10px 15px;
             cursor: pointer;
+            transition: background-color 0.2s;
         }
         .autocomplete-items div:hover {
-            background-color: #e9e9e9;
+            background-color: #e3f2fd;
         }
         .autocomplete-active {
-            background-color: #e9e9e9 !important;
+            background-color: #e3f2fd !important;
         }
         
         /* 룬 선택 관련 스타일 */
@@ -254,33 +325,57 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
+            accent-color: #4CAF50;
         }
         .rune-checkbox:disabled {
             cursor: not-allowed;
             opacity: 0.5;
         }
         .calculation-result {
-            margin: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin: 20px 0;
         }
         .calculation-result h3 {
             margin-top: 0;
             color: #2c3e50;
+            font-size: 18px;
         }
         .effect-sum {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
             margin: 10px 0;
-            padding: 10px;
-            background: white;
-            border-radius: 4px;
             border-left: 4px solid #4CAF50;
+            transition: all 0.2s;
+        }
+        .effect-sum:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .rune-list {
             color: #666;
             font-size: 0.9em;
-            margin-top: 5px;
+            margin-top: 8px;
+        }
+
+        /* 검색 입력창 개선 */
+        #name-search {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 14px;
+            transition: all 0.2s;
+            background: white;
+        }
+        #name-search:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76,175,80,0.1);
         }
     </style>
 </head>
@@ -311,9 +406,24 @@
         </div>
         <!-- 선택된 룬 수 표시 -->
         <div class="selected-count">
-            선택된 룬: 무기 <span id="weapon-count">0</span>/1, 
-            방어구 <span id="armor-count">0</span>/5, 
-            앰블럼 <span id="emblem-count">0</span>/1
+            <div class="count-item">
+                <div class="count-label">무기</div>
+                <div class="count-value">
+                    <span id="weapon-count">0</span>/1
+                </div>
+            </div>
+            <div class="count-item">
+                <div class="count-label">방어구</div>
+                <div class="count-value">
+                    <span id="armor-count">0</span>/5
+                </div>
+            </div>
+            <div class="count-item">
+                <div class="count-label">앰블럼</div>
+                <div class="count-value">
+                    <span id="emblem-count">0</span>/1
+                </div>
+            </div>
         </div>
         
         <table>
@@ -960,9 +1070,37 @@
         }
 
         function updateSelectedCounts() {
-            document.getElementById('weapon-count').textContent = selectedRunes['무기'].length;
-            document.getElementById('armor-count').textContent = selectedRunes['방어구'].length;
-            document.getElementById('emblem-count').textContent = selectedRunes['앰블럼'].length;
+            const weaponCount = selectedRunes['무기'].length;
+            const armorCount = selectedRunes['방어구'].length;
+            const emblemCount = selectedRunes['앰블럼'].length;
+            
+            const weaponSpan = document.getElementById('weapon-count');
+            const armorSpan = document.getElementById('armor-count');
+            const emblemSpan = document.getElementById('emblem-count');
+            
+            // 무기 카운트 업데이트 (1개 완료 시 초록색)
+            weaponSpan.textContent = weaponCount;
+            if (weaponCount >= maxSelections['무기']) {
+                weaponSpan.classList.add('completed');
+            } else {
+                weaponSpan.classList.remove('completed');
+            }
+            
+            // 방어구 카운트 업데이트 (5개 완료 시 초록색)
+            armorSpan.textContent = armorCount;
+            if (armorCount >= maxSelections['방어구']) {
+                armorSpan.classList.add('completed');
+            } else {
+                armorSpan.classList.remove('completed');
+            }
+            
+            // 앰블럼 카운트 업데이트 (1개 완료 시 초록색)
+            emblemSpan.textContent = emblemCount;
+            if (emblemCount >= maxSelections['앰블럼']) {
+                emblemSpan.classList.add('completed');
+            } else {
+                emblemSpan.classList.remove('completed');
+            }
         }
 
         function updateCheckboxStates() {
