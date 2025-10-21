@@ -4280,7 +4280,7 @@
             if (!setData) return;
             
             // 먼저 모든 체크박스 해제
-            document.querySelectorAll('input[type="checkbox"][data-name]').forEach(checkbox => {
+            document.querySelectorAll('.rune-checkbox').forEach(checkbox => {
                 checkbox.checked = false;
             });
             
@@ -4291,7 +4291,7 @@
             if (setData.runes) {
                 Object.keys(setData.runes).forEach(type => {
                     setData.runes[type].forEach(runeName => {
-                        const checkbox = document.querySelector(`input[type="checkbox"][data-name="${runeName}"]`);
+                        const checkbox = document.querySelector(`input[type="checkbox"][data-rune-name="${runeName}"]`);
                         if (checkbox) {
                             checkbox.checked = true;
                             selectedRunes[type].push(runeName);
@@ -4299,6 +4299,9 @@
                     });
                 });
             }
+            
+            // 체크박스 상태 업데이트 (선택 개수 초과 시 다른 체크박스 비활성화)
+            updateCheckboxStates();
             
             // 스테이터스 복원
             if (setData.stats) {
@@ -4360,6 +4363,7 @@
             // UI 업데이트
             updateSelectedCounts();
             calculateEffects();
+            recalculateDamage();
         }
         
         // 로컬스토리지에서 저장 목록 가져오기
