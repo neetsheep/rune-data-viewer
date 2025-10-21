@@ -4628,9 +4628,12 @@
                 return;
             }
             
+            // 모달 먼저 닫고
+            closeModal('loadModal');
+            
+            // 세팅 불러오기
             loadSet(setData);
             alert(`'${selectedLoadItem}' 세팅을 불러왔습니다.`);
-            closeModal('loadModal');
         }
         
         // 변경 모달 열기
