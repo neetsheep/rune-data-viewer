@@ -1436,6 +1436,101 @@
             background: #f8d7da;
             border-left-color: #dc3545;
         }
+        
+        /* 내보내기 버튼 */
+        .btn-export {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-export:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-export:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        
+        /* 드롭 영역 */
+        .drop-zone {
+            margin-top: 20px;
+            padding: 30px;
+            border: 2px dashed #cbd5e0;
+            border-radius: 12px;
+            background: #f7fafc;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .drop-zone:hover {
+            border-color: #667eea;
+            background: #edf2f7;
+        }
+        
+        .drop-zone.drag-over {
+            border-color: #667eea;
+            background: #e6f0ff;
+            border-style: solid;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        
+        .drop-zone-content {
+            pointer-events: none;
+        }
+        
+        .drop-icon {
+            color: #a0aec0;
+            margin-bottom: 10px;
+        }
+        
+        .drop-zone:hover .drop-icon {
+            color: #667eea;
+        }
+        
+        .drop-text {
+            margin: 10px 0 5px 0;
+            color: #2d3748;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .drop-subtext {
+            margin: 0;
+            color: #718096;
+            font-size: 14px;
+        }
+        
+        /* 모바일 대응 */
+        @media (max-width: 768px) {
+            .drop-zone {
+                padding: 20px;
+            }
+            
+            .drop-icon {
+                width: 36px;
+                height: 36px;
+            }
+            
+            .drop-text {
+                font-size: 14px;
+            }
+            
+            .drop-subtext {
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1714,6 +1809,21 @@
                 <button id="btn-update" class="btn-update">변경</button>
                 <button id="btn-delete" class="btn-delete">삭제</button>
                 <button id="btn-compare" class="btn-compare">비교</button>
+                <button id="btn-export" class="btn-export">내보내기</button>
+            </div>
+            
+            <!-- 드롭 영역 추가 -->
+            <div id="drop-zone" class="drop-zone">
+                <div class="drop-zone-content">
+                    <svg class="drop-icon" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <p class="drop-text">JSON 파일을 여기에 드래그하여 세팅 가져오기</p>
+                    <p class="drop-subtext">또는 클릭하여 파일 선택</p>
+                </div>
+                <input type="file" id="file-input" accept=".json" style="display: none;">
             </div>
         </div>
     </div>
@@ -1798,6 +1908,22 @@
             <div class="modal-footer">
                 <button id="compareModalConfirm" class="modal-btn-confirm">비교</button>
                 <button id="compareModalCancel" class="modal-btn-cancel">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 내보내기 모달 -->
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>세팅 내보내기</h3>
+            </div>
+            <div class="modal-body">
+                <div id="exportList" class="save-list"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="exportModalConfirm" class="modal-btn-confirm">내보내기</button>
+                <button id="exportModalCancel" class="modal-btn-cancel">취소</button>
             </div>
         </div>
     </div>
@@ -4386,6 +4512,7 @@
             document.getElementById('btn-update').disabled = count < 1;
             document.getElementById('btn-delete').disabled = count < 1;
             document.getElementById('btn-compare').disabled = count < 2;
+            document.getElementById('btn-export').disabled = count < 1;
         }
         
         // 모달 열기/닫기
@@ -4399,6 +4526,7 @@
             if (modalId === 'loadModal') selectedLoadItem = null;
             if (modalId === 'updateModal') selectedUpdateItem = null;
             if (modalId === 'deleteModal') selectedDeleteItem = null;
+            if (modalId === 'exportModal') selectedExportItem = null;
             if (modalId === 'compareModal') {
                 selectedCompareItem1 = null;
                 selectedCompareItem2 = null;
@@ -4604,6 +4732,178 @@
             updateButtonStates();
         }
         
+        // ============================================
+        // 세팅 내보내기/가져오기 기능
+        // ============================================
+        
+        let selectedExportItem = null;
+        
+        // 내보내기 모달 열기
+        function openExportModal() {
+            const saveList = getSaveList();
+            const count = Object.keys(saveList).length;
+            
+            if (count < 1) {
+                alert('내보낼 세팅이 없습니다.');
+                return;
+            }
+            
+            const listHtml = Object.keys(saveList).map(name => {
+                const data = saveList[name];
+                const date = new Date(data.timestamp).toLocaleString('ko-KR');
+                return `
+                    <div class="save-item" data-name="${name}">
+                        <div class="save-item-name">${name}</div>
+                        <div class="save-item-date">${date}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('exportList').innerHTML = listHtml;
+            selectedExportItem = null;
+            openModal('exportModal');
+        }
+        
+        // 내보내기 항목 선택
+        function selectExportItem(name) {
+            selectedExportItem = name;
+            document.querySelectorAll('#exportList .save-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            document.querySelector(`#exportList .save-item[data-name="${name}"]`).classList.add('selected');
+        }
+        
+        // 선택된 세팅 내보내기 (JSON 다운로드)
+        function exportSelectedSet() {
+            if (!selectedExportItem) {
+                alert('내보낼 세팅을 선택해주세요.');
+                return;
+            }
+            
+            const saveList = getSaveList();
+            const setData = saveList[selectedExportItem];
+            
+            if (!setData) {
+                alert('세팅을 찾을 수 없습니다.');
+                return;
+            }
+            
+            // 파일명 생성: 세팅이름_연도월일시간분.json
+            const now = new Date();
+            const dateStr = now.getFullYear().toString().slice(-2) + 
+                            String(now.getMonth() + 1).padStart(2, '0') + 
+                            String(now.getDate()).padStart(2, '0') + 
+                            String(now.getHours()).padStart(2, '0') + 
+                            String(now.getMinutes()).padStart(2, '0');
+            const fileName = `${selectedExportItem}_${dateStr}.json`;
+            
+            // JSON 파일로 다운로드
+            const jsonStr = JSON.stringify(setData, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert(`'${selectedExportItem}' 세팅을 ${fileName} 파일로 내보냈습니다.`);
+            closeModal('exportModal');
+        }
+        
+        // 드롭 영역 이벤트 설정
+        function setupDropZone() {
+            const dropZone = document.getElementById('drop-zone');
+            const fileInput = document.getElementById('file-input');
+            
+            // 클릭 시 파일 선택 창 열기
+            dropZone.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            // 파일 선택 시 처리
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    handleFileImport(file);
+                }
+                fileInput.value = ''; // 초기화
+            });
+            
+            // 드래그 이벤트 처리
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('drag-over');
+            });
+            
+            dropZone.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('drag-over');
+            });
+            
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('drag-over');
+                
+                const file = e.dataTransfer.files[0];
+                if (file && file.name.endsWith('.json')) {
+                    handleFileImport(file);
+                } else {
+                    alert('JSON 파일만 가져올 수 있습니다.');
+                }
+            });
+        }
+        
+        // 파일 가져오기 처리
+        function handleFileImport(file) {
+            const reader = new FileReader();
+            
+            reader.onload = (e) => {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    // 데이터 유효성 검사
+                    if (!importedData.runes || !importedData.stats || !importedData.skills) {
+                        alert('유효하지 않은 세팅 파일입니다.');
+                        return;
+                    }
+                    
+                    // 파일명에서 세팅 이름 추출 (확장자와 날짜 제거)
+                    let settingName = file.name.replace('.json', '');
+                    // _날짜 부분 제거 (예: _2510211930)
+                    settingName = settingName.replace(/_\d{10}$/, '');
+                    
+                    // 중복 확인 및 이름 변경
+                    const saveList = getSaveList();
+                    let finalName = settingName;
+                    let counter = 1;
+                    
+                    while (saveList[finalName]) {
+                        finalName = `${settingName} (${counter})`;
+                        counter++;
+                    }
+                    
+                    // localStorage에 저장
+                    saveList[finalName] = importedData;
+                    setSaveList(saveList);
+                    
+                    alert(`'${finalName}' 세팅을 성공적으로 가져왔습니다!\n불러오기 메뉴에서 확인할 수 있습니다.`);
+                    
+                    // 버튼 상태 업데이트
+                    updateButtonStates();
+                    
+                } catch (error) {
+                    console.error('파일 가져오기 오류:', error);
+                    alert('파일을 읽는 중 오류가 발생했습니다.\nJSON 파일 형식을 확인해주세요.');
+                }
+            };
+            
+            reader.readAsText(file);
+        }
+        
         // 비교 모달 열기
         function openCompareModal() {
             const saveList = getSaveList();
@@ -4745,6 +5045,7 @@
             document.getElementById('btn-update').addEventListener('click', openUpdateModal);
             document.getElementById('btn-delete').addEventListener('click', openDeleteModal);
             document.getElementById('btn-compare').addEventListener('click', openCompareModal);
+            document.getElementById('btn-export').addEventListener('click', openExportModal);
             
             // 저장 모달 버튼
             document.getElementById('saveModalConfirm').addEventListener('click', saveCurrentSet);
@@ -4774,6 +5075,12 @@
             document.getElementById('compareModalConfirm').addEventListener('click', compareSelectedSets);
             document.getElementById('compareModalCancel').addEventListener('click', function() {
                 closeModal('compareModal');
+            });
+            
+            // 내보내기 모달 버튼
+            document.getElementById('exportModalConfirm').addEventListener('click', exportSelectedSet);
+            document.getElementById('exportModalCancel').addEventListener('click', function() {
+                closeModal('exportModal');
             });
             
             // 저장 모달에서 Enter 키 처리
@@ -4823,6 +5130,18 @@
                     selectCompareItem2(name);
                 }
             });
+            
+            // 내보내기 리스트 클릭 이벤트
+            document.getElementById('exportList').addEventListener('click', function(e) {
+                const item = e.target.closest('.save-item');
+                if (item) {
+                    const name = item.getAttribute('data-name');
+                    selectExportItem(name);
+                }
+            });
+            
+            // 드롭 영역 설정
+            setupDropZone();
         });
     </script>
 </body>
