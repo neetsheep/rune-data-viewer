@@ -4623,6 +4623,11 @@
                 return;
             }
             
+            // 확인 메시지 표시
+            if (!confirm(`'${selectedLoadItem}' 세팅을 불러오시겠습니까?`)) {
+                return;
+            }
+            
             loadSet(setData);
             alert(`'${selectedLoadItem}' 세팅을 불러왔습니다.`);
             closeModal('loadModal');
@@ -5032,6 +5037,17 @@
             `;
             
             document.getElementById('compareResult').innerHTML = resultHtml;
+            
+            // 비교 결과로 스크롤 이동 (부드러운 애니메이션)
+            setTimeout(() => {
+                const compareResultElement = document.getElementById('compareResult');
+                if (compareResultElement) {
+                    compareResultElement.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'nearest' 
+                    });
+                }
+            }, 100);
         }
         
         // 페이지 로드 시 이벤트 리스너 등록
