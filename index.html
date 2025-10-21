@@ -95,7 +95,7 @@
             margin-top: 15px;
             flex-wrap: wrap;
         }
-        #clearFilterBtn, #toggleDescBtn {
+        #clearFilterBtn {
             flex-grow: 1;
             min-width: 120px;
             padding: 12px 20px;
@@ -108,8 +108,6 @@
             font-weight: 600;
             transition: all 0.2s;
             text-align: center;
-        }
-        #clearFilterBtn {
             background-color: #f44336;
         }
         #clearFilterBtn:hover {
@@ -117,24 +115,133 @@
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(244,67,54,0.3);
         }
-        #toggleDescBtn {
-            background-color: #2196F3;
-            color: white !important;
+
+        /* 유저 스테이터스 섹션 */
+        .user-stats-section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
-        #toggleDescBtn:hover {
-            background-color: #1976D2;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(33,150,243,0.3);
+        
+        .user-stats-section h2 {
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            color: #2c3e50;
+            font-weight: 600;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
         }
-        #toggleDescBtn.inactive {
-            background-color: #2196F3;
-            color: white !important;
-            opacity: 0.35; /* on 상태에서 투명도 적용 */
+        
+        .user-stats-section h3 {
+            margin: 25px 0 15px 0;
+            font-size: 16px;
+            color: #2c3e50;
+            font-weight: 600;
+            border-bottom: 2px solid #2196F3;
+            padding-bottom: 8px;
         }
-        #toggleDescBtn.inactive:hover {
-            background-color: #1976D2;
-            color: white !important;
-            opacity: 0.5; /* 호버 시 약간 더 진하게 */
+        
+        .stats-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .stats-column {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .stat-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 15px;
+            position: relative;
+        }
+        
+        .stat-row label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            min-width: 100px;
+        }
+        
+        .stat-row input[type="number"] {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: right;
+            transition: all 0.2s;
+            width: 120px;
+        }
+        
+        .percent-symbol {
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            margin-left: 3px;
+        }
+        
+        .stat-row input[type="number"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76,175,80,0.1);
+        }
+        
+        .stat-row input[type="number"]:hover {
+            border-color: #4CAF50;
+        }
+        
+        /* 숫자 입력 화살표 스타일 */
+        .stat-row input[type="number"]::-webkit-inner-spin-button,
+        .stat-row input[type="number"]::-webkit-outer-spin-button {
+            opacity: 1;
+        }
+        
+        /* 강화류 토글 스타일 */
+        .enhancement-toggles {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        
+        .toggle-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        
+        .toggle-item:hover {
+            background: #e9ecef;
+        }
+        
+        .toggle-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #4CAF50;
+        }
+        
+        .toggle-item span {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .toggle-item:has(input:checked) {
+            background: #e8f5e9;
+            border-color: #4CAF50;
         }
 
         .selected-count {
@@ -256,6 +363,25 @@
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             background: white;
+        }
+        
+        /* 키워드 열 너비를 이름 열과 동일하게 설정 */
+        table th:nth-child(2),
+        table td:nth-child(2),
+        table th:nth-child(3),
+        table td:nth-child(3) {
+            width: 150px;
+            min-width: 150px;
+        }
+        
+        /* 선택, 이름, 키워드 열 가운데 정렬 */
+        table th:nth-child(1),
+        table td:nth-child(1),
+        table th:nth-child(2),
+        table td:nth-child(2),
+        table th:nth-child(3),
+        table td:nth-child(3) {
+            text-align: center;
         }
 
         th, td {
@@ -391,6 +517,117 @@
             color: #2c3e50;
             font-size: 18px;
         }
+        
+        /* 대미지 배율 계산 스타일 */
+        .damage-calculation {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        
+        .damage-calculation h3 {
+            margin: 0 0 20px 0;
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: 600;
+            border-bottom: 3px solid #FF9800;
+            padding-bottom: 10px;
+        }
+        
+        .damage-calculation h4 {
+            margin: 0 0 15px 0;
+            color: #2c3e50;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .damage-details {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .damage-section {
+            flex: 1;
+            min-width: 300px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .calc-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .calc-row:last-child {
+            border-bottom: none;
+        }
+        
+        .calc-label {
+            font-size: 14px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .calc-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2196F3;
+        }
+        
+        .damage-final {
+            flex: 1;
+            min-width: 300px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 8px;
+            color: white;
+        }
+        
+        .damage-final h4 {
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .final-row {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .final-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .final-row.direct {
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .final-row.indirect {
+            border-left: 4px solid #FF5722;
+        }
+        
+        .final-label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+        
+        .final-value {
+            display: block;
+            font-size: 28px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
         .effect-sum {
             background: #f8f9fa;
             padding: 15px;
@@ -429,7 +666,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>룬 정보 데이터 <small>(Var.0.1.3)</small></h1>
+        <h1>룬 정보 데이터 <small>(Var.0.1.4)</small></h1>
         <div class="controls">
             <div class="filter-section">
                 <strong>종류 :</strong>
@@ -441,7 +678,11 @@
             </div>
             <div class="filter-section">
                 <strong>검색 키워드 :</strong>
-                <div id="effect-filters" class="filter-group"></div>
+                <div id="keyword-filters" class="filter-group"></div>
+            </div>
+            <div class="filter-section">
+                <strong>검색 특징 :</strong>
+                <div id="feature-filters" class="filter-group"></div>
             </div>
             <div class="filter-section">
                 <strong>이름 검색 :</strong>
@@ -449,9 +690,9 @@
             </div>
             <div class="control-buttons">
                 <button id="clearFilterBtn" type="button" onclick="clearAllFilters(event)">필터 초기화</button>
-                <button id="toggleDescBtn" type="button" onclick="toggleDescription(event)" class="inactive">설명</button>
             </div>
         </div>
+        
         <!-- 선택된 룬 수 표시 -->
         <div class="selected-count">
             <div class="count-item">
@@ -479,17 +720,147 @@
                 <tr>
                     <th>선택</th>
                     <th onclick="sortTable(1, 'str')">이름 <span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(2, 'str')">키워드 <span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(3, 'str')">효과 <span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(4, 'num')">수치 <span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(5, 'str')">조건부 효과 <span class="sort-indicator"></span></th>
-                    <th class="description-column" onclick="sortTable(6, 'str')">설명 <span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(2, 'str')">특징 <span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(3, 'str')">설명 <span class="sort-indicator"></span></th>
                 </tr>
             </thead>
             <tbody>
                 <!-- 데이터는 스크립트에서 동적으로 생성됩니다 -->
             </tbody>
         </table>
+        
+        <!-- 유저 스테이터스 입력 섹션 -->
+        <div class="user-stats-section">
+            <h2>스테이터스</h2>
+            <div class="stats-container">
+                <div class="stats-column">
+                    <div class="stat-row">
+                        <label>강타 강화</label>
+                        <input type="number" id="stat-강타강화" placeholder="0" min="0">
+                    </div>
+                    <div class="stat-row">
+                        <label>연타 강화</label>
+                        <input type="number" id="stat-연타강화" placeholder="0" min="0">
+                    </div>
+                    <div class="stat-row">
+                        <label>콤보 강화</label>
+                        <input type="number" id="stat-콤보강화" placeholder="0" min="0">
+                    </div>
+                    <div class="stat-row">
+                        <label>광역 강화</label>
+                        <input type="number" id="stat-광역강화" placeholder="0" min="0">
+                    </div>
+                </div>
+                <div class="stats-column">
+                    <div class="stat-row">
+                        <label>스킬 위력</label>
+                        <input type="number" id="stat-스킬위력" placeholder="0" min="0">
+                    </div>
+                    <div class="stat-row">
+                        <label>치명타</label>
+                        <input type="number" id="stat-치명타" placeholder="0" min="0">
+                    </div>
+                    <div class="stat-row">
+                        <label>추가타</label>
+                        <input type="number" id="stat-추가타" placeholder="0" min="0">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 캐릭터 스킬 관련 대미지율 -->
+            <h3>캐릭터 스킬 관련</h3>
+            <div class="stats-container">
+                <div class="stats-column">
+                    <div class="stat-row">
+                        <label>공격력</label>
+                        <input type="number" id="skill-공격력" placeholder="0.0" min="0" step="0.1">
+                        <span class="percent-symbol">%</span>
+                    </div>
+                    <div class="stat-row">
+                        <label>연타 피해</label>
+                        <input type="number" id="skill-연타피해" placeholder="0.0" min="0" step="0.1">
+                        <span class="percent-symbol">%</span>
+                    </div>
+                    <div class="stat-row">
+                        <label>강타 피해</label>
+                        <input type="number" id="skill-강타피해" placeholder="0.0" min="0" step="0.1">
+                        <span class="percent-symbol">%</span>
+                    </div>
+                    <div class="stat-row">
+                        <label>광역 피해</label>
+                        <input type="number" id="skill-광역피해" placeholder="0.0" min="0" step="0.1">
+                        <span class="percent-symbol">%</span>
+                    </div>
+                    <div class="stat-row">
+                        <label>콤보 피해</label>
+                        <input type="number" id="skill-콤보피해" placeholder="0.0" min="0" step="0.1">
+                        <span class="percent-symbol">%</span>
+                    </div>
+                </div>
+                <div class="stats-column">
+                    <div class="stat-row">
+                        <label>추가 피해</label>
+                        <input type="number" id="skill-추가피해" placeholder="0.0" min="0" step="0.1">
+                        <span class="percent-symbol">%</span>
+                    </div>
+                    <div class="stat-row">
+                        <label>치명타 피해</label>
+                        <input type="number" id="skill-치명타피해" placeholder="0.0" min="0" step="0.1">
+                        <span class="percent-symbol">%</span>
+                    </div>
+                    <div class="stat-row">
+                        <label>치명타 확률</label>
+                        <input type="number" id="skill-치명타확률" placeholder="0.0" min="0" step="0.1" max="100">
+                        <span class="percent-symbol">%</span>
+                    </div>
+                    <div class="stat-row">
+                        <label>추가타 확률</label>
+                        <input type="number" id="skill-추가타확률" placeholder="0.0" min="0" step="0.1" max="100">
+                        <span class="percent-symbol">%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 강화류 사용 유무 -->
+            <h3>강화류 사용 유무</h3>
+            <div class="enhancement-toggles">
+                <label class="toggle-item">
+                    <input type="checkbox" id="use-강타" checked>
+                    <span>강타</span>
+                </label>
+                <label class="toggle-item">
+                    <input type="checkbox" id="use-연타" checked>
+                    <span>연타</span>
+                </label>
+                <label class="toggle-item">
+                    <input type="checkbox" id="use-광역" checked>
+                    <span>광역</span>
+                </label>
+                <label class="toggle-item">
+                    <input type="checkbox" id="use-콤보" checked>
+                    <span>콤보</span>
+                </label>
+            </div>
+            
+            <!-- 시너지 대미지 -->
+            <h3>시너지 대미지</h3>
+            <div class="stats-container">
+                <div class="stats-column">
+                    <div class="stat-row">
+                        <label>주는 피해 증가</label>
+                        <input type="number" id="synergy-주는피해" placeholder="0.0" min="0" step="0.1">
+                        <span class="percent-symbol">%</span>
+                    </div>
+                </div>
+                <div class="stats-column">
+                    <div class="stat-row">
+                        <label>받는 피해 증가</label>
+                        <input type="number" id="synergy-받는피해" placeholder="0.0" min="0" step="0.1">
+                        <span class="percent-symbol">%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <!-- 계산 결과 표시 영역 -->
         <div id="calculation-result" class="calculation-result" style="display: none;">
@@ -498,251 +869,782 @@
                 <!-- 계산 결과는 스크립트에서 동적으로 생성됩니다 -->
             </div>
         </div>
+        
+        <!-- 대미지 배율 계산 결과 -->
+        <div id="damage-calculation" class="damage-calculation">
+            <h3>대미지 배율 계산</h3>
+            <div class="damage-details">
+                <div class="damage-section">
+                    <h4>세부 계산</h4>
+                    <div class="calc-row">
+                        <span class="calc-label">1. 공격력</span>
+                        <span class="calc-value" id="calc-attack">1.00</span>
+                    </div>
+                    <div class="calc-row">
+                        <span class="calc-label">2. 강화류 (강타/연타/광역/콤보)</span>
+                        <span class="calc-value" id="calc-enhancement">1.00</span>
+                    </div>
+                    <div class="calc-row">
+                        <span class="calc-label">3. 피해증가 (주는 피해 × 받는 피해)</span>
+                        <span class="calc-value" id="calc-damage-increase">1.00</span>
+                    </div>
+                    <div class="calc-row">
+                        <span class="calc-label">4. 치명타</span>
+                        <span class="calc-value" id="calc-critical">1.00</span>
+                    </div>
+                    <div class="calc-row">
+                        <span class="calc-label">5. 추가타</span>
+                        <span class="calc-value" id="calc-additional">1.00</span>
+                    </div>
+                    <div class="calc-row">
+                        <span class="calc-label">6-1. 룬 피해 계수</span>
+                        <span class="calc-value" id="calc-rune-damage">1.00</span>
+                    </div>
+                    <div class="calc-row">
+                        <span class="calc-label">6-2. 룬 지속 피해 계수</span>
+                        <span class="calc-value" id="calc-rune-dot">1.00</span>
+                    </div>
+                </div>
+                <div class="damage-final">
+                    <h4>최종 대미지 배율</h4>
+                    <div class="final-row direct">
+                        <span class="final-label">직접 피해</span>
+                        <span class="final-value" id="final-direct">1.00배</span>
+                    </div>
+                    <div class="final-row indirect">
+                        <span class="final-label">간접 피해 (지속 피해)</span>
+                        <span class="final-value" id="final-indirect">1.00배</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
         const runeData = [
             // 무기 전설
-            { type: '무기', grade: '전설', name: '불길', keyword: '-', effects: [{ effect: '치명타 확률 증가', value: '18%' }, { effect: '지속피해', value: '공격력×n%', condition: '화상 (쿨타임: 10초)' }] },
-            { type: '무기', grade: '전설', name: '결정', keyword: '-', effects: [{ effect: '추가타 확률 증가', value: '18%' }, { effect: '지속피해', value: '공격력×n%', condition: '빙결 (쿨타임: 10초)' }] },
-            { type: '무기', grade: '전설', name: '뇌명', keyword: '-', effects: [{ effect: '강타 피해 증가', value: '20%' }, { effect: '지속피해', value: '공격력×n%', condition: '감전 (쿨타임: 10초)' }] },
-            { type: '무기', grade: '전설', name: '독사+', keyword: '-', effects: [{ effect: '연타 피해 증가', value: '20%' }, { effect: '지속피해', value: '공격력×n%', condition: '중독 (쿨타임: 10초)' }] },
-            { type: '무기', grade: '전설', name: '공포', keyword: '-', effects: [{ effect: '치명타 피해 증가', value: '18%' }, { effect: '지속피해', value: '공격력×n%', condition: '암흑 (쿨타임: 10초)' }] },
-            { type: '무기', grade: '전설', name: '집행자', keyword: '-', effects: [{ effect: '적에게 주는 피해 증가', value: '10%' }, { effect: '치유량 증가', value: '20%' }, { effect: '지속피해', value: '공격력×n%', condition: '신성 (쿨타임: 10초)' }] },
-            { type: '무기', grade: '전설', name: '야수+', keyword: '-', effects: [{ effect: '적에게 주는 피해 증가', value: '20%' }, { effect: '지속피해', value: '공격력×n%', condition: '출혈 (쿨타임: 10초)' }] },
-            { type: '무기', grade: '전설', name: '밤+', keyword: '-', effects: [{ effect: '공격력 증가', value: '20%' }, { effect: '지속피해', value: '공격력×n%', condition: '정신 (쿨타임: 10초)' }] },
-            { type: '무기', grade: '전설', name: '투사+', keyword: '[결함]', effects: [{ effect: '적에게 주는 피해 증가', value: '33%' }, { effect: '멀티히트 피해 감소', value: '-10%' }] },
-            { type: '무기', grade: '전설', name: '은둔자+', keyword: '[결함]', effects: [{ effect: '공격력 증가', value: '33%' }, { effect: '재사용 대기 시간 회복 속도 감소', value: '-9%' }] },
-            { type: '무기', grade: '전설', name: '망각+', keyword: '[조건부]', effects: [{ effect: '공격력 증가', value: '19%' }, { effect: '모든 스킬의 재사용 대기 시간 감소', value: '9%', condition: '기본 공격 적중 시' }] },
-            { type: '무기', grade: '전설', name: '서리바람+', keyword: '-', effects: [{ effect: '공격력 증가', value: '20%' }, { effect: '캐스팅 및 차지 속도 증가', value: '25%' }] },
-            { type: '무기', grade: '전설', name: '옛 마법사', keyword: '[결함]', effects: [{ effect: '재사용 대기 시간 회복 속도 증가', value: '29%' }, { effect: '적에게 주는 피해 감소', value: '-10%' }] },
-            { type: '무기', grade: '전설', name: '물결치는 날', keyword: '[조건부]', effects: [{ effect: '다음 기본 공격 추가 피해', value: '공격력×n%' }, { effect: '다음 1회 기본 공격 속도 증가', value: '10%' }], condition: '스킬 사용 시' },
-            { type: '무기', grade: '전설', name: '파괴자+', keyword: '-', effects: [{ effect: '공격력 증가', value: '18%' }, { effect: '무방비 피해 증가', value: '48%' }] },
-            { type: '무기', grade: '전설', name: '검무+', keyword: '[누적]', effects: [{ effect: '공격력 증가', value: '2% (최대 20%)' }, { effect: '치명타 확률 증가', value: '1% (최대 10%)' }], condition: '공격 적중 시 (지속: 10초 / 최대 10회)' },
-            { type: '무기', grade: '전설', name: '무수한 궤적', keyword: '-', effects: [{ effect: '공격력 증가', value: '10%' }, { effect: '기본 공격 속도 증가', value: '30%' }, { effect: '기본 공격 추가타 확률 증가', value: '30%' }] },
-            { type: '무기', grade: '전설', name: '마지막 자비', keyword: '[조건부]', effects: [{ effect: '공격력 증가', value: '20%' }, { effect: '공격력 추가 증가', value: '20%' }], condition: '남은 체력 50% 이하 적 공격 시 (지속: 10초)' },
-            { type: '무기', grade: '전설', name: '끝없는 순환', keyword: '[축적]', effects: [{ effect: '[공격] 마법진 암흑 피해', value: '공격력×n%' }, { effect: '[회복] 마법진 회복', value: '공격력×n%' }], condition: '공격/회복 20회 축적' },
-            { type: '무기', grade: '전설', name: '종언+', keyword: '[누적]', effects: [{ effect: '공격력 증가', value: '2% (최대 20%)' }, { effect: '공격력 증가 (기본)', value: '24%' }], condition: '자신과 전투 중인 적 처치 시 (지속: 20초 / 최대 10회)' },
-            { type: '무기', grade: '전설', name: '영웅', keyword: '-', effects: [{ effect: '공격력, 연타, 강타, 콤보, 스킬, 치명타, 멀티 히트 피해 증가', value: '각 4.3%' }] },
+            { type: '무기', grade: '전설', name: '불길', keyword: '', effects: [{ effect: '치명타 확률 증가', value: '18%' }, { effect: '지속피해', value: '공격력×n%', condition: '화상 (쿨타임: 10초)' }] },
+            { type: '무기', grade: '전설', name: '결정', keyword: '', effects: [{ effect: '추가타 확률 증가', value: '18%' }, { effect: '지속피해', value: '공격력×n%', condition: '빙결 (쿨타임: 10초)' }] },
+            { type: '무기', grade: '전설', name: '뇌명', keyword: '', effects: [{ effect: '강타 피해 증가', value: '20%' }, { effect: '지속피해', value: '공격력×n%', condition: '감전 (쿨타임: 10초)' }] },
+            { type: '무기', grade: '전설', name: '독사+', keyword: '', effects: [{ effect: '연타 피해 증가', value: '20%' }, { effect: '지속피해', value: '공격력×n%', condition: '중독 (쿨타임: 10초)' }] },
+            { type: '무기', grade: '전설', name: '공포', keyword: '', effects: [{ effect: '치명타 피해 증가', value: '18%' }, { effect: '지속피해', value: '공격력×n%', condition: '암흑 (쿨타임: 10초)' }] },
+            { type: '무기', grade: '전설', name: '집행자', keyword: '', effects: [{ effect: '적에게 주는 피해 증가', value: '10%' }, { effect: '치유량 증가', value: '20%' }, { effect: '지속피해', value: '공격력×n%', condition: '신성 (쿨타임: 10초)' }] },
+            { type: '무기', grade: '전설', name: '야수+', keyword: '', effects: [{ effect: '적에게 주는 피해 증가', value: '20%' }, { effect: '지속피해', value: '공격력×n%', condition: '출혈 (쿨타임: 10초)' }] },
+            { type: '무기', grade: '전설', name: '밤+', keyword: '', effects: [{ effect: '공격력 증가', value: '20%' }, { effect: '지속피해', value: '공격력×n%', condition: '정신 (쿨타임: 10초)' }] },
+            { type: '무기', grade: '전설', name: '투사+', keyword: '결함', effects: [{ effect: '적에게 주는 피해 증가', value: '33%' }, { effect: '멀티히트 피해 감소', value: '-10%' }] },
+            { type: '무기', grade: '전설', name: '은둔자+', keyword: '결함', effects: [{ effect: '공격력 증가', value: '33%' }, { effect: '재사용 대기 시간 회복 속도 감소', value: '-9%' }] },
+            { type: '무기', grade: '전설', name: '망각+', keyword: '조건부', effects: [{ effect: '공격력 증가', value: '19%' }, { effect: '모든 스킬의 재사용 대기 시간 감소', value: '9%', condition: '기본 공격 적중 시' }] },
+            { type: '무기', grade: '전설', name: '서리바람+', keyword: '', effects: [{ effect: '공격력 증가', value: '20%' }, { effect: '캐스팅 및 차지 속도 증가', value: '25%' }] },
+            { type: '무기', grade: '전설', name: '옛 마법사', keyword: '결함', effects: [{ effect: '재사용 대기 시간 회복 속도 증가', value: '29%' }, { effect: '적에게 주는 피해 감소', value: '-10%' }] },
+            { type: '무기', grade: '전설', name: '물결치는 날', keyword: '조건부', effects: [{ effect: '다음 기본 공격 추가 피해', value: '공격력×n%' }, { effect: '다음 1회 기본 공격 속도 증가', value: '10%' }], condition: '스킬 사용 시' },
+            { type: '무기', grade: '전설', name: '파괴자+', keyword: '', effects: [{ effect: '공격력 증가', value: '18%' }, { effect: '무방비 피해 증가', value: '48%' }] },
+            { type: '무기', grade: '전설', name: '검무+', keyword: '누적', effects: [{ effect: '공격력 증가', value: '2% (최대 20%)' }, { effect: '치명타 확률 증가', value: '1% (최대 10%)' }], condition: '공격 적중 시 (지속: 10초 / 최대 10회)' },
+            { type: '무기', grade: '전설', name: '무수한 궤적', keyword: '', effects: [{ effect: '공격력 증가', value: '10%' }, { effect: '기본 공격 속도 증가', value: '30%' }, { effect: '기본 공격 추가타 확률 증가', value: '30%' }] },
+            { type: '무기', grade: '전설', name: '마지막 자비', keyword: '', effects: [{ effect: '공격력 증가', value: '20%' }, { effect: '공격력 추가 증가', value: '20%' }], condition: '남은 체력 50% 이하 적 공격 시 (지속: 10초)' },
+            { type: '무기', grade: '전설', name: '끝없는 순환', keyword: '축적', effects: [{ effect: '[공격] 마법진 암흑 피해', value: '공격력×n%' }, { effect: '[회복] 마법진 회복', value: '공격력×n%' }], condition: '공격/회복 20회 축적' },
+            { type: '무기', grade: '전설', name: '종언+', keyword: '누적', effects: [{ effect: '공격력 증가', value: '2% (최대 20%)' }, { effect: '공격력 증가 (기본)', value: '24%' }], condition: '자신과 전투 중인 적 처치 시 (지속: 20초 / 최대 10회)' },
+            { type: '무기', grade: '전설', name: '영웅', keyword: '', effects: [{ effect: '공격력, 연타, 강타, 콤보, 스킬, 치명타, 멀티 히트 피해 증가', value: '각 4.3%' }] },
             
             // 방어구 전설
-            { type: '방어구', grade: '전설', name: '여명+', keyword: '[누적]', effects: [{ effect: '공격력 증가', value: '3.5% (최대 21%)' }], condition: '스킬 사용 시 (지속: 10초 / 최대 6회)' },
-            { type: '방어구', grade: '전설', name: '황혼', keyword: '[누적]', effects: [{ effect: '적에게 주는 피해 증가', value: '1.4% (최대 22.4%)' }], condition: '공격 적중 시 (지속: 8초 / 최대 16회)' },
-            { type: '방어구', grade: '전설', name: '바위 감시자', keyword: '[축적]', effects: [{ effect: '공격력 증가', value: '22%' }], condition: '강타 7회 적중 시 (지속: 6초)' },
-            { type: '방어구', grade: '전설', name: '쇄도+', keyword: '[조건부]', effects: [{ effect: '캐스팅 및 차지 속도 증가', value: '20%' }, { effect: '스킬 사용 속도 증가', value: '20%' }], condition: '스킬 사용 시 25% 확률 (지속: 5초)' },
-            { type: '방어구', grade: '전설', name: '무도가+', keyword: '-', effects: [{ effect: '공격력 증가', value: '12%' }, { effect: '궁극기 게이지 획득량 증가', value: '20%' }] },
-            { type: '방어구', grade: '전설', name: '해결사+', keyword: '-', effects: [{ effect: '공격 속도 증가', value: '30%' }, { effect: '기본 공격 추가타 확률 증가', value: '30%' }] },
-            { type: '방어구', grade: '전설', name: '들불', keyword: '[조건부]', effects: [{ effect: '치명타 확률 증가', value: '14%' }], condition: '화상 보유 적 공격 시 (지속: 5초 / 쿨타임: 3초)' },
-            { type: '방어구', grade: '전설', name: '설산', keyword: '[조건부]', effects: [{ effect: '추가타 확률 증가', value: '16%' }], condition: '빙결 보유 적 공격 시 (지속: 5초 / 쿨타임: 3초)' },
-            { type: '방어구', grade: '전설', name: '절개+', keyword: '[조건부]', effects: [{ effect: '공격력 증가', value: '20%' }], condition: '출혈 보유 적 공격 시 (지속: 5초 / 쿨타임: 3초)' },
-            { type: '방어구', grade: '전설', name: '환영+', keyword: '[조건부]', effects: [{ effect: '공격력 증가', value: '18%' }, { effect: '방어구 파괴 부여', value: '받는 피해 10% 증가', condition: '정신 보유 적 공격 시 (지속: 10초 / 쿨타임: 3초)' }] },
-            { type: '방어구', grade: '전설', name: '황금 들판', keyword: '[조건부]', effects: [{ effect: '공격력 증가', value: '20%' }], condition: '체력 75% 이상일 경우' },
-            { type: '방어구', grade: '전설', name: '모래 폭풍', keyword: '[조건부]', effects: [{ effect: '스킬 사용 속도 및 공격 속도 증가', value: '10%' }, { effect: '스킬 사용 속도 및 공격 속도 추가 증가', value: '24%', condition: '무방비 공격 적중 시 (지속: 10초)' }] },
-            { type: '방어구', grade: '전설', name: '황폐+', keyword: '[조건부]', effects: [{ effect: '적에게 주는 피해 증가', value: '12%' }, { effect: '추가타 확률 증가', value: '7%' }], condition: '자원 50% 미만일 경우' },
-            { type: '방어구', grade: '전설', name: '신성한 칙령', keyword: '[조건부]', effects: [{ effect: '공격력 증가', value: '15%' }, { effect: '회복량 증가', value: '9%' }], condition: '아군 회복 시 (지속: 5초)' },
-            { type: '방어구', grade: '전설', name: '준비된 자', keyword: '-', effects: [{ effect: '적에게 주는 피해 증가', value: '20%', condition: '퀵슬롯 아이템 사용 시 (지속: 15초)' }, { effect: '포션 개수 증가', value: '+2' }, { effect: '붕대 개수 증가', value: '+2' }] },
-            { type: '방어구', grade: '전설', name: '저무는 달', keyword: '[누적]', effects: [{ effect: '공격력과 방어력 증가', value: '6%' }, { effect: '공격력과 방어력 추가 증가', value: '2% (최대 20%)' }], condition: '전투 시작 후 30초마다 (최대 10회)' },
-            { type: '방어구', grade: '전설', name: '땅울림', keyword: '-', effects: [{ effect: '공격력 증가', value: '8%' }, { effect: '공격력 증가', value: '30%', condition: '전투 시작 시, 3초마다 2%씩 감소' }] },
-            { type: '방어구', grade: '전설', name: '신전 기사', keyword: '[결함]', effects: [{ effect: '공격력 증가', value: '23%' }, { effect: '치명타 확률 감소', value: '-8%' }] },
-            { type: '방어구', grade: '전설', name: '근위병+', keyword: '[결함]', effects: [{ effect: '공격력 증가', value: '23%' }, { effect: '재사용 대기 시간 회복 속도 감소', value: '-7%' }] },
-            { type: '방어구', grade: '전설', name: '침묵하는 산', keyword: '[조건부]', effects: [{ effect: '공격력 증가', value: '22%' }], condition: '5초 동안 이동하지 않을 경우' },
-            { type: '방어구', grade: '전설', name: '필사+', keyword: '[조건부]', effects: [{ effect: '공격력 증가', value: '10%' }, { effect: '공격력 추가 증가', value: '20%', condition: '체력 50% 이하로 감소 시 (지속: 20초 / 쿨타임: 15초)' }] },
-            { type: '방어구', grade: '전설', name: '파멸+', keyword: '[조건부]', effects: [{ effect: '공격력 증가', value: '25%' }], condition: '궁극기 사용 시 (지속: 20초)' },
-            { type: '방어구', grade: '전설', name: '집정관', keyword: '[결함]', effects: [{ effect: '공격력 증가', value: '23%' }, { effect: '스킬 사용 속도와 캐스팅 및 차지 속도 감소', value: '-8%' }] },
-            { type: '방어구', grade: '전설', name: '새벽별', keyword: '[누적]', effects: [{ effect: '스킬 재사용 대기 시간 회복 속도 증가', value: '3% (최대 18%)' }], condition: '스킬 사용 시 (지속: 8초 / 최대 6회)' },
-            { type: '방어구', grade: '전설', name: '눈 먼 예언자', keyword: '-', effects: [{ effect: '각성의 재사용 대기 시간 감소', value: '38초' }] },
-            { type: '방어구', grade: '전설', name: '압도적인 힘', keyword: '-', effects: [{ effect: '강타 피해 증가', value: '6%' }, { effect: '공격력 증가', value: '6%' }, { effect: '치명타 확률 증가', value: '4%' }], condition: '엠블럼 각성 시 20초간 능력치 2배' },
-            { type: '방어구', grade: '전설', name: '섬세한 손놀림', keyword: '-', effects: [{ effect: '연타 피해 증가', value: '6%' }, { effect: '공격력 증가', value: '6%' }, { effect: '추가타 확률 증가', value: '4%' }], condition: '엠블럼 각성 시 20초간 능력치 2배' },
-            { type: '방어구', grade: '전설', name: '성역+', keyword: '[조건부]', effects: [{ effect: '공격력 증가', value: '17%', condition: '보호막 유지 시' }, { effect: '보호막 생성', value: '(공격력×n%)', condition: '포션 사용 또는 30초마다' }] },
-            { type: '방어구', grade: '전설', name: '불안정한 힘', keyword: '[조건부]', effects: [{ effect: '적에게 주는 피해 증가', value: '22%' }], condition: '전투 시작 시 (브레이크 시 효과 사라짐, 30초 후 재활성화)' },
-            { type: '방어구', grade: '전설', name: '고대 수호자', keyword: '[결함]', effects: [{ effect: '공격력 증가', value: '23%' }, { effect: '이동 속도 감소', value: '-8%' }] },
-            { type: '방어구', grade: '전설', name: '갈퀴발톱+', keyword: '-', effects: [{ effect: '브레이크 스킬로 주는 피해 증가', value: '24%' }, { effect: '브레이크 피해 증가', value: '24%' }, { effect: '무방비 피해 증가', value: '24%' }] },
-            { type: '방어구', grade: '전설', name: '태양', keyword: '-', effects: [{ effect: '주기적인 광역 피해', value: '(공격력×n%)' }], condition: '3.5초마다 3m 범위 내' },
-            { type: '방어구', grade: '전설', name: '싹쓸바람', keyword: '-', effects: [{ effect: '광역 피해 및 끌어당김', value: '(공격력×n%)' }], condition: '공격 적중 시 (쿨타임: 10초)' },
-            { type: '방어구', grade: '전설', name: '혼돈', keyword: '[조건부]', effects: [{ effect: '추가 피해', value: '(공격력×n%)' }], condition: '지속 피해 3회 중첩 시 (대상마다 4초에 한 번)' },
-            { type: '방어구', grade: '전설', name: '붕괴하는 별', keyword: '[조건부]', effects: [{ effect: '추가 피해', value: '(공격력×n%)', condition: '공격 3회 중첩 시 (대상마다 3초에 한 번)' }, { effect: '공격력 증가', value: '10%', condition: '공격 3회 중첩 시 (지속 10초)' }] },
-            { type: '방어구', grade: '전설', name: '돌격대장+', keyword: '[조건부]', effects: [{ effect: '방어구 파괴 부여', value: '받는 피해 10% 증가' }, { effect: '공격력 증가', value: '20%' }], condition: '도발 시' },
-            { type: '방어구', grade: '전설', name: '지휘관', keyword: '[누적]', effects: [{ effect: '공격력 증가', value: '4.5% (최대 22.5%)' }], condition: '특정 공격 시 (지속: 8초 / 최대 5회)' },
-            { type: '방어구', grade: '전설', name: '응징+', keyword: '-', effects: [{ effect: '공격력 증가', value: '12%' }, { effect: '체력 회복', value: '(공격력×n%)', condition: '적 처치 시' }] },
-            { type: '방어구', grade: '전설', name: '집념+', keyword: '-', effects: [{ effect: '캐스팅 및 차지 속도 증가', value: '25%' }, { effect: '적에게 주는 피해 증가', value: '10%' }] },
-            { type: '방어구', grade: '전설', name: '분쇄+', keyword: '[조건부]', effects: [{ effect: '공격력 증가', value: '6%' }, { effect: '적에게 주는 피해 증가', value: '28%', condition: '무방비 공격 적중 시 (지속: 10초)' }] },
-            { type: '방어구', grade: '전설', name: '쌍둥이 별', keyword: '-', effects: [{ effect: '누적 효과 추가 발생', value: '+1회' }, { effect: '캐스팅 및 차지 속도, 스킬 사용 속도 증가', value: '7%' }] },
-            { type: '방어구', grade: '전설', name: '푸른 거목', keyword: '[축적]', effects: [{ effect: '스킬 피해량 증가', value: '2.2% (최대 22%)' }], condition: '스킬 5회 사용 시마다 (최대 10회)' },
-            { type: '방어구', grade: '전설', name: '어두운 징조', keyword: '[누적]', effects: [{ effect: '공격력 증가', value: '0.6% (최대 18%)' }, { effect: '치명타 확률 증가', value: '0.6% (최대 18%)' }, { effect: '적에게 주는 피해 증가', value: '0.6% (최대 18%)' }], condition: '궁극기 사용 시 (최대 30회)' },
-            { type: '방어구', grade: '전설', name: '요정 무리', keyword: '[축적]', effects: [{ effect: '모든 스킬 재사용 대기 시간 감소', value: '2.1초' }], condition: '스킬 7회 사용 시 (쿨타임: 3초)' },
-            { type: '방어구', grade: '전설', name: '수정 꽃잎', keyword: '[축적]', effects: [{ effect: '추가 피해', value: '(공격력×n%)' }, { effect: '공격력 증가', value: '12%' }], condition: '치명타 6회 적중 시 (공증 10초 지속 / 쿨타임: 3초)' },
-            { type: '방어구', grade: '전설', name: '나무 사슴', keyword: '[축적]', effects: [{ effect: '추가 피해', value: '(공격력×n%)' }, { effect: '공격력 증가', value: '12%' }], condition: '추가타 6회 적중 시 (공증 10초 지속 / 쿨타임: 4초)' },
-            { type: '방어구', grade: '전설', name: '에메랄드 숲', keyword: '-', effects: [{ effect: '축적 횟수 추가', value: '+1회' }, { effect: '적에게 주는 피해 증가', value: '10%' }] },
-            { type: '방어구', grade: '전설', name: '불사', keyword: '[조건부]', effects: [{ effect: '적에게 주는 피해 증가', value: '18%' }, { effect: '죽음 방지 및 회복', value: '1회' }, { effect: '받는 피해 감소', value: '80%' }], condition: '행동 불능 시 (지속: 3초 / 쿨타임: 180초)' },
-            { type: '방어구', grade: '전설', name: '싸움꾼', keyword: '[조건부]', effects: [{ effect: '적에게 주는 피해 증가', value: '12% ~ 16%' }, { effect: '받는 피해 감소', value: '8% ~ 12%' }], condition: '주변 적 수에 따라 (최대 3명)' },
-            { type: '방어구', grade: '전설', name: '약탈자', keyword: '-', effects: [{ effect: '체력 회복', value: '(공격력×n%)', condition: '추가타 적중 시 (쿨타임: 1초)' }, { effect: '추가타 확률 증가', value: '10%' }] },
-            { type: '방어구', grade: '전설', name: '원소 조화', keyword: '-', effects: [{ effect: '추가 피해', value: '3가지 속성 (공격력×n%)' }], condition: '공격 적중 시 (쿨타임: 5초)' },
-            { type: '방어구', grade: '전설', name: '다가오는 죽음', keyword: '-', effects: [{ effect: '추가 피해', value: '(공격력×n%) ~ (공격력×n%)' }], condition: '거리에 비례 (쿨타임: 10초)' },
-            { type: '방어구', grade: '전설', name: '잊힌 성소', keyword: '[축적]', effects: [{ effect: '원소 화살 난사', value: '(공격력×n%)' }], condition: '스킬/기본 공격 60회 사용 시' },
+            { type: '방어구', grade: '전설', name: '여명+', keyword: '누적', effects: [{ effect: '공격력 증가', value: '3.5% (최대 21%)' }], condition: '스킬 사용 시 (지속: 10초 / 최대 6회)' },
+            { type: '방어구', grade: '전설', name: '황혼', keyword: '누적', effects: [{ effect: '적에게 주는 피해 증가', value: '1.4% (최대 22.4%)' }], condition: '공격 적중 시 (지속: 8초 / 최대 16회)' },
+            { type: '방어구', grade: '전설', name: '바위 감시자', keyword: '축적', effects: [{ effect: '공격력 증가', value: '22%' }], condition: '강타 7회 적중 시 (지속: 6초)' },
+            { type: '방어구', grade: '전설', name: '쇄도+', keyword: '조건부', effects: [{ effect: '캐스팅 및 차지 속도 증가', value: '20%' }, { effect: '스킬 사용 속도 증가', value: '20%' }], condition: '스킬 사용 시 25% 확률 (지속: 5초)' },
+            { type: '방어구', grade: '전설', name: '무도가+', keyword: '', effects: [{ effect: '공격력 증가', value: '12%' }, { effect: '궁극기 게이지 획득량 증가', value: '20%' }] },
+            { type: '방어구', grade: '전설', name: '해결사+', keyword: '', effects: [{ effect: '공격 속도 증가', value: '30%' }, { effect: '기본 공격 추가타 확률 증가', value: '30%' }] },
+            { type: '방어구', grade: '전설', name: '들불', keyword: '조건부', effects: [{ effect: '치명타 확률 증가', value: '14%' }], condition: '화상 보유 적 공격 시 (지속: 5초 / 쿨타임: 3초)' },
+            { type: '방어구', grade: '전설', name: '설산', keyword: '조건부', effects: [{ effect: '추가타 확률 증가', value: '16%' }], condition: '빙결 보유 적 공격 시 (지속: 5초 / 쿨타임: 3초)' },
+            { type: '방어구', grade: '전설', name: '절개+', keyword: '조건부', effects: [{ effect: '공격력 증가', value: '20%' }], condition: '출혈 보유 적 공격 시 (지속: 5초 / 쿨타임: 3초)' },
+            { type: '방어구', grade: '전설', name: '환영+', keyword: '조건부', effects: [{ effect: '공격력 증가', value: '18%' }, { effect: '방어구 파괴 부여', value: '받는 피해 10% 증가', condition: '정신 보유 적 공격 시 (지속: 10초 / 쿨타임: 3초)' }] },
+            { type: '방어구', grade: '전설', name: '황금 들판', keyword: '조건부', effects: [{ effect: '공격력 증가', value: '20%' }], condition: '체력 75% 이상일 경우' },
+            { type: '방어구', grade: '전설', name: '모래 폭풍', keyword: '조건부', effects: [{ effect: '스킬 사용 속도 및 공격 속도 증가', value: '10%' }, { effect: '스킬 사용 속도 및 공격 속도 추가 증가', value: '24%', condition: '무방비 공격 적중 시 (지속: 10초)' }] },
+            { type: '방어구', grade: '전설', name: '황폐+', keyword: '조건부', effects: [{ effect: '적에게 주는 피해 증가', value: '12%' }, { effect: '추가타 확률 증가', value: '7%' }], condition: '자원 50% 미만일 경우' },
+            { type: '방어구', grade: '전설', name: '신성한 칙령', keyword: '조건부', effects: [{ effect: '공격력 증가', value: '15%' }, { effect: '회복량 증가', value: '9%' }], condition: '아군 회복 시 (지속: 5초)' },
+            { type: '방어구', grade: '전설', name: '준비된 자', keyword: '조건부', effects: [{ effect: '적에게 주는 피해 증가', value: '20%', condition: '퀵슬롯 아이템 사용 시 (지속: 15초)' }, { effect: '포션 개수 증가', value: '+2' }, { effect: '붕대 개수 증가', value: '+2' }] },
+            { type: '방어구', grade: '전설', name: '저무는 달', keyword: '누적', effects: [{ effect: '공격력과 방어력 증가', value: '6%' }, { effect: '공격력과 방어력 추가 증가', value: '2% (최대 20%)' }], condition: '전투 시작 후 30초마다 (최대 10회)' },
+            { type: '방어구', grade: '전설', name: '땅울림', keyword: '조건부', effects: [{ effect: '공격력 증가', value: '8%' }, { effect: '공격력 증가', value: '30%', condition: '전투 시작 시, 3초마다 2%씩 감소' }] },
+            { type: '방어구', grade: '전설', name: '신전 기사', keyword: '결함', effects: [{ effect: '공격력 증가', value: '23%' }, { effect: '치명타 확률 감소', value: '-8%' }] },
+            { type: '방어구', grade: '전설', name: '근위병+', keyword: '결함', effects: [{ effect: '공격력 증가', value: '23%' }, { effect: '재사용 대기 시간 회복 속도 감소', value: '-7%' }] },
+            { type: '방어구', grade: '전설', name: '침묵하는 산', keyword: '조건부', effects: [{ effect: '공격력 증가', value: '22%' }], condition: '5초 동안 이동하지 않을 경우' },
+            { type: '방어구', grade: '전설', name: '필사+', keyword: '조건부', effects: [{ effect: '공격력 증가', value: '10%' }, { effect: '공격력 추가 증가', value: '20%', condition: '체력 50% 이하로 감소 시 (지속: 20초 / 쿨타임: 15초)' }] },
+            { type: '방어구', grade: '전설', name: '파멸+', keyword: '조건부', effects: [{ effect: '공격력 증가', value: '25%' }], condition: '궁극기 사용 시 (지속: 20초)' },
+            { type: '방어구', grade: '전설', name: '집정관', keyword: '결함', effects: [{ effect: '공격력 증가', value: '23%' }, { effect: '스킬 사용 속도와 캐스팅 및 차지 속도 감소', value: '-8%' }] },
+            { type: '방어구', grade: '전설', name: '새벽별', keyword: '누적', effects: [{ effect: '스킬 재사용 대기 시간 회복 속도 증가', value: '3% (최대 18%)' }], condition: '스킬 사용 시 (지속: 8초 / 최대 6회)' },
+            { type: '방어구', grade: '전설', name: '눈 먼 예언자', keyword: '각성+', effects: [{ effect: '각성의 재사용 대기 시간 감소', value: '38초' }] },
+            { type: '방어구', grade: '전설', name: '압도적인 힘', keyword: '각성', effects: [{ effect: '강타 피해 증가', value: '6%' }, { effect: '공격력 증가', value: '6%' }, { effect: '치명타 확률 증가', value: '4%' }], condition: '엠블럼 각성 시 20초간 능력치 2배' },
+            { type: '방어구', grade: '전설', name: '섬세한 손놀림', keyword: '각성', effects: [{ effect: '연타 피해 증가', value: '6%' }, { effect: '공격력 증가', value: '6%' }, { effect: '추가타 확률 증가', value: '4%' }], condition: '엠블럼 각성 시 20초간 능력치 2배' },
+            { type: '방어구', grade: '전설', name: '성역+', keyword: '조건부', effects: [{ effect: '공격력 증가', value: '17%', condition: '보호막 유지 시' }, { effect: '보호막 생성', value: '(공격력×n%)', condition: '포션 사용 또는 30초마다' }] },
+            { type: '방어구', grade: '전설', name: '불안정한 힘', keyword: '조건부', effects: [{ effect: '적에게 주는 피해 증가', value: '22%' }], condition: '전투 시작 시 (브레이크 시 효과 사라짐, 30초 후 재활성화)' },
+            { type: '방어구', grade: '전설', name: '고대 수호자', keyword: '결함', effects: [{ effect: '공격력 증가', value: '23%' }, { effect: '이동 속도 감소', value: '-8%' }] },
+            { type: '방어구', grade: '전설', name: '갈퀴발톱+', keyword: '', effects: [{ effect: '브레이크 스킬로 주는 피해 증가', value: '24%' }, { effect: '브레이크 피해 증가', value: '24%' }, { effect: '무방비 피해 증가', value: '24%' }] },
+            { type: '방어구', grade: '전설', name: '태양', keyword: '', effects: [{ effect: '주기적인 광역 피해', value: '(공격력×n%)' }], condition: '3.5초마다 3m 범위 내' },
+            { type: '방어구', grade: '전설', name: '싹쓸바람', keyword: '', effects: [{ effect: '광역 피해 및 끌어당김', value: '(공격력×n%)' }], condition: '공격 적중 시 (쿨타임: 10초)' },
+            { type: '방어구', grade: '전설', name: '혼돈', keyword: '중첩', effects: [{ effect: '추가 피해', value: '(공격력×n%)' }], condition: '지속 피해 3회 중첩 시 (대상마다 4초에 한 번)' },
+            { type: '방어구', grade: '전설', name: '붕괴하는 별', keyword: '중첩', effects: [{ effect: '추가 피해', value: '(공격력×n%)', condition: '공격 3회 중첩 시 (대상마다 3초에 한 번)' }, { effect: '공격력 증가', value: '10%', condition: '공격 3회 중첩 시 (지속 10초)' }] },
+            { type: '방어구', grade: '전설', name: '돌격대장+', keyword: '조건부', effects: [{ effect: '방어구 파괴 부여', value: '받는 피해 10% 증가' }, { effect: '공격력 증가', value: '20%' }], condition: '도발 시' },
+            { type: '방어구', grade: '전설', name: '지휘관', keyword: '조건부', effects: [{ effect: '공격력 증가', value: '4.5% (최대 22.5%)' }], condition: '특정 공격 시 (지속: 8초 / 최대 5회)' },
+            { type: '방어구', grade: '전설', name: '응징+', keyword: '조건부', effects: [{ effect: '공격력 증가', value: '12%' }, { effect: '체력 회복', value: '(공격력×n%)', condition: '적 처치 시' }] },
+            { type: '방어구', grade: '전설', name: '집념+', keyword: '', effects: [{ effect: '캐스팅 및 차지 속도 증가', value: '25%' }, { effect: '적에게 주는 피해 증가', value: '10%' }] },
+            { type: '방어구', grade: '전설', name: '분쇄+', keyword: '조건부', effects: [{ effect: '공격력 증가', value: '6%' }, { effect: '적에게 주는 피해 증가', value: '28%', condition: '무방비 공격 적중 시 (지속: 10초)' }] },
+            { type: '방어구', grade: '전설', name: '쌍둥이 별', keyword: '누적+', effects: [{ effect: '누적 효과 추가 발생', value: '+1회' }, { effect: '캐스팅 및 차지 속도, 스킬 사용 속도 증가', value: '7%' }] },
+            { type: '방어구', grade: '전설', name: '푸른 거목', keyword: '축적', effects: [{ effect: '스킬 피해량 증가', value: '2.2% (최대 22%)' }], condition: '스킬 5회 사용 시마다 (최대 10회)' },
+            { type: '방어구', grade: '전설', name: '어두운 징조', keyword: '누적', effects: [{ effect: '공격력 증가', value: '0.6% (최대 18%)' }, { effect: '치명타 확률 증가', value: '0.6% (최대 18%)' }, { effect: '적에게 주는 피해 증가', value: '0.6% (최대 18%)' }], condition: '궁극기 사용 시 (최대 30회)' },
+            { type: '방어구', grade: '전설', name: '요정 무리', keyword: '축적', effects: [{ effect: '모든 스킬 재사용 대기 시간 감소', value: '2.1초' }], condition: '스킬 7회 사용 시 (쿨타임: 3초)' },
+            { type: '방어구', grade: '전설', name: '수정 꽃잎', keyword: '축적', effects: [{ effect: '추가 피해', value: '(공격력×n%)' }, { effect: '공격력 증가', value: '12%' }], condition: '치명타 6회 적중 시 (공증 10초 지속 / 쿨타임: 3초)' },
+            { type: '방어구', grade: '전설', name: '나무 사슴', keyword: '축적', effects: [{ effect: '추가 피해', value: '(공격력×n%)' }, { effect: '공격력 증가', value: '12%' }], condition: '추가타 6회 적중 시 (공증 10초 지속 / 쿨타임: 4초)' },
+            { type: '방어구', grade: '전설', name: '에메랄드 숲', keyword: '축적+', effects: [{ effect: '축적 횟수 추가', value: '+1회' }, { effect: '적에게 주는 피해 증가', value: '10%' }] },
+            { type: '방어구', grade: '전설', name: '불사', keyword: '조건부', effects: [{ effect: '적에게 주는 피해 증가', value: '18%' }, { effect: '죽음 방지 및 회복', value: '1회' }, { effect: '받는 피해 감소', value: '80%' }], condition: '행동 불능 시 (지속: 3초 / 쿨타임: 180초)' },
+            { type: '방어구', grade: '전설', name: '싸움꾼', keyword: '조건부', effects: [{ effect: '적에게 주는 피해 증가', value: '12% ~ 16%' }, { effect: '받는 피해 감소', value: '8% ~ 12%' }], condition: '주변 적 수에 따라 (최대 3명)' },
+            { type: '방어구', grade: '전설', name: '약탈자', keyword: '조건부', effects: [{ effect: '체력 회복', value: '(공격력×n%)', condition: '추가타 적중 시 (쿨타임: 1초)' }, { effect: '추가타 확률 증가', value: '10%' }] },
+            { type: '방어구', grade: '전설', name: '원소 조화', keyword: '', effects: [{ effect: '추가 피해', value: '3가지 속성 (공격력×n%)' }], condition: '공격 적중 시 (쿨타임: 5초)' },
+            { type: '방어구', grade: '전설', name: '다가오는 죽음', keyword: '', effects: [{ effect: '추가 피해', value: '(공격력×n%) ~ (공격력×n%)' }], condition: '거리에 비례 (쿨타임: 10초)' },
+            { type: '방어구', grade: '전설', name: '잊힌 성소', keyword: '축적', effects: [{ effect: '원소 화살 난사', value: '(공격력×n%)' }], condition: '스킬/기본 공격 60회 사용 시' },
             
             // 무기 신화
-            { type: '무기', grade: '신화', name: '만 갈래 물길', keyword: '[누적]', effects: [{ effect: '공격력 증가', value: '15%' }, { effect: '공격력 추가 증가', value: '1% (최대 20%)', condition: '클래스 레벨 50 달성마다' }] },
-            { type: '무기', grade: '신화', name: '흰 까마귀', keyword: '[조건부]', effects: [{ effect: '공격 속도 증가', value: '10%' }, { effect: '이동 속도 증가', value: '10%' },{ effect: '스킬 사용 속도 증가', value: '10%' }, { effect: '캐스팅 및 차지 속도 증가', value: '10%' }, { effect: '재사용 대기 시간 회복 속도 증가', value: '10%' }, { effect: '적에게 주는 피해 증가', value: '7%', condition: '+10 강화 시' }, { effect: '공격력 증가', value: '7%', condition: '+15 강화 시' }] },
-            { type: '무기', grade: '신화', name: '메아리치는 진노', keyword: '[조건부]', effects: [{ effect: '공격력 증가', value: '5%' }, { effect: '공격력 추가 증가', value: '3%', condition: '+10 강화 시' }, { effect: '공격력 추가 증가', value: '3%', condition: '+15 강화 시' }, { effect: '추가 피해', value: '(공격력×n%)', condition: '연타 적중 시 (쿨타임: 8초)' }, { effect: '지속피해', value: '(공격력×n%)', condition: '빙결, 연타 적중 시 (쿨타임: 8초)' }, { effect: '추가 피해', value: '(공격력×n%)', condition: '강타 적중 시 (쿨타임: 8초)' }, { effect: '지속피해', value: '(공격력×n%)', condition: '화상, 강타 적중 시 (쿨타임: 8초)' }] },
-            { type: '무기', grade: '신화', name: '무한', keyword: '-', effects: [{ effect: '공격력 증가', value: '20%' }, { effect: '모든 스킬의 재사용 대기 시간 감소', value: '9%', condition: '기본 공격 사용 시' }, { effect: '공격 속도 증가', value: '12%', condition: '스킬 사용 시 (지속: 5초)' }] },
+            { type: '무기', grade: '신화', name: '만 갈래 물길', keyword: '조건부', effects: [{ effect: '공격력 증가', value: '15%' }, { effect: '공격력 추가 증가', value: '1% (최대 20%)', condition: '클래스 레벨 50 달성마다' }] },
+            { type: '무기', grade: '신화', name: '흰 까마귀', keyword: '조건부', effects: [{ effect: '공격 속도 증가', value: '10%' }, { effect: '이동 속도 증가', value: '10%' },{ effect: '스킬 사용 속도 증가', value: '10%' }, { effect: '캐스팅 및 차지 속도 증가', value: '10%' }, { effect: '재사용 대기 시간 회복 속도 증가', value: '10%' }, { effect: '적에게 주는 피해 증가', value: '7%', condition: '+10 강화 시' }, { effect: '공격력 증가', value: '7%', condition: '+15 강화 시' }] },
+            { type: '무기', grade: '신화', name: '메아리치는 진노', keyword: '조건부', effects: [{ effect: '공격력 증가', value: '5%' }, { effect: '공격력 추가 증가', value: '3%', condition: '+10 강화 시' }, { effect: '공격력 추가 증가', value: '3%', condition: '+15 강화 시' }, { effect: '추가 피해', value: '(공격력×n%)', condition: '연타 적중 시 (쿨타임: 8초)' }, { effect: '지속피해', value: '(공격력×n%)', condition: '빙결, 연타 적중 시 (쿨타임: 8초)' }, { effect: '추가 피해', value: '(공격력×n%)', condition: '강타 적중 시 (쿨타임: 8초)' }, { effect: '지속피해', value: '(공격력×n%)', condition: '화상, 강타 적중 시 (쿨타임: 8초)' }] },
+            { type: '무기', grade: '신화', name: '무한', keyword: '조건부', effects: [{ effect: '공격력 증가', value: '20%' }, { effect: '모든 스킬의 재사용 대기 시간 감소', value: '9%', condition: '기본 공격 사용 시' }, { effect: '공격 속도 증가', value: '12%', condition: '스킬 사용 시 (지속: 5초)' }] },
             
              // 방어구 신화
-            { type: '방어구', grade: '신화', name: '닫힌 운명', keyword: '[조건부]', effects: [{ effect: '추가 피해', value: '(공격력×n%)' }, { effect: '방어구 파괴 부여', value: '받는 피해 10% 증가' }], condition: '공격 적중 시 (재사용 대기 시간: 5초)' },
-            { type: '방어구', grade: '신화', name: '검게 물든 후광', keyword: '[조건부]', effects: [{ effect: '받는 피해 증가', value: '15%' }, { effect: '적에게 주는 피해 증가', value: '15%' }, { effect: '적에게 주는 피해 증가', value: '6%', condition: '+10 강화 시' }, { effect: '적에게 주는 피해 증가', value: '6%', condition: '+15 강화 시' }], condition: '아군 회복/물약 사용 시 15초간 받는 피해 증가 무효화' },
-            { type: '방어구', grade: '신화', name: '그림자로 엮은 회랑', keyword: '-', effects: [{ effect: '주기적인 광역 피해', value: '(공격력×n%)' }], condition: '2, 3, 4초마다 발사 (+15 강화 시 5초마다 추가)' },
-            { type: '방어구', grade: '신화', name: '바스러지는 빛', keyword: '[누적]', effects: [{ effect: '공격력 증가', value: '5.5% (최대 27.5%)' }], condition: '스킬 사용 시 (지속: 8초 / 최대 5회, +15 강화 시 50% 확률로 추가 중첩)' },
-            { type: '방어구', grade: '신화', name: '세상을 삼키는 악의', keyword: '[조건부]', effects: [{ effect: '원소 지속 피해를 보유한 적에게 주는 피해 증가', value: '16%' }, { effect: '적에게 주는 무방비 피해 증가', value: '16%' }, { effect: '적에게 주는 피해 추가 증가', value: '3%', condition: '+10 강화 시' }, { effect: '적에게 주는 피해 추가 증가', value: '3%', condition: '+15 강화 시' }] },
-            { type: '방어구', grade: '신화', name: '이름 없는 혼돈', keyword: '[조건부]', effects: [{ effect: '공격력 증가', value: '10%~30% (+15 강화 시 최대 40%)' }], condition: '전투 중 5초마다 5초 동안' },
-            { type: '방어구', grade: '신화', name: '영원', keyword: '-', effects: [{ effect: '모든 결함 효과 제거', value: '-' }, { effect: '공격력 증가', value: '10%' }] },
-            { type: '방어구', grade: '신화', name: '쏟아지는 별', keyword: '-', effects: [{ effect: '주기적인 광역 피해', value: '(공격력×n%)' }], condition: '전투 중 15초마다 (궁극기 사용 시 모든 적 타격)' },
-
+            { type: '방어구', grade: '신화', name: '닫힌 운명', keyword: '조건부', effects: [{ effect: '추가 피해', value: '(공격력×n%)' }, { effect: '방어구 파괴 부여', value: '받는 피해 10% 증가' }], condition: '공격 적중 시 (재사용 대기 시간: 5초)' },
+            { type: '방어구', grade: '신화', name: '검게 물든 후광', keyword: '조건부', effects: [{ effect: '받는 피해 증가', value: '15%' }, { effect: '적에게 주는 피해 증가', value: '15%' }, { effect: '적에게 주는 피해 증가', value: '6%', condition: '+10 강화 시' }, { effect: '적에게 주는 피해 증가', value: '6%', condition: '+15 강화 시' }], condition: '아군 회복/물약 사용 시 15초간 받는 피해 증가 무효화' },
+            { type: '방어구', grade: '신화', name: '그림자로 엮은 회랑', keyword: '조건부', effects: [{ effect: '주기적인 광역 피해', value: '(공격력×n%)' }], condition: '2, 3, 4초마다 발사 (+15 강화 시 5초마다 추가)' },
+            { type: '방어구', grade: '신화', name: '바스러지는 빛', keyword: '중첩', effects: [{ effect: '공격력 증가', value: '5.5% (최대 27.5%)' }], condition: '스킬 사용 시 (지속: 8초 / 최대 5회, +15 강화 시 50% 확률로 추가 중첩)' },
+            { type: '방어구', grade: '신화', name: '세상을 삼키는 악의', keyword: '조건부', effects: [{ effect: '원소 지속 피해를 보유한 적에게 주는 피해 증가', value: '16%' }, { effect: '적에게 주는 무방비 피해 증가', value: '16%' }, { effect: '적에게 주는 피해 추가 증가', value: '3%', condition: '+10 강화 시' }, { effect: '적에게 주는 피해 추가 증가', value: '3%', condition: '+15 강화 시' }] },
+            { type: '방어구', grade: '신화', name: '이름 없는 혼돈', keyword: '조건부', effects: [{ effect: '공격력 증가', value: '10%~30% (+15 강화 시 최대 40%)' }], condition: '전투 중 5초마다 5초 동안' },
+            { type: '방어구', grade: '신화', name: '영원', keyword: '결함+', effects: [{ effect: '모든 결함 효과 제거', value: '-' }, { effect: '공격력 증가', value: '10%' }] },
+            { type: '방어구', grade: '신화', name: '쏟아지는 별', keyword: '조건부', effects: [{ effect: '주기적인 광역 피해', value: '(공격력×n%)' }], condition: '전투 중 15초마다 (궁극기 사용 시 모든 적 타격)' },
+            
             // 앰블럼 전설
-            { type: '앰블럼', grade: '전설', name: '무자비한 포식자', keyword: '[조건부]', effects: [ { effect: '적에게 주는 스킬 피해 증가', value: '55%', condition: '무방비 공격 시 각성 (20초 지속)' }, { effect: '모든 스킬 재사용 대기 시간 초기화', value: '-', condition: '무방비 공격 시 각성' }, { effect: '적에게 주는 피해 증가', value: '21%' } ], condition: '(재사용 대기 시간: 90초)'},
-            { type: '앰블럼', grade: '전설', name: '순수한 힘', keyword: '[조건부]', effects: [ { effect: '적에게 주는 피해 증가', value: '27%', condition: '궁극기 사용 시 (30초 지속)' }, { effect: '궁극기 게이지 획득량 증가', value: '20%' } ]},
-            { type: '앰블럼', grade: '전설', name: '부서진 하늘', keyword: '[조건부]', effects: [ { effect: '연타 피해 증가', value: '60%', condition: '공격 시 50% 확률로 각성 (20초 지속)' }, { effect: '추가 피해', value: '(공격력×n%)', condition: '각성 중 공격 적중 시 (0.5초마다)' }, { effect: '연타 피해 증가', value: '8%' }, { effect: '재사용 대기 시간 회복 속도 증가', value: '8%' } ], condition: '(재사용 대기 시간: 90초)'},
-            { type: '앰블럼', grade: '전설', name: '인도하는 빛', keyword: '[조건부]', effects: [ { effect: '아군 공격력 증가', value: '8%', condition: '궁극기 사용 시 (15초 지속)' }, { effect: '공격력 증가', value: '20%', condition: '아군 회복 시 (15초 지속)' } ]},
-            { type: '앰블럼', grade: '전설', name: '대마법사', keyword: '[조건부]', effects: [ { effect: '공격력 증가', value: '45%', condition: '공격 시 50% 확률로 각성 (20초 지속)' }, { effect: '스킬 캐스팅 및 사용 속도 증가', value: '25%', condition: '공격 시 50% 확률로 각성 (20초 지속)' }, { effect: '스킬 사용 속도, 캐스팅 및 차지 속도 증가', value: '14%' }, { effect: '차지 스킬의 피해량 증가', value: '14%' } ], condition: '(재사용 대기 시간: 90초)'},
-            { type: '앰블럼', grade: '전설', name: '흩날리는 검', keyword: '[조건부]', effects: [ { effect: '공격력 증가', value: '35%', condition: '공격 시 50% 확률로 각성 (35초 지속)' }, { effect: '기본 공격 속도 증가', value: '20%', condition: '공격 시 50% 확률로 각성 (35초 지속)' }, { effect: '기본 공격 추가타 확률 증가', value: '20%', condition: '공격 시 50% 확률로 각성 (35초 지속)' }, { effect: '기본 공격 속도 증가', value: '24%' }, { effect: '기본 공격 추가타 확률 증가', value: '24%' } ], condition: '(재사용 대기 시간: 90초)'},
-            { type: '앰블럼', grade: '전설', name: '산맥 군주', keyword: '[조건부]', effects: [ { effect: '강타 피해 증가', value: '60%', condition: '공격 시 50% 확률로 각성 (20초 지속)' }, { effect: '추가 피해', value: '(공격력×n%)', condition: '각성 중 공격 적중 시 (3초마다)' }, { effect: '강타 피해 증가', value: '8%' }, { effect: '스킬 사용 속도 증가', value: '8%' } ], condition: '(재사용 대기 시간: 90초)'},
-            { type: '앰블럼', grade: '전설', name: '아득한 빛', keyword: '[조건부]', effects: [ { effect: '치명타 확률 증가', value: '20%', condition: '공격 시 50% 확률로 각성 (20초 지속)' }, { effect: '치명타 피해량 증가', value: '50%', condition: '공격 시 50% 확률로 각성 (20초 지속)' }, { effect: '치명타 확률 증가', value: '5%' }, { effect: '치명타 피해량 증가', value: '10%' }, { effect: '적에게 주는 피해 증가', value: '5%' } ], condition: '(재사용 대기 시간: 90초)'},
-            { type: '앰블럼', grade: '전설', name: '갈라진 땅', keyword: '[조건부]', effects: [ { effect: '추가타 확률 증가', value: '30%', condition: '공격 시 50% 확률로 각성 (35초 지속)' }, { effect: '추가 공격 발생', value: '선행 타격의 18% 피해', condition: '각성 중 추가타 적중 시' }, { effect: '추가타 확률 증가', value: '12%' } ], condition: '(재사용 대기 시간: 90초)'}
+            { type: '앰블럼', grade: '전설', name: '무자비한 포식자', keyword: '각성', effects: [ { effect: '적에게 주는 스킬 피해 증가', value: '55%', condition: '무방비 공격 시 각성 (20초 지속)' }, { effect: '모든 스킬 재사용 대기 시간 초기화', value: '-', condition: '무방비 공격 시 각성' }, { effect: '적에게 주는 피해 증가', value: '21%' } ], condition: '(재사용 대기 시간: 90초)'},
+            { type: '앰블럼', grade: '전설', name: '순수한 힘', keyword: '조건부', effects: [ { effect: '적에게 주는 피해 증가', value: '27%', condition: '궁극기 사용 시 (30초 지속)' }, { effect: '궁극기 게이지 획득량 증가', value: '20%' } ]},
+            { type: '앰블럼', grade: '전설', name: '부서진 하늘', keyword: '각성', effects: [ { effect: '연타 피해 증가', value: '60%', condition: '공격 시 50% 확률로 각성 (20초 지속)' }, { effect: '추가 피해', value: '(공격력×n%)', condition: '각성 중 공격 적중 시 (0.5초마다)' }, { effect: '연타 피해 증가', value: '8%' }, { effect: '재사용 대기 시간 회복 속도 증가', value: '8%' } ], condition: '(재사용 대기 시간: 90초)'},
+            { type: '앰블럼', grade: '전설', name: '인도하는 빛', keyword: '조건부', effects: [ { effect: '아군 공격력 증가', value: '8%', condition: '궁극기 사용 시 (15초 지속)' }, { effect: '공격력 증가', value: '20%', condition: '아군 회복 시 (15초 지속)' } ]},
+            { type: '앰블럼', grade: '전설', name: '대마법사', keyword: '각성', effects: [ { effect: '공격력 증가', value: '45%', condition: '공격 시 50% 확률로 각성 (20초 지속)' }, { effect: '스킬 캐스팅 및 사용 속도 증가', value: '25%', condition: '공격 시 50% 확률로 각성 (20초 지속)' }, { effect: '스킬 사용 속도, 캐스팅 및 차지 속도 증가', value: '14%' }, { effect: '차지 스킬의 피해량 증가', value: '14%' } ], condition: '(재사용 대기 시간: 90초)'},
+            { type: '앰블럼', grade: '전설', name: '흩날리는 검', keyword: '각성', effects: [ { effect: '공격력 증가', value: '35%', condition: '공격 시 50% 확률로 각성 (35초 지속)' }, { effect: '기본 공격 속도 증가', value: '20%', condition: '공격 시 50% 확률로 각성 (35초 지속)' }, { effect: '기본 공격 추가타 확률 증가', value: '20%', condition: '공격 시 50% 확률로 각성 (35초 지속)' }, { effect: '기본 공격 속도 증가', value: '24%' }, { effect: '기본 공격 추가타 확률 증가', value: '24%' } ], condition: '(재사용 대기 시간: 90초)'},
+            { type: '앰블럼', grade: '전설', name: '산맥 군주', keyword: '각성', effects: [ { effect: '강타 피해 증가', value: '60%', condition: '공격 시 50% 확률로 각성 (20초 지속)' }, { effect: '추가 피해', value: '(공격력×n%)', condition: '각성 중 공격 적중 시 (3초마다)' }, { effect: '강타 피해 증가', value: '8%' }, { effect: '스킬 사용 속도 증가', value: '8%' } ], condition: '(재사용 대기 시간: 90초)'},
+            { type: '앰블럼', grade: '전설', name: '아득한 빛', keyword: '각성', effects: [ { effect: '치명타 확률 증가', value: '20%', condition: '공격 시 50% 확률로 각성 (20초 지속)' }, { effect: '치명타 피해량 증가', value: '50%', condition: '공격 시 50% 확률로 각성 (20초 지속)' }, { effect: '치명타 확률 증가', value: '5%' }, { effect: '치명타 피해량 증가', value: '10%' }, { effect: '적에게 주는 피해 증가', value: '5%' } ], condition: '(재사용 대기 시간: 90초)'},
+            { type: '앰블럼', grade: '전설', name: '갈라진 땅', keyword: '각성', effects: [ { effect: '추가타 확률 증가', value: '30%', condition: '공격 시 50% 확률로 각성 (35초 지속)' }, { effect: '추가 공격 발생', value: '선행 타격의 18% 피해', condition: '각성 중 추가타 적중 시' }, { effect: '추가타 확률 증가', value: '12%' } ], condition: '(재사용 대기 시간: 90초)'},
+            
+            // 6성 전설 무기
+            { type: '무기', grade: '6성 전설', name: '천자루의 검', keyword: '', effects: [{ effect: '공격력 증가', value: '24%' }], condition: '검 클래스 레벨 40 달성마다 4% (최대 6회)' },
+            
+            // 6성 전설 방어구
+            { type: '방어구', grade: '6성 전설', name: '횃불', keyword: '조건부', effects: [{ effect: '치명타 확률 증가', value: '10%', condition: '화상 보유 적 공격 시 (5초 지속)' }], condition: '(재사용 대기 시간: 3초)' },
+            { type: '방어구', grade: '6성 전설', name: '마나 격류', keyword: '중첩', effects: [{ effect: '공격력 증가', value: '3.5%' }], condition: '스킬 사용마다 (5초 지속 / 최대 4회)' },
+            { type: '방어구', grade: '6성 전설', name: '바위 거인', keyword: '조건부', effects: [{ effect: '공격력 증가', value: '3%' }, { effect: '공격력 증가', value: '20%', condition: '3중첩 도달 시 (5초 지속)' }], condition: '강타 적중 시 (최대 3회)' },
+            { type: '방어구', grade: '6성 전설', name: '평원 방랑자', keyword: '조건부', effects: [{ effect: '적에게 주는 피해 증가', value: '12%' }, { effect: '이동 속도 증가', value: '30%' }], condition: '이동 스킬 사용 시 (10초 지속)' },
+            { type: '방어구', grade: '6성 전설', name: '파멸의 낙인', keyword: '중첩', effects: [{ effect: '지속피해', value: '공격력×9%', condition: '파멸의 낙인 (8초 지속 / 1초마다)' }, { effect: '낙인 피해량 증가', value: '10%' }], condition: '만료마다 (최대 10회 / 공명 보유 시 초기 5중첩)' },
+            { type: '방어구', grade: '6성 전설', name: '공명하는 수정', keyword: '중첩', effects: [{ effect: '적에게 주는 피해 증가', value: '2%' }, { effect: '추가 피해 증가', value: '0.6%', condition: '파멸의 낙인 보유 적' }], condition: '1초마다 (최대 12회 / 감소 후 재증가)' },
+            
+            // 6성 전설 앰블럼
+            { type: '앰블럼', grade: '6성 전설', name: '현란함', keyword: '', effects: [{ effect: '치명타 확률 증가', value: '10%' }, { effect: '치명타 피해 증가', value: '30%' }] }
         ];
 
-        const effectCategories = {
-            '공격력 증가': ['공격력 증가', '공격력 추가 증가', '공격력과 방어력 증가', '공격력과 방어력 추가 증가', '아군 공격력 증가'],
-            '피해 증가': [
-                '적에게 주는 피해 증가',
-                '연타 피해 증가',
-                '강타 피해 증가',
-                '치명타 피해 증가',
-                '무방비 피해 증가',
-                '브레이크 스킬로 주는 피해 증가',
-                '브레이크 피해 증가',
-                '스킬 피해량 증가',
-                '차지 스킬의 피해량 증가',
-                '적에게 주는 스킬 피해 증가',
-                '적에게 주는 무방비 피해 증가'
-            ],
-            '치명타 확률': ['치명타 확률 증가'],
-            '추가타 확률': ['추가타 확률 증가', '기본 공격 추가타 확률 증가'],
-            '유틸': ['캐스팅 및 차지 속도 증가', '재사용 대기 시간 회복 속도 증가', '모든 스킬의 재사용 대기 시간 감소', 
-                   '치유량 증가', '기본 공격 속도 증가', '다음 1회 기본 공격 속도 증가', '궁극기 게이지 획득량 증가', 
-                   '스킬 사용 속도 증가', '스킬 사용 속도 및 공격 속도 증가', '스킬 사용 속도 및 공격 속도 추가 증가', 
-                   '회복량 증가', '스킬 재사용 대기 시간 회복 속도 증가', '각성의 재사용 대기 시간 감소', '체력 회복', 
-                   '캐스팅 및 차지 속도, 스킬 사용 속도 증가', '이동 속도 증가', '공격 속도 증가', '모든 스킬의 재사용 대기 시간 초기화'],
-            '기타': ['지속피해', '멀티히트 피해 감소', '재사용 대기 시간 회복 속도 감소', '적에게 주는 피해 감소', 
-                   '[공격] 마법진 암흑 피해', '[회복] 마법진 회복', '방어구 파괴 부여', '포션 개수 증가', '붕대 개수 증가', 
-                   '치명타 확률 감소', '스킬 사용 속도와 캐스팅 및 차지 속도 감소', '보호막 생성', '이동 속도 감소', 
-                   '누적 효과 추가 발생', '축적 횟수 추가', '죽음 방지 및 회복', '받는 피해 감소', '원소 화살 난사', 
-                   '추가 피해', '받는 피해 증가', '모든 결함 효과 제거', '추가 공격 발생', '주기적인 광역 피해', 
-                   '광역 피해 및 끌어당김', '콤보', '멀티 히트']
+        // 대미지 계산 공식 기준으로 재구성된 키워드 카테고리
+        const keywordCategories = {
+            '공격력': ['공격력'],
+            '강화류': ['연타 피해', '강타 피해', '광역 피해', '콤보 피해'],
+            '피해증가': ['주는 피해', '스킬 피해', '방어구 파괴'],
+            '치명타': ['치명타 확률', '치명타 피해'],
+            '추가타': ['추가타 확률', '평타 추가타'],
+            '룬 피해': ['룬 피해'],
+            '지속 피해': ['지속 피해'],
+            '기타': ['쿨타임', '빠른 공격', '빠른 스킬', '캐스팅 속도', '차지 속도', '회복량', 
+                   '이동 속도', '궁극기 게이지', '보호막', '무방비 피해', '브레이크 스킬 피해', 
+                   '브레이크 피해', '차지 스킬 피해', '룬 회복', '받는 피해', '누적 횟수', 
+                   '축적 횟수', '각성 쿨타임', '결함 제거', '추가 공격']
+        };
+        
+        // 특징 카테고리
+        const featureCategories = ['누적', '중첩', '각성', '축적', '조건부', '결함', '기타'];
+        
+        // 누적 룬 평균 스택 계산 함수
+        // 트리거: 공격=0.5초, 스킬=1초
+        // 쌍둥이별 효과: 누적 횟수 2배
+        function calculate누적평균스택(트리거간격, 지속시간, 최대스택, has쌍둥이별) {
+            const 트리거배율 = has쌍둥이별 ? 2 : 1;
+            const 실제트리거간격 = 트리거간격 / 트리거배율;
+            
+            // 150초 시뮬레이션
+            let 스택들 = []; // [{획득시각, 만료시각}]
+            let 총스택합 = 0;
+            
+            for (let t = 0; t < 150; t += 0.1) {
+                // 트리거 발동
+                if (t % 실제트리거간격 < 0.1) {
+                    if (스택들.length < 최대스택) {
+                        스택들.push({ 획득: t, 만료: t + 지속시간 });
+                    }
+                }
+                
+                // 만료된 스택 제거
+                스택들 = 스택들.filter(s => s.만료 > t);
+                
+                // 현재 스택 수 기록
+                총스택합 += 스택들.length * 0.1; // 0.1초 단위
+            }
+            
+            return 총스택합 / 150;
+        }
+        
+        // 축적 룬 가동률 계산 함수
+        // 트리거 간격: 공격=0.5초, 강타=0.3초, 스킬=1초, 치명타=0.8초, 추가타=1초, 회복=0.5초
+        // 에메랄드 숲: 필요 횟수 절반
+        function calculate축적가동률(트리거간격, 필요횟수, 지속시간, 재사용대기, has에메랄드숲) {
+            const 실제필요횟수 = has에메랄드숲 ? Math.ceil(필요횟수 / 2) : 필요횟수;
+            
+            // 축적 완료 시간
+            const 축적완료시간 = 트리거간격 * 실제필요횟수;
+            
+            // 한 사이클 = 축적시간 + 재사용대기
+            const 사이클시간 = 축적완료시간 + 재사용대기;
+            
+            // 150초 동안 발동 가능 횟수
+            const 발동횟수 = Math.floor(150 / 사이클시간) + 1;
+            
+            // 총 가동 시간 계산
+            let 총가동시간 = 0;
+            for (let i = 0; i < 발동횟수; i++) {
+                const 발동시각 = i * 사이클시간;
+                if (발동시각 >= 150) break;
+                
+                // 이번 발동의 가동 시간 (150초를 넘지 않도록)
+                const 이번가동 = Math.min(지속시간, 150 - 발동시각 - 축적완료시간);
+                if (이번가동 > 0) {
+                    총가동시간 += 이번가동;
+                }
+            }
+            
+            return 총가동시간 / 150;
+        }
+        
+        // 특수 룬 150초 평균 계산 함수
+        function calculate150sAverage(has쌍둥이별, has에메랄드숲, has파멸의낙인, has공명하는수정) {
+            has에메랄드숲 = has에메랄드숲 || false;
+            has파멸의낙인 = has파멸의낙인 || false;
+            has공명하는수정 = has공명하는수정 || false;
+            const averages = {};
+            
+            // === 누적 룬들 ===
+            // 검무+: 공격(0.5초), 10초 지속, 최대 10스택
+            const 검무평균스택 = calculate누적평균스택(0.5, 10, 10, has쌍둥이별);
+            averages['검무+_공격력'] = 2.0 * 검무평균스택;
+            averages['검무+_치명타확률'] = 1.0 * 검무평균스택;
+            
+            // 여명+: 스킬(1초), 10초 지속, 최대 6스택
+            const 여명평균스택 = calculate누적평균스택(1.0, 10, 6, has쌍둥이별);
+            averages['여명+'] = 3.5 * 여명평균스택;
+            
+            // 황혼: 공격(0.5초), 8초 지속, 최대 16스택
+            const 황혼평균스택 = calculate누적평균스택(0.5, 8, 16, has쌍둥이별);
+            averages['황혼'] = 1.4 * 황혼평균스택;
+            
+            // 종언+: 적 처치(거의 없음), 20초 지속, 최대 10스택
+            // 보스전에서는 처치할 쫄몹 거의 없지만, 있다면 쌍둥이별 효과 적용
+            const 종언누적배율 = has쌍둥이별 ? 2 : 1;
+            averages['종언+_누적'] = 0 * 종언누적배율; // 보스전에서는 0
+            averages['종언+_기본'] = 24.0;
+            
+            // 저무는 달: 기본 6% + 30초마다 2% 영구 누적, 최대 10스택
+            // 쌍둥이별: 30초마다 2%→4%
+            // 일반: 0-30초: 6%, 30-60초: 8%, 60-90초: 10%, 90-120초: 12%, 120-150초: 14%
+            // 쌍둥이별: 0-30초: 6%, 30-60초: 10%, 60-90초: 14%, 90-120초: 18%, 120-150초: 22%
+            const 저무는달발동횟수 = Math.floor(150 / 30); // 5회 발동 (30초, 60초, 90초, 120초, 150초)
+            const 저무는달누적배율 = has쌍둥이별 ? 2 : 1;
+            let 저무는달총합 = 0;
+            for (let i = 0; i < 5; i++) {
+                // 각 구간의 공격력 증가량: 6% + 2% * i * 누적배율
+                const 구간공격력 = 6.0 + (2.0 * i * 저무는달누적배율);
+                저무는달총합 += 구간공격력 * 30; // 30초 동안
+            }
+            averages['저무는달_총합'] = 저무는달총합 / 150;
+            
+            // 새벽별: 스킬(1초), 8초 지속, 최대 6스택
+            const 새벽별평균스택 = calculate누적평균스택(1.0, 8, 6, has쌍둥이별);
+            averages['새벽별'] = 3.0 * 새벽별평균스택;
+            
+            // 어두운 징조: 궁극기(20초마다), 영구, 최대 30스택
+            // 150초 동안 궁극기 사용 횟수: 150 / 20 = 7.5회 → 7회
+            const 궁극기발동횟수 = Math.floor(150 / 20);
+            const 누적배율 = has쌍둥이별 ? 2 : 1;
+            const 어두운징조스택 = Math.min(궁극기발동횟수 * 누적배율, 30); // 최대 30스택
+            averages['어두운징조_공격력'] = 0.6 * 어두운징조스택;
+            averages['어두운징조_치명타확률'] = 0.6 * 어두운징조스택;
+            averages['어두운징조_주는피해'] = 0.6 * 어두운징조스택;
+            
+            // 바스러지는 빛: 스킬(1초), 8초 지속, 최대 5스택, +15강화 시 50% 추가
+            // 중첩이라 쌍둥이별 효과 없음
+            const 바스러지는빛평균스택 = calculate누적평균스택(1.0, 8, 5, false) * 1.5; // +15 강화 50% 추가
+            averages['바스러지는 빛'] = 5.5 * 바스러지는빛평균스택;
+            
+            // === 중첩 룬들 ===
+            // 파멸의 낙인: 8초마다 10% 증가, 최대 10중첩
+            // 공명하는 수정 보유 시: 초기 중첩 5회
+            const 파멸초기중첩 = has공명하는수정 ? 5 : 0;
+            let total = 0;
+            for (let t = 0; t < 150; t++) {
+                // 8초마다 중첩 증가, 초기 중첩 적용
+                const 경과중첩 = Math.floor(t / 8);
+                const 현재중첩 = Math.min(10, 파멸초기중첩 + 경과중첩);
+                const multiplier = 1 + (현재중첩 * 0.1);
+                total += 9 * multiplier;
+            }
+            averages['파멸의 낙인'] = total / 150;
+            
+            // 공명하는 수정: 1초마다 증가, 12중첩 후 감소 (삼각파)
+            // 파멸의 낙인 보유 시: 중첩 당 0.6% 추가 증가 (2% → 2.6%)
+            const 공명기본피해 = 2.0;
+            const 공명추가피해 = has파멸의낙인 ? 0.6 : 0;
+            const 공명중첩피해 = 공명기본피해 + 공명추가피해;
+            total = 0;
+            for (let t = 0; t < 150; t++) {
+                const cyclePos = t % 24;
+                const stack = cyclePos < 12 ? cyclePos : (24 - cyclePos);
+                total += 공명중첩피해 * (1 + stack);
+            }
+            averages['공명하는 수정'] = total / 150;
+            
+            // === 기타 특수 룬들 ===
+            // 땅울림: 기본 8% + 전투 시작 시 30%, 3초마다 2% 감소 (최소 8%)
+            // 0-3초: 38%, 3-6초: 36%, ..., 45초: 8% (그 이후 8% 유지)
+            // 평균 계산: 8% + 30% 감소분 평균
+            let 땅울림총합 = 0;
+            for (let t = 0; t < 150; t++) {
+                const 감소횟수 = Math.floor(t / 3);
+                const 감소량 = Math.min(감소횟수 * 2, 30); // 최대 30%까지 감소
+                땅울림총합 += 8 + (30 - 감소량);
+            }
+            averages['땅울림'] = 땅울림총합 / 150;
+            
+            // 마나 격류: 스킬마다 3.5%, 5초 지속, 최대 4중첩
+            const 마나격류평균스택 = calculate누적평균스택(1.0, 5, 4, false); // 6성이라 쌍둥이별 영향 없음
+            averages['마나 격류'] = 3.5 * 마나격류평균스택;
+            
+            // 바위 거인: 강타로 3% 3중첩, 3중첩 도달 시 소모하고 20% 5초
+            averages['바위 거인'] = 19.0;
+            
+            // === 축적 룬들 ===
+            // 바위 감시자: 강타 7회, 6초 지속, 재사용 없음 (중첩 안됨)
+            // [계산 로직]
+            // - 강타 0.3초, 7회 축적 = 2.1초
+            // - 에메랄드 숲: 7회 → 4회 축적 = 1.2초
+            // - 발동 후: 공격력 22% 버프 6초
+            // - 재사용 없음 (지속 종료 후 바로 축적 가능)
+            // - 사이클: 2.1초(축적) + 6초(지속) = 8.1초
+            // - 에메랄드: 1.2초(축적) + 6초(지속) = 7.2초
+            // - 150초 / 8.1초 = 18.5회 → 18회 발동
+            // - 에메랄드: 150초 / 7.2초 = 20.8회 → 20회 발동
+            // - 가동률 = 6초 × 18회 / 150초 = 72%
+            // - 에메랄드 가동률 = 6초 × 20회 / 150초 = 80%
+            // - 공격력 = 22% × 72% = 15.8%
+            // - 에메랄드 공격력 = 22% × 80% = 17.6%
+            const 바위감시자필요횟수 = has에메랄드숲 ? Math.ceil(7 / 2) : 7;
+            const 바위감시자사이클 = 0.3 * 바위감시자필요횟수 + 6; // 축적 + 지속
+            const 바위감시자발동 = Math.floor(150 / 바위감시자사이클) + 1;
+            let 바위감시자총가동 = 0;
+            for (let i = 0; i < 바위감시자발동; i++) {
+                const 발동시각 = i * 바위감시자사이클;
+                if (발동시각 >= 150) break;
+                const 축적시각 = 발동시각 + (0.3 * 바위감시자필요횟수);
+                const 가동 = Math.min(6, 150 - 축적시각);
+                if (가동 > 0) 바위감시자총가동 += 가동;
+            }
+            averages['바위 감시자'] = 22.0 * (바위감시자총가동 / 150);
+            
+            // 요정 무리: 스킬 7회, 재사용 3초 (2.1초 감소 효과, 중첩 안됨)
+            // [계산 로직]
+            // - 스킬 1초, 7회 축적 = 7초
+            // - 에메랄드 숲: 7회 → 4회 축적 = 4초
+            // - 발동 후: 즉시 모든 스킬 쿨타임 2.1초 감소 (1회 효과)
+            // - 재사용 대기: 3초
+            // - 사이클: 7초(축적) + 3초(재사용) = 10초
+            // - 에메랄드: 4초(축적) + 3초(재사용) = 7초
+            // - 150초 / 10초 = 15회 발동
+            // - 에메랄드: 150초 / 7초 = 21회 발동
+            // - 효과 = 2.1초 × 15회 = 31.5초
+            // - 에메랄드 효과 = 2.1초 × 21회 = 44.1초
+            const 요정무리필요횟수 = has에메랄드숲 ? Math.ceil(7 / 2) : 7;
+            const 요정무리사이클 = (1.0 * 요정무리필요횟수) + 3; // 축적 + 재사용
+            const 요정무리발동 = Math.floor(150 / 요정무리사이클);
+            averages['요정 무리'] = 2.1 * 요정무리발동; // 초 단위 효과
+            
+            // 수정 꽃잎: 치명타 6회, 룬피해 45% + 공격력 12% 10초, 재사용 3초 (중첩 안됨)
+            // [계산 로직]
+            // - 치명타 0.8초, 6회 축적 = 4.8초
+            // - 에메랄드 숲: 6회 → 3회 축적 = 2.4초
+            // - 발동 후: 즉시 45% 피해 + 공격력 12% 버프 10초
+            // - 재사용 대기: 3초 (축적 시작 가능)
+            // - 사이클: 4.8초(축적) + 3초(재사용) = 7.8초
+            // - 에메랄드: 2.4초(축적) + 3초(재사용) = 5.4초
+            // - 150초 / 7.8초 = 19.2회 → 19회 발동
+            // - 에메랄드: 150초 / 5.4초 = 27.8회 → 27회 발동
+            // - 룬 피해 DPS: 45% × 19회 / 150초 = 5.7%
+            // - 에메랄드: 45% × 27회 / 150초 = 8.1%
+            const 수정꽃잎필요횟수 = has에메랄드숲 ? Math.ceil(6 / 2) : 6;
+            const 수정꽃잎축적 = 0.8 * 수정꽃잎필요횟수;
+            const 수정꽃잎사이클 = 수정꽃잎축적 + 3; // 축적 + 재사용
+            const 수정꽃잎발동 = Math.floor(150 / 수정꽃잎사이클);
+            // 룬 피해: 1회 발동당 45% (즉시)
+            averages['수정꽃잎_룬피해'] = 45.0 * 수정꽃잎발동 / 150;
+            // 공격력: 10초 지속, 중첩 안되지만 사이클이 짧아서 계속 유지
+            let 수정꽃잎총가동 = 0;
+            for (let i = 0; i < 수정꽃잎발동; i++) {
+                const 발동시각 = i * 수정꽃잎사이클 + 수정꽃잎축적 + 3;
+                if (발동시각 >= 150) break;
+                const 가동 = Math.min(10, 150 - 발동시각);
+                if (가동 > 0) 수정꽃잎총가동 += 가동;
+            }
+            averages['수정꽃잎_공격력'] = 12.0 * (수정꽃잎총가동 / 150);
+            
+            // 나무 사슴: 추가타 6회, 룬피해 56% + 공격력 12% 10초, 재사용 4초 (중첩 안됨)
+            // [계산 로직]
+            // - 추가타 1초, 6회 축적 = 6초
+            // - 에메랄드 숲: 6회 → 3회 축적 = 3초
+            // - 발동 후: 즉시 56% 피해 + 공격력 12% 버프 10초
+            // - 재사용 대기: 4초 (축적 시작 가능)
+            // - 사이클: 6초(축적) + 4초(재사용) = 10초
+            // - 에메랄드: 3초(축적) + 4초(재사용) = 7초
+            // - 150초 / 10초 = 15회 발동
+            // - 에메랄드: 150초 / 7초 = 21회 발동
+            // - 룬 피해 DPS: 56% × 15회 / 150초 = 5.6%
+            // - 에메랄드: 56% × 21회 / 150초 = 7.8%
+            const 나무사슴필요횟수 = has에메랄드숲 ? Math.ceil(6 / 2) : 6;
+            const 나무사슴축적 = 1.0 * 나무사슴필요횟수;
+            const 나무사슴사이클 = 나무사슴축적 + 4; // 축적 + 재사용
+            const 나무사슴발동 = Math.floor(150 / 나무사슴사이클);
+            // 룬 피해: 1회 발동당 56% (즉시)
+            averages['나무사슴_룬피해'] = 56.0 * 나무사슴발동 / 150;
+            // 공격력: 10초 지속, 중첩 안되지만 사이클이 10초라 거의 100% 유지
+            let 나무사슴총가동 = 0;
+            for (let i = 0; i < 나무사슴발동; i++) {
+                const 발동시각 = i * 나무사슴사이클 + 나무사슴축적 + 4;
+                if (발동시각 >= 150) break;
+                const 가동 = Math.min(10, 150 - 발동시각);
+                if (가동 > 0) 나무사슴총가동 += 가동;
+            }
+            averages['나무사슴_공격력'] = 12.0 * (나무사슴총가동 / 150);
+            
+            // 푸른 거목: 스킬 5회마다 2.2% 영구 증가, 최대 10중첩
+            // [계산 로직]
+            // - 스킬 1초, 5회마다 스택 +1
+            // - 에메랄드 숲: 5회 → 3회마다 스택 +1
+            // - 영구 증가이므로 최대 10스택까지 누적
+            // - 일반: 5초, 10초, 15초... → 50초에 10스택 도달 → 이후 22% 유지
+            // - 에메랄드: 3초, 6초, 9초... → 30초에 10스택 도달 → 이후 22% 유지
+            // - 평균 계산: 150초 시뮬레이션
+            const 푸른거목발동간격 = has에메랄드숲 ? Math.ceil(5 / 2) : 5; // 스킬 횟수
+            let 푸른거목총합 = 0;
+            let 푸른거목스택 = 0;
+            for (let t = 0; t < 150; t++) {
+                // 발동간격마다 스택 증가
+                if (t > 0 && t % 푸른거목발동간격 === 0 && 푸른거목스택 < 10) {
+                    푸른거목스택++;
+                }
+                푸른거목총합 += 2.2 * 푸른거목스택;
+            }
+            averages['푸른 거목'] = 푸른거목총합 / 150;
+            
+            // 잊힌 성소: 스킬/기본공격 60회, 5초 지속 피해, 재사용 없음 (중첩 안됨)
+            // [계산 로직]
+            // - 기본 공격 0.5초 기준, 60회 축적 = 30초
+            // - 에메랄드 숲: 60회 → 30회 축적 = 15초
+            // - 발동 후 5초 동안 0.1초마다 15% 피해 (총 50회 = 750%)
+            // - 사이클: 30초(축적) + 5초(지속) = 35초
+            // - 에메랄드: 15초(축적) + 5초(지속) = 20초
+            // - 150초 / 35초 = 4.28회 → 4회 발동
+            // - 에메랄드: 150초 / 20초 = 7.5회 → 7회 발동
+            // - DPS = 750% × 4회 / 150초 = 20%
+            // - 에메랄드 DPS = 750% × 7회 / 150초 = 35%
+            const 잊힌성소필요횟수 = has에메랄드숲 ? Math.ceil(60 / 2) : 60;
+            const 잊힌성소축적시간 = 0.5 * 잊힌성소필요횟수;
+            const 잊힌성소지속시간 = 5;
+            const 잊힌성소사이클 = 잊힌성소축적시간 + 잊힌성소지속시간;
+            const 잊힌성소발동 = Math.floor(150 / 잊힌성소사이클);
+            // 5초 동안 0.1초마다 15% = 50회 × 15% = 750%
+            const 잊힌성소총피해 = 15.0 * 50;
+            averages['잊힌 성소'] = 잊힌성소총피해 * 잊힌성소발동 / 150;
+            
+            // === 조건부 룬들 (가동률 재계산 필요) ===
+            // 필사+: 기본 10% + 체력 50% 이하 시 20% (20초 지속)
+            // 클래스마다 다름, 평균 5% 가동률로 가정
+            const 필사가동률 = 0.05; // 150초 중 7.5초
+            averages['필사+_기본'] = 10.0;
+            averages['필사+_추가'] = 20.0 * 필사가동률;
+            
+            // 성역+: 보호막 유지 시 공격력 17%
+            // 포션 5개 + 30초마다 자동 (최대 5회)
+            // 보호막이 겹치므로 거의 100% 유지 가정
+            averages['성역+_공격력'] = 17.0 * 0.9; // 90% 가동
+            averages['성역+_보호막'] = 13.9; // 보호막 자체는 10회 생성
+            
+            // 만 갈래 물길: 클래스 레벨 50마다 1% (최대 20회)
+            // 모든 클래스 20개 레벨 50 달성 가정
+            averages['만갈래물길_기본'] = 15.0;
+            averages['만갈래물길_추가'] = 1.0 * 20; // 20클래스 최대
+            
+            // 무한: 기본 공격 시 쿨타임 9% 감소
+            // 기본 공격 0.5초마다, 스킬 위주 빌드는 적게 사용
+            // 평균 50%만 기본 공격 사용으로 가정 (150회)
+            averages['무한_쿨타임'] = 9.0 * 0.5; // 50% 가동
+            
+            // 이름 없는 혼돈: 5초마다 5초 동안 10~30%
+            // "5초마다 5초 동안" = 5초 발동 종료 후 즉시 다음 5초 발동
+            // 가동률: 100% (항상 발동 중)
+            // +15 강화: 10~40% (평균 25%)
+            // +15 가정
+            averages['이름없는혼돈'] = 25.0; // 평균 25%, 가동률 100%
+            
+            // 끝없는 순환: 공격 20회 or 회복 20회 (중첩 안됨)
+            // [계산 로직]
+            // - 공격 0.5초, 20회 축적 = 10초
+            // - 에메랄드 숲: 20회 → 10회 축적 = 5초
+            // - 발동 후 4.5초 동안 0.5초마다 21% 피해 (총 9회 = 189%)
+            // - 사이클: 10초(축적) + 4.5초(지속) = 14.5초
+            // - 에메랄드: 5초(축적) + 4.5초(지속) = 9.5초
+            // - 150초 / 14.5초 = 10.3회 → 10회 발동
+            // - 에메랄드: 150초 / 9.5초 = 15.8회 → 15회 발동
+            // - DPS = 189% × 10회 / 150초 = 12.6%
+            // - 에메랄드 DPS = 189% × 15회 / 150초 = 18.9%
+            const 끝없는순환필요횟수 = has에메랄드숲 ? Math.ceil(20 / 2) : 20;
+            const 끝없는순환축적시간 = 0.5 * 끝없는순환필요횟수;
+            const 끝없는순환지속시간 = 4.5;
+            const 끝없는순환사이클 = 끝없는순환축적시간 + 끝없는순환지속시간;
+            const 끝없는순환발동 = Math.floor(150 / 끝없는순환사이클);
+            // 4.5초 동안 0.5초마다 21% = 9회 × 21% = 189%
+            const 끝없는순환총피해 = 21.0 * 9;
+            const 끝없는순환총회복 = 0.5 * 9;
+            averages['끝없는순환_공격'] = 끝없는순환총피해 * 끝없는순환발동 / 150;
+            averages['끝없는순환_회복'] = 끝없는순환총회복 * 끝없는순환발동 / 150;
+            
+            return averages;
+        }
+        
+        // runeSpecialAverages는 calculateEffects 내에서 동적으로 계산됨
+        
+        // 룬 효율 계산을 위한 상세 데이터
+        const runeEfficiencyData = {
+            '불길': { keywords: ['치명타 확률', '지속 피해'], values: [18.0, 356.0], counts: [150, 15], efficiencies: [18.0, 35.6] },
+            '결정': { keywords: ['추가타 확률', '지속 피해'], values: [18.0, 356.0], counts: [150, 15], efficiencies: [18.0, 35.6] },
+            '뇌명': { keywords: ['강타 피해', '지속 피해'], values: [20.0, 356.0], counts: [150, 15], efficiencies: [20.0, 35.6] },
+            '독사+': { keywords: ['연타 피해', '지속 피해'], values: [20.0, 356.0], counts: [150, 15], efficiencies: [20.0, 35.6] },
+            '공포': { keywords: ['치명타 피해', '지속 피해'], values: [18.0, 356.0], counts: [150, 15], efficiencies: [18.0, 35.6] },
+            '집행자': { keywords: ['회복량', '주는 피해', '지속 피해'], values: [20.0, 10.0, 533.0], counts: [150, 150, 15], efficiencies: [20.0, 10.0, 53.3] },
+            '야수+': { keywords: ['주는 피해', '지속 피해'], values: [20.0, 356.0], counts: [150, 15], efficiencies: [20.0, 35.6] },
+            '밤+': { keywords: ['공격력', '지속 피해'], values: [20.0, 356.0], counts: [150, 15], efficiencies: [20.0, 35.6] },
+            '투사+': { keywords: ['주는 피해', '광역 피해'], values: [33.0, -10.0], counts: [150, 150], efficiencies: [33.0, -10.0] },
+            '은둔자+': { keywords: ['공격력', '쿨타임'], values: [33.0, -9.0], counts: [150, 150], efficiencies: [33.0, -9.0] },
+            '망각+': { keywords: ['공격력', '쿨타임'], values: [19.0, 9.0], counts: [150, 150], efficiencies: [19.0, 9.0] },
+            '서리바람+': { keywords: ['공격력', '캐스팅 속도', '차지 속도'], values: [20.0, 25.0, 25.0], counts: [150, 150, 150], efficiencies: [20.0, 25.0, 25.0] },
+            '옛 마법사': { keywords: ['쿨타임', '주는 피해'], values: [29.0, -10.0], counts: [150, 150], efficiencies: [29.0, -10.0] },
+            '물결치는 날': { keywords: ['룬 피해', '빠른 공격'], values: [152.0, 10.0], counts: [100, 100], efficiencies: [101.3, 6.7] },
+            '파괴자+': { keywords: ['공격력', '무방비 피해'], values: [18.0, 48.0], counts: [150, 1], efficiencies: [18.0, 0.3] },
+            '검무+': { keywords: ['공격력', '치명타 확률'], values: [2.0, 1.0], counts: [145, 145], efficiencies: [1.9, 1.0] },
+            '무수한 궤적': { keywords: ['공격력', '빠른 공격', '평타 추가타'], values: [10.0, 30.0, 30.0], counts: [150, 150, 150], efficiencies: [10.0, 30.0, 30.0] },
+            '마지막 자비': { keywords: ['공격력', '공격력'], values: [20.0, 20.0], counts: [150, 75], efficiencies: [20.0, 10.0] },
+            '끝없는 순환': { keywords: ['룬 피해', '룬 회복'], values: [21.0, 0.5], counts: [90, 90], efficiencies: [12.6, 0.3] },
+            '종언+': { keywords: ['공격력', '공격력'], values: [2.0, 24.0], counts: [0, 150], efficiencies: [0.0, 24.0] },
+            '영웅': { keywords: ['공격력', '연타 피해', '강타 피해', '콤보 피해', '스킬 피해', '치명타 피해', '광역 피해'], values: [4.3, 4.3, 4.3, 4.3, 4.3, 4.3, 4.3], counts: [150, 150, 150, 150, 150, 150, 150], efficiencies: [4.3, 4.3, 4.3, 4.3, 4.3, 4.3, 4.3] },
+            '여명+': { keywords: ['공격력'], values: [3.5], counts: [145], efficiencies: [3.4] },
+            '황혼': { keywords: ['주는 피해'], values: [1.4], counts: [140], efficiencies: [1.3] },
+            '바위 감시자': { keywords: ['공격력'], values: [22.0], counts: [145], efficiencies: [21.3] },
+            '쇄도+': { keywords: ['캐스팅 속도', '차지 속도', '빠른 스킬'], values: [20.0, 20.0, 20.0], counts: [75, 75, 75], efficiencies: [10.0, 10.0, 10.0] },
+            '무도가+': { keywords: ['공격력', '궁극기 게이지'], values: [12.0, 20.0], counts: [150, 150], efficiencies: [12.0, 20.0] },
+            '해결사+': { keywords: ['빠른 공격', '평타 추가타'], values: [30.0, 30.0], counts: [150, 150], efficiencies: [30.0, 30.0] },
+            '들불': { keywords: ['치명타 확률'], values: [14.0], counts: [150], efficiencies: [14.0] },
+            '설산': { keywords: ['추가타 확률'], values: [16.0], counts: [150], efficiencies: [16.0] },
+            '절개+': { keywords: ['공격력'], values: [20.0], counts: [150], efficiencies: [20.0] },
+            '환영+': { keywords: ['공격력', '방어구 파괴'], values: [18.0, 10.0], counts: [150, 150], efficiencies: [18.0, 10.0] },
+            '황금 들판': { keywords: ['공격력'], values: [20.0], counts: [150], efficiencies: [20.0] },
+            '모래 폭풍': { keywords: ['빠른 스킬', '빠른 공격', '빠른 스킬', '빠른 공격'], values: [10.0, 10.0, 24.0, 24.0], counts: [150, 150, 1, 1], efficiencies: [10.0, 10.0, 0.2, 0.2] },
+            '황폐+': { keywords: ['주는 피해', '추가타 확률'], values: [12.0, 7.0], counts: [135, 135], efficiencies: [10.8, 6.3] },
+            '신성한 칙령': { keywords: ['공격력', '회복량'], values: [15.0, 9.0], counts: [150, 150], efficiencies: [15.0, 9.0] },
+            '준비된 자': { keywords: ['주는 피해'], values: [20.0], counts: [150], efficiencies: [20.0] },
+            '저무는 달': { keywords: ['공격력', '방어력'], values: [2.0, 2.0], counts: [5, 5], efficiencies: [0.1, 0.1] },
+            '땅울림': { keywords: ['공격력', '공격력', '공격력'], values: [8.0, 30.0, -2.0], counts: [150, 45, 45], efficiencies: [8.0, 9.0, -0.6] },
+            '신전 기사': { keywords: ['공격력', '치명타 확률'], values: [23.0, -8.0], counts: [150, 150], efficiencies: [23.0, -8.0] },
+            '근위병+': { keywords: ['공격력', '쿨타임'], values: [23.0, -7.0], counts: [150, 150], efficiencies: [23.0, -7.0] },
+            '침묵하는 산': { keywords: ['공격력'], values: [22.0], counts: [100], efficiencies: [14.7] },
+            '필사+': { keywords: ['공격력', '공격력'], values: [10.0, 20.0], counts: [150, 10], efficiencies: [10.0, 1.3] },
+            '파멸+': { keywords: ['공격력'], values: [25.0], counts: [130], efficiencies: [21.7] },
+            '집정관': { keywords: ['공격력', '빠른 스킬', '캐스팅 속도', '차지 속도'], values: [23.0, -8.0, -8.0, -8.0], counts: [150, 150, 150, 150], efficiencies: [23.0, -8.0, -8.0, -8.0] },
+            '새벽별': { keywords: ['쿨타임'], values: [3.0], counts: [120], efficiencies: [2.4] },
+            '눈 먼 예언자': { keywords: ['각성 쿨타임'], values: [38], counts: [150], efficiencies: [38] },
+            '압도적인 힘': { keywords: ['강타 피해', '공격력', '치명타 확률', '강타 피해', '공격력', '치명타 확률'], values: [6.0, 6.0, 4.0, 6.0, 6.0, 4.0], counts: [150, 150, 150, 33, 33, 33], efficiencies: [6.0, 6.0, 4.0, 1.3, 1.3, 0.9] },
+            '섬세한 손놀림': { keywords: ['연타 피해', '공격력', '추가타 확률', '연타 피해', '공격력', '추가타 확률'], values: [6.0, 6.0, 4.0, 6.0, 6.0, 4.0], counts: [150, 150, 150, 33, 33, 33], efficiencies: [6.0, 6.0, 4.0, 1.3, 1.3, 0.9] },
+            '성역+': { keywords: ['공격력', '보호막'], values: [17.0, 13.9], counts: [120, 10], efficiencies: [13.6, 0.9] },
+            '불안정한 힘': { keywords: ['주는 피해'], values: [22.0], counts: [90], efficiencies: [13.2] },
+            '고대 수호자': { keywords: ['공격력', '이동 속도'], values: [23.0, -8.0], counts: [150, 150], efficiencies: [23.0, -8.0] },
+            '갈퀴발톱+': { keywords: ['브레이크 스킬 피해', '브레이크 피해', '무방비 피해'], values: [24.0, 24.0, 24.0], counts: [150, 150, 1], efficiencies: [24.0, 24.0, 0.2] },
+            '태양': { keywords: ['룬 피해'], values: [89.0], counts: [43], efficiencies: [25.4] },
+            '싹쓸바람': { keywords: ['룬 피해'], values: [38.0], counts: [89], efficiencies: [22.6] },
+            '혼돈': { keywords: ['룬 피해'], values: [102.0], counts: [25], efficiencies: [17.0] },
+            '붕괴하는 별': { keywords: ['룬 피해', '공격력'], values: [30.0, 10.0], counts: [50, 150], efficiencies: [10.0, 10.0] },
+            '돌격대장+': { keywords: ['방어구 파괴', '공격력'], values: [10.0, 20.0], counts: [150, 150], efficiencies: [10.0, 20.0] },
+            '지휘관': { keywords: ['공격력', '공격력', '공격력', '공격력', '공격력'], values: [4.5, 4.5, 4.5, 4.5, 4.5], counts: [150, 150, 1, 120, 90], efficiencies: [4.5, 4.5, 0.0, 3.6, 2.7] },
+            '응징+': { keywords: ['공격력', '룬 회복'], values: [12.0, 24.5], counts: [150, 0], efficiencies: [12.0, 0.0] },
+            '집념+': { keywords: ['캐스팅 속도', '차지 속도', '주는 피해'], values: [25.0, 25.0, 10.0], counts: [150, 150, 150], efficiencies: [25.0, 25.0, 10.0] },
+            '분쇄+': { keywords: ['공격력', '주는 피해'], values: [6.0, 28.0], counts: [150, 1], efficiencies: [6.0, 0.2] },
+            '쌍둥이 별': { keywords: ['누적 횟수', '캐스팅 속도', '차지 속도', '빠른 스킬'], values: [1, 7.0, 7.0, 7.0], counts: [150, 150, 150, 150], efficiencies: [1, 7.0, 7.0, 7.0] },
+            '푸른 거목': { keywords: ['스킬 피해'], values: [2.2], counts: [100], efficiencies: [1.5] },
+            '어두운 징조': { keywords: ['공격력', '치명타 확률', '주는 피해'], values: [0.6, 0.6, 0.6], counts: [8, 8, 8], efficiencies: [0.0, 0.0, 0.0] },
+            '요정 무리': { keywords: ['쿨타임'], values: [2.1], counts: [21], efficiencies: [2.1] },
+            '수정 꽃잎': { keywords: ['룬 피해', '공격력'], values: [45.0, 12.0], counts: [50, 150], efficiencies: [15.0, 12.0] },
+            '나무 사슴': { keywords: ['룬 피해', '공격력'], values: [56.0, 12.0], counts: [38, 150], efficiencies: [14.0, 12.0] },
+            '에메랄드 숲': { keywords: ['축적 횟수', '주는 피해'], values: [1, 10.0], counts: [150, 150], efficiencies: [1, 10.0] },
+            '불사': { keywords: ['주는 피해', '룬 회복', '받는 피해'], values: [18.0, 100.0, 80.0], counts: [150, 1, 1], efficiencies: [18.0, 0.7, 0.5] },
+            '싸움꾼': { keywords: ['주는 피해', '받는 피해'], values: [12.0, 8.0], counts: [150, 150], efficiencies: [12.0, 8.0] },
+            '약탈자': { keywords: ['룬 회복', '추가타 확률'], values: [3.0, 10.0], counts: [150, 150], efficiencies: [3.0, 10.0] },
+            '원소 조화': { keywords: ['룬 피해'], values: [42.0], counts: [90], efficiencies: [25.2] },
+            '다가오는 죽음': { keywords: ['룬 피해'], values: [185.75], counts: [15], efficiencies: [18.6] },
+            '잊힌 성소': { keywords: ['룬 피해'], values: [15.0], counts: [250], efficiencies: [25.0] },
+            '만 갈래 물길': { keywords: ['공격력', '공격력'], values: [15.0, 20.0], counts: [150, 150], efficiencies: [15.0, 20.0] },
+            '흰 까마귀': { keywords: ['빠른 공격', '이동 속도', '빠른 스킬', '캐스팅 속도', '차지 속도', '쿨타임', '주는 피해', '공격력'], values: [10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 7.0, 7.0], counts: [150, 150, 150, 150, 150, 150, 150, 150], efficiencies: [10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 7.0, 7.0] },
+            '메아리치는 진노': { keywords: ['룬 피해', '지속 피해', '룬 피해', '지속 피해', '공격력', '공격력', '공격력'], values: [110.0, 35.0, 110.0, 35.0, 5.0, 3.0, 3.0], counts: [19, 19, 19, 19, 150, 150, 150], efficiencies: [13.8, 4.4, 13.8, 4.4, 5.0, 3.0, 3.0] },
+            '무한': { keywords: ['쿨타임', '공격력', '빠른 공격'], values: [9.0, 20.0, 12.0], counts: [75, 150, 150], efficiencies: [4.5, 20.0, 12.0] },
+            '닫힌 운명': { keywords: ['룬 피해', '룬 피해', '룬 피해', '방어구 파괴'], values: [68.0, 136.0, 272.0, 10.0], counts: [10, 10, 10, 150], efficiencies: [4.5, 9.1, 18.1, 10.0] },
+            '검게 물든 후광': { keywords: ['받는 피해', '주는 피해', '주는 피해', '주는 피해'], values: [-15.0, 15.0, 6.0, 6.0], counts: [150, 150, 150, 150], efficiencies: [-15.0, 15.0, 6.0, 6.0] },
+            '그림자로 엮은 회랑': { keywords: ['룬 피해', '룬 피해', '룬 피해', '룬 피해'], values: [25.0, 25.0, 25.0, 25.0], counts: [75, 50, 38, 30], efficiencies: [12.5, 8.3, 6.3, 5.0] },
+            '바스러지는 빛': { keywords: ['공격력'], values: [5.5], counts: [148], efficiencies: [5.4] },
+            '세상을 삼키는 악의': { keywords: ['주는 피해', '무방비 피해', '주는 피해', '주는 피해'], values: [16.0, 16.0, 3.0, 3.0], counts: [150, 1, 150, 150], efficiencies: [16.0, 0.1, 3.0, 3.0] },
+            '이름 없는 혼돈': { keywords: ['공격력'], values: [25.0], counts: [150], efficiencies: [25.0] },
+            '영원': { keywords: ['결함 제거', '공격력'], values: [0, 10.0], counts: [150, 150], efficiencies: [0, 10.0] },
+            '쏟아지는 별': { keywords: ['룬 피해', '룬 피해', '룬 피해'], values: [315.0, 45.0, 315.0], counts: [10, 10, 8], efficiencies: [21.0, 3.0, 15.8] },
+            '무자비한 포식자': { keywords: ['스킬 피해', '쿨타임', '주는 피해'], values: [55.0, 100.0, 21.0], counts: [1, 1, 150], efficiencies: [0.4, 0.7, 21.0] },
+            '순수한 힘': { keywords: ['주는 피해', '궁극기 게이지'], values: [27.0, 20.0], counts: [133, 150], efficiencies: [24.0, 20.0] },
+            '부서진 하늘': { keywords: ['연타 피해', '룬 피해', '연타 피해', '쿨타임'], values: [60.0, 29.0, 8.0, 8.0], counts: [33, 67, 150, 150], efficiencies: [13.3, 12.9, 8.0, 8.0] },
+            '인도하는 빛': { keywords: ['공격력', '공격력'], values: [8.0, 20.0], counts: [8, 150], efficiencies: [0.4, 20.0] },
+            '대마법사': { keywords: ['공격력', '캐스팅 속도', '차지 속도', '캐스팅 속도', '차지 속도', '차지 스킬 피해'], values: [45.0, 25.0, 25.0, 14.0, 14.0, 14.0], counts: [33, 33, 33, 150, 150, 150], efficiencies: [10.0, 5.6, 5.6, 14.0, 14.0, 14.0] },
+            '흩날리는 검': { keywords: ['공격력', '빠른 공격', '평타 추가타', '빠른 공격', '평타 추가타'], values: [35.0, 20.0, 20.0, 24.0, 24.0], counts: [58, 58, 58, 150, 150], efficiencies: [13.6, 7.8, 7.8, 24.0, 24.0] },
+            '산맥 군주': { keywords: ['강타 피해', '룬 피해', '강타 피해', '빠른 스킬'], values: [60.0, 155.0, 8.0, 8.0], counts: [33, 11, 150, 150], efficiencies: [13.3, 11.5, 8.0, 8.0] },
+            '아득한 빛': { keywords: ['치명타 확률', '치명타 피해', '치명타 확률', '치명타 피해', '주는 피해'], values: [20.0, 50.0, 5.0, 10.0, 5.0], counts: [33, 33, 150, 150, 150], efficiencies: [4.4, 11.1, 5.0, 10.0, 5.0] },
+            '갈라진 땅': { keywords: ['추가타 확률', '추가 공격', '추가타 확률'], values: [30.0, 18.0, 12.0], counts: [58, 58, 150], efficiencies: [11.7, 7.0, 12.0] },
+            '천자루의 검': { keywords: ['공격력'], values: [24.0], counts: [150], efficiencies: [24.0] },
+            '횃불': { keywords: ['치명타 확률'], values: [10.0], counts: [150], efficiencies: [10.0] },
+            '마나 격류': { keywords: ['공격력'], values: [14.0], counts: [143], efficiencies: [13.3] },
+            '바위 거인': { keywords: ['공격력'], values: [20.0], counts: [143], efficiencies: [19.0] },
+            '평원 방랑자': { keywords: ['주는 피해', '이동 속도'], values: [12.0, 10.0], counts: [143, 143], efficiencies: [11.4, 9.5] },
+            '파멸의 낙인': { keywords: ['룬 피해'], values: [9.0], counts: [150], efficiencies: [9.0] },
+            '공명하는 수정': { keywords: ['주는 피해'], values: [2.0], counts: [150], efficiencies: [2.0] },
+            '현란함': { keywords: ['치명타 확률', '치명타 피해'], values: [10.0, 30.0], counts: [150, 150], efficiencies: [10.0, 30.0] }
         };
         
         const allDescriptions = {
             // 무기 전설
-            '불길': '치명타 확률이 18% 증가한다. 공격 적중 시, (공격력×n%)의 지속 피해: 화상을 준다.(재사용 대기 시간: 10초)',
-            '결정': '추가타 확률이 18% 증가한다. 공격 적중 시, (공격력×n%)의 지속 피해: 빙결을 준다.(재사용 대기 시간: 10초)',
-            '뇌명': '강타 피해가 20% 증가한다. 공격 적중 시, (공격력×n%)의 지속 피해: 감전을 준다.(재사용 대기 시간: 10초)',
-            '독사+': '연타 피해가 20% 증가한다. 공격 적중 시, (공격력×n%)의 지속 피해: 중독을 준다.(재사용 대기 시간: 10초)',
-            '공포': '치명타 피해가 18% 증가한다. 공격 적중 시, (공격력×n%)의 지속 피해: 암흑을 준다.(재사용 대기 시간: 10초)',
-            '집행자': '치유량이 20%, 적에게 주는 피해가 10% 증가한다. 공격 적중 시, (공격력×n%)의 지속 피해: 신성을 준다.(재사용 대기 시간: 10초)',
-            '야수+': '적에게 주는 피해가 20% 증가한다. 공격 적중 시, (공격력×n%)의 지속 피해: 출혈을 준다.(재사용 대기 시간: 10초)',
-            '밤+': '공격력이 20% 증가한다. 공격 적중 시, (공격력×n%)의 지속 피해: 정신을 준다.(재사용 대기 시간: 10초)',
-            '투사+': '적에게 주는 피해가 33% 증가한다. 결함: 멀티히트 피해가 10% 감소한다.',
-            '은둔자+': '공격력이 33% 증가한다. 결함: 재사용 대기 시간 회복 속도가 9% 감소한다.',
-            '망각+': '공격력이 19% 증가한다. 기본 공격 적중 시, 모든 스킬의 재사용 대기 시간이 9% 감소한다.',
+            '불길': '치명타 확률이 18% 증가한다.\n공격 적중 시, (공격력×356%)의 지속 피해: 화상을 준다.(재사용 대기 시간: 10초)',
+            '결정': '추가타 확률이 18% 증가한다.\n공격 적중 시, (공격력×356%)의 지속 피해: 빙결을 준다.(재사용 대기 시간: 10초)',
+            '뇌명': '강타 피해가 20% 증가한다.\n공격 적중 시, (공격력×356%)의 지속 피해: 감전을 준다.(재사용 대기 시간: 10초)',
+            '독사+': '연타 피해가 20% 증가한다.\n공격 적중 시, (공격력×356%)의 지속 피해: 중독을 준다.(재사용 대기 시간: 10초) ',
+            '공포': '치명타 피해가 18% 증가한다.\n공격 적중 시, (공격력×356%)의 지속 피해: 암흑을 준다.(재사용 대기 시간: 10초)',
+            '집행자': '치유량이 20%, 적에게 주는 피해가 10% 증가한다.\n공격 적중 시, (공격력×533%)의 지속 피해: 신성을 준다.(재사용 대기 시간: 10초)',
+            '야수+': '적에게 주는 피해가 20% 증가한다.\n공격 적중 시, (공격력×356%)의 지속 피해: 출혈을 준다.(재사용 대기 시간: 10초)',
+            '밤+': '공격력이 20% 증가한다.\n공격 적중 시, (공격력×356%)의 지속 피해: 정신을 준다.(재사용 대기 시간: 10초)',
+            '투사+': '적에게 주는 피해가 33% 증가한다.결함: 멀티히트 피해가 10% 감소한다.',
+            '은둔자+': '공격력이 33% 증가한다.결함: 재사용 대기 시간 회복 속도가 9% 감소한다.',
+            '망각+': '공격력이 19% 증가한다.기본 공격 적중 시, 모든 스킬의 재사용 대기 시간이 9% 감소한다.',
             '서리바람+': '공격력이 20% 증가하고, 캐스팅 및 차지 속도가 25% 증가한다.',
-            '옛 마법사': '재사용 대기 시간 회복 속도가 29% 증가한다. 결함: 적에게 주는 피해가 10% 감소한다.',
-            '물결치는 날': '스킬 사용 시, 다음 기본 공격 적중 시 대상에게 (공격력×n%)의 피해를 추가로 입히고, 다음 1회의 기본 공격 속도가 10% 증가한다.',
+            '옛 마법사': '재사용 대기 시간 회복 속도가 29% 증가한다.결함: 적에게 주는 피해가 10% 감소한다.',
+            '물결치는 날': '스킬 사용 시, 다음 기본 공격 적중 시 대상에게 (공격력×152%)의 피해를 추가로 입히고, 다음 1회의 기본 공격 속도가 10% 증가한다.',
             '파괴자+': '공격력이 18% 증가하고, 무방비 피해가 48% 증가한다.',
-            '검무+': '누적: 공격이 적중할 때마다 10초 동안 공격력이 2%, 치명타 확률이 1% 증가한다. 해당 효과는 최대 10회까지 중첩되며 지속 시간은 스택마다 개별로 가진다.',
+            '검무+': '누적: 공격이 적중할 때마다 10초 동안 공격력이 2%, 치명타 확률이 1% 증가한다.해당 효과는 최대 10회까지 중첩되며 지속 시간은 스택마다 개별로 가진다.',
             '무수한 궤적': '공격력이 10%, 기본 공격 속도가 30% 증가하며, 기본 공격 추가타 확률이 30% 증가한다.',
-            '마지막 자비': '공격력이 20% 증가한다. 남은 체력이 50% 이하인 적을 공격했을 경우, 10초 동안 공격력이 추가로 20% 증가한다.',
-            '끝없는 순환': '축적: 아군을 20회 회복시킨 이후, 다음 공격 적중 시 대상의 위치에 마법진을 펼쳐 9m 범위 내의 적들에게 0.5초마다 (공격력×n%)의 암흑 피해를 4.5초 동안 입힌다. 축적: 적을 20회 공격한 이후, 다음 아군 회복 시 대상의 위치에 마법진을 펼쳐 9m 범위 내의 아군의 체력을 0.5초마다 (공격력×n%)씩 4.5초 동안 회복한다. 축적 효과는 각각 0.5초에 한 번만 획득 할 수 있다.',
-            '종언+': '누적: 자신과 전투 중인 적이 처치되었을 경우, 공격력이 20초 동안 2% 증가한다. 해당 효과는 최대 10회까지 중첩되며 지속 시간은 스택마다 개별로 가진다. 공격력이 24% 증가한다.',
-            '영웅': '공격력, 연타, 강타, 콤보, 스킬, 치명타, 멀티 히트 피해가 각각 4.3% 증가한다.',
+            '마지막 자비': '공격력이 20% 증가한다.남은 체력이 50% 이하인 적을 공격했을 경우, 10초 동안 공격력이 추가로 20% 증가한다.',
+            '끝없는 순환': '축적: 아군을 20회 회복시킨 이후, 다음 공격 적중 시 대상의 위치에 마법진을 펼쳐 9m 범위 내의 적들에게 0.5초마다 (공격력×21%)의 암흑 피해를 4.5초 동안 입힌다.축적: 적을 20회 공격한 이후, 다음 아군 회복 시 대상의 위치에 마법진을 펼쳐 9m 범위 내의 아군의 체력을 0.5초마다 (공격력×0.5%)씩 4.5초 동안 회복한다.축적 효과는 각각 0.5초에 한 번만 획득 할 수 있다.',
+            '종언+': '누적: 자신과 전투 중인 적이 처치되었을 경우, 공격력이 20초 동안 2% 증가한다. 해당 효과는 최대 10회까지 중첩되며 지속 시간은 스택마다 개별로 가진다.공격력이 24% 증가한다.',
+            '영웅': '공격력, 연타 피해, 강타 피해, 콤보 피해, 스킬 피해, 치명타 피해, 멀티 히트 피해가 각각 4.3% 증가한다.',
             
             // 방어구 전설
             '여명+': '누적: 스킬을 사용할 때마다 10초 동안 공격력이 3.5% 증가한다. 해당 효과는 최대 6회까지 중첩되며 지속 시간은 스택마다 개별로 가진다.',
             '황혼': '누적: 공격이 적중할 때마다 8초 동안 적에게 주는 피해가 1.4% 증가한다. 해당 효과는 최대 16회까지 중첩되며 지속 시간은 스택마다 개별로 가진다.',
             '바위 감시자': '축적: 강타 7회 적중 시, 6초 동안 공격력이 22% 증가한다.',
             '쇄도+': '스킬 사용 시, 25% 확률로 5초 동안 캐스팅 및 차지 속도와 스킬 사용 속도가 20% 증가한다.',
-            '무도가+': '공격력이 12% 증가하며, 궁극기 게이지 획득량 증가',
+            '무도가+': '공격력이 12% 증가하며, 궁극기 게이지 획득량이 20% 증가한다.',
             '해결사+': '공격 속도가 30% 증가하며, 기본 공격의 추가타 확률이 30% 증가한다.',
             '들불': '지속 피해: 화상을 보유한 적 공격 시, 5초 동안 치명타 확률이 14% 증가한다.(재사용 대기 시간: 3초)',
             '설산': '지속 피해: 빙결을 보유한 적 공격 시, 5초 동안 추가타 확률이 16% 증가한다.(재사용 대기 시간: 3초)',
             '절개+': '지속 피해: 출혈을 보유한 적 공격 시, 5초 동안 공격력이 20% 증가한다.(재사용 대기 시간: 3초)',
-            '환영+': '공격력이 18% 증가한다.\n지속 피해: 정신을 보유한 적 공격 시, 약화 효과: 방어구 파괴를 부여해 10초 동안 받는 피해를 10% 증가시킨다.(재사용 대기 시간: 3초)\n방어구 파괴는 중복 적용되지 않는다.',
+            '환영+': '공격력이 18% 증가한다.지속 피해: 정신을 보유한 적 공격 시, 약화 효과: 방어구 파괴를 부여해 10초 동안 받는 피해를 10% 증가시킨다.(재사용 대기 시간: 3초)방어구 파괴는 중복 적용되지 않는다.',
             '황금 들판': '체력이 75% 이상일 경우, 공격력이 20% 증가한다.',
-            '모래 폭풍': '스킬 사용 속도 및 공격 속도가 10% 증가한다.\n무방비 공격 적중 시, 10초 동안 스킬 사용 속도 및 공격 속도가 24% 추가로 증가한다.',
+            '모래 폭풍': '스킬 사용 속도 및 공격 속도가 10% 증가한다.무방비 공격 적중 시, 10초 동안 스킬 사용 속도 및 공격 속도가 24% 추가로 증가한다.',
             '황폐+': '보유한 자원이 50% 미만일 경우, 적에게 주는 피해가 12%, 추가타 확률이 7% 증가한다.',
             '신성한 칙령': '아군의 체력을 회복시키면 5초 동안 공격력이 15% 증가하며 회복량이 9% 증가한다.',
             '준비된 자': '퀵슬롯 아이템을 사용했을 경우 15초 동안 적에게 주는 피해가 20% 증가한다. 퀵슬롯의 포션 개수가 2개 증가하며, 붕대 개수가 2개 증가한다.',
-            '저무는 달': '누적: 공격력과 방어력 증가, 전투 시작 시, 전투 종료까지 30초마다 공격력과 방어력이 추가로 2%씩 증가하며, 해당 효과는 최대 10회까지 중첩된다.',
+            '저무는 달': '누적: 공격력과 방어력이 6% 증가한다. 전투 시작 시, 전투 종료까지 30초마다 공격력과 방어력이 추가로 2%씩 증가하며, 해당 효과는 최대 10회까지 중첩된다.',
             '땅울림': '공격력이 8% 증가한다. 전투 시작 시, 공격력이 30% 증가한다. 증가한 공격력은 매 3초마다 2%씩 감소한다.',
-            '신전 기사': '공격력이 23% 증가한다.\n결함: 치명타 확률이 8% 감소한다.',
-            '근위병+': '공격력이 23% 증가한다.\n결함: 재사용 대기 시간 회복 속도가 7% 감소한다.',
+            '신전 기사': '공격력이 23% 증가한다.결함: 치명타 확률이 8% 감소한다.',
+            '근위병+': '공격력이 23% 증가한다.결함: 재사용 대기 시간 회복 속도가 7% 감소한다.',
             '침묵하는 산': '5초 동안 이동하지 않을 경우, 공격력이 22% 증가한다.',
             '필사+': '공격력이 10% 증가한다. 체력이 50% 이하로 감소하면 20초 동안 공격력이 20% 추가로 증가한다.(재사용 대기 시간: 15초)',
             '파멸+': '궁극기 사용 시, 20초 동안 공격력이 25% 증가한다.',
-            '집정관': '공격력이 23% 증가한다.\n결함: 스킬 사용 속도와 캐스팅 및 차지 속도 감소',
-            '새벽별': '누적: 스킬을 사용할 때마다 8초 동안 스킬 재사용 대기 시간 회복 속도가 3% 빨라진다.\n해당 효과는 최대 6회까지 중첩되며 지속 시간은 스택마다 개별로 가진다.',
+            '집정관': '공격력이 23% 증가한다.결함: 스킬 사용 속도와 캐스팅 및 차지 속도가 8% 감소한다.',
+            '새벽별': '누적: 스킬을 사용할 때마다 8초 동안 스킬 재사용 대기 시간 회복 속도가 3% 빨라진다.해당 효과는 최대 6회까지 중첩되며 지속 시간은 스택마다 개별로 가진다.',
             '눈 먼 예언자': '각성의 재사용 대기 시간이 38초 감소한다.',
             '압도적인 힘': '강타 피해가 6%, 공격력이 6%, 치명타 확률이 4% 증가한다. 엠블럼의 각성 효과가 활성화될 때, 20초간 이 룬으로 증가한 능력치가 두배가 된다.',
             '섬세한 손놀림': '연타 피해가 6%, 공격력이 6%, 추가타 확률이 4% 증가한다. 엠블럼의 각성 효과가 활성화될 때, 20초간 이 룬으로 증가한 능력치가 두배가 된다.',
-            '성역+': '보호막 계열 효과가 유지되는 동안 공격력이 17% 증가한다. 포션을 사용하거나 30초가 지날 때마다 (공격력×n%)의 피해를 흡수하는 보호막이 생성된다.',
+            '성역+': '보호막 계열 효과가 유지되는 동안 공격력이 17% 증가한다. 포션을 사용하거나 30초가 지날 때마다 (공격력×13.9%)의 피해를 흡수하는 보호막이 생성된다.',
             '불안정한 힘': '전투 시작 시, 적에게 주는 피해가 22% 증가한다. 브레이크 당할 경우 효과가 사라지며, 30초 후에 재활성화된다.',
-            '고대 수호자': '공격력이 23% 증가한다.\n결함: 이동 속도가 8% 감소한다.',
-            '갈퀴발톱+': '브레이크 스킬로 주는 피해가 24% 증가한다.\n추가로 적에게 주는 브레이크 피해가 24% 증가하며, 무방비 피해가 24% 증가한다.',
-            '태양': '3.5초마다 자신 주위 3m 범위 내의 적에게 (공격력×n%)의 피해를 준다.',
-            '싹쓸바람': '공격 적중 시, 대상 주위 5m 범위 내의 적들을 중앙으로 3초간 끌어당기며 매 0.5초마다 (공격력×n%)의 피해를 준다.(재사용 대기 시간: 10초)',
-            '혼돈': '자신의 공격에 적중당한 대상이 자신으로부터 지속 피해: 화상, 지속 피해: 빙결, 지속 피해: 감전, 지속 피해: 출혈, 지속 피해: 중독, 지속 피해: 암흑, 지속 피해: 정신, 지속 피해: 신성 효과를 받을 때마다 중첩을 쌓는다. 중첩이 3회 쌓일 경우, 중첩을 전부 소모하여 (공격력×n%)의 피해를 준다. 이 효과는 각 대상마다 4초에 한 번만 발동한다.',
-            '붕괴하는 별': '자신의 공격이 적에게 적중 할 때마다 중첩을 쌓는다. 중첩이 3회 쌓일 경우, 중첩을 전부 소모하여 (공격력×n%)의 피해를 주고, 자신의 공격력을 10초 동안 10% 증가시킨다. 이 효과는 각 대상마다 3초에 한 번만 발동한다.',
-            '돌격대장+': '적을 도발할 경우, 약화 효과: 방어구 파괴를 부여해 10초 동안 받는 피해를 10% 증가시키며, 자신의 공격력을 15초 동안 20% 증가시킨다.\n방어구 파괴는 중복 적용되지 않는다.',
+            '고대 수호자': '공격력이 23% 증가한다.결함: 이동 속도가 8% 감소한다.',
+            '갈퀴발톱+': '브레이크 스킬로 주는 피해가 24% 증가한다.추가로 적에게 주는 브레이크 피해가 24% 증가하며, 무방비 피해가 24% 증가한다.',
+            '태양': '3.5초마다 자신 주위 3m 범위 내의 적에게 (공격력×89%)의 피해를 준다.',
+            '싹쓸바람': '공격 적중 시, 대상 주위 5m 범위 내의 적들을 중앙으로 3초간 끌어당기며 매 0.5초마다 (공격력×38%)의 피해를 준다.(재사용 대기 시간: 10초)',
+            '혼돈': '자신의 공격에 적중당한 대상이 자신으로부터 지속 피해: 화상, 지속 피해: 빙결, 지속 피해: 감전, 지속 피해: 출혈, 지속 피해: 중독, 지속 피해: 암흑, 지속 피해: 정신, 지속 피해: 신성 효과를 받을 때마다 중첩을 쌓는다. 중첩이 3회 쌓일 경우, 중첩을 전부 소모하여 (공격력×102%)의 피해를 준다. 이 효과는 각 대상마다 4초에 한 번만 발동한다.',
+            '붕괴하는 별': '자신의 공격이 적에게 적중 할 때마다 중첩을 쌓는다. 중첩이 3회 쌓일 경우, 중첩을 전부 소모하여 (공격력×30%)의 피해를 주고, 자신의 공격력을 10초 동안 10% 증가시킨다. 이 효과는 각 대상마다 3초에 한 번만 발동한다.',
+            '돌격대장+': '적을 도발할 경우, 약화 효과: 방어구 파괴를 부여해 10초 동안 받는 피해를 10% 증가시키며, 자신의 공격력을 15초 동안 20% 증가시킨다.방어구 파괴는 중복 적용되지 않는다.',
             '지휘관': '강타, 연타, 무방비, 치명타, 추가타 공격 시, 8초 동안 공격력이 4.5% 증가하며, 해당 효과는 최대 5회까지 중첩된다. 각 공격력 증가 효과는 별도의 지속 시간을 가진다.',
-            '응징+': '공격력이 12% 증가한다. 자신과 전투 중인 적이 처치되었을 경우, 자신의 체력을 (공격력×n%)만큼 회복한다.',
+            '응징+': '공격력이 12% 증가한다. 자신과 전투 중인 적이 처치되었을 경우, 자신의 체력을 (공격력×24.5%)만큼 회복한다.',
             '집념+': '캐스팅 및 차지 속도가 25%, 적에게 주는 피해가 10% 증가한다.',
             '분쇄+': '공격력이 6% 증가한다. 무방비 공격 적중 시, 10초 동안 적에게 주는 피해가 28% 증가한다.',
-            '쌍둥이 별': '누적 효과가 발생할 때, 추가로 한 번 더 발생한다.\n캐스팅 및 차지 속도, 스킬 사용 속도 증가',
+            '쌍둥이 별': '누적 효과가 발생할 때, 추가로 한 번 더 발생한다.캐스팅 및 차지 속도, 스킬 사용 속도가 7% 증가한다.',
             '푸른 거목': '축적: 스킬을 5회 사용 시, 전투 종료 시까지 스킬 피해량이 2.2% 증가한다. 이 효과는 최대 10회까지 중첩된다.',
             '어두운 징조': '누적: 궁극기 사용 시, 전투가 끝날 때까지 공격력이 0.6%, 치명타 확률이 0.6%, 적에게 주는 피해가 0.6% 증가한다. 이 효과는 최대 30회까지 중첩된다.',
             '요정 무리': '축적: 스킬을 7회 사용 시, 모든 스킬의 재사용 대기 시간이 2.1초 감소한다.(재사용 대기 시간: 3초)',
-            '수정 꽃잎': '축적: 치명타 공격을 6회 적중시킬 경우, 다음 공격 적중 시 (공격력×n%)의 피해를 입히고, 자신의 공격력이 10초 동안 12% 증가한다.(재사용 대기 시간: 3초)',
-            '나무 사슴': '축적: 추가타 공격을 6회 적중시킬 경우, 다음 공격 적중 시 (공격력×n%)의 피해를 입히고, 자신의 공격력이 10초 동안 12% 증가한다.(재사용 대기 시간: 4초)',
-            '에메랄드 숲': '축적: 효과에 필요한 횟수를 누적시킬 때, 1회 추가로 누적시킨다.\n적에게 주는 피해가 10% 증가한다.',
+            '수정 꽃잎': '축적: 치명타 공격을 6회 적중시킬 경우, 다음 공격 적중 시 (공격력×45%)의 피해를 입히고, 자신의 공격력이 10초 동안 12% 증가한다.(재사용 대기 시간: 3초)',
+            '나무 사슴': '축적: 추가타 공격을 6회 적중시킬 경우, 다음 공격 적중 시 (공격력×56%)의 피해를 입히고, 자신의 공격력이 10초 동안 12% 증가한다.(재사용 대기 시간: 4초)',
+            '에메랄드 숲': '축적: 효과에 필요한 횟수를 누적시킬 때, 1회 추가로 누적시킨다.적에게 주는 피해가 10% 증가한다.',
             '불사': '적에게 주는 피해가 18% 증가한다. 행동 불능에 이르는 공격을 1회 막아주고 체력을 대량회복한다. 이 후 3초 동안 받는 피해가 80% 감소한다. 동일한 행동 불능에 저항하는 효과와 재사용 대기 시간을 공유한다.(재사용 대기 시간: 180초)',
             '싸움꾼': '자신 주변 6m 범위 내에 있는 적의 수가 많을수록, 적에게 입히는 피해가 최소 12%에서 최대 16%까지 증가한다. 적에게 받는 피해는 최소 8%에서 최대 12%까지 감소한다. 적이 3명일 때 최대 효과를 가진다.',
-            '약탈자': '추가타 적중 시, 체력이 (공격력×n%) 회복된다.(재사용 대기 시간: 1초)\n추가타 확률이 10% 증가한다.',
-            '원소 조화': '공격 적중 시, 전방 10m 범위 내의 적에게 3가지 속성의 투사체를 발사하여 각각 (공격력×n%)의 화염, 냉기, 번개 속성 피해를 입힌다.(재사용 대기 시간: 5초)',
-            '다가오는 죽음': '적을 향해 느리게 날아가는 암흑 구체를 발사한다. 암흑 구체가 날아간 거리에 비례하여 최소 (공격력×n%) 피해를 입히고, 최대 18m 거리에서 (공격력×n%)의 피해를 입힌다.(재사용 대기 시간: 10초)',
-            '잊힌 성소': '축적: 스킬 혹은 기본 공격을 60회 사용 시, 화염, 번개 혹은 얼음의 힘으로 스스로를 감싸 주위 2.5m 범위에 5초 동안 0.1초마다 1.5m 범위를 (공격력×n%)의 피해로 공격하는 원소 화살을 난사한다.',
+            '약탈자': '추가타 적중 시, 체력이 (공격력×2.4%) 회복된다.(재사용 대기 시간: 1초)추가타 확률이 10% 증가한다.',
+            '원소 조화': '공격 적중 시, 전방 10m 범위 내의 적에게 3가지 속성의 투사체를 발사하여 각각 (공격력×42%)의 화염, 냉기, 번개 속성 피해를 입힌다.(재사용 대기 시간: 5초)',
+            '다가오는 죽음': '적을 향해 느리게 날아가는 암흑 구체를 발사한다. 암흑 구체가 날아간 거리에 비례하여 최소 (공격력×117.5%) 피해를 입히고, 최대 18m 거리에서 (공격력×254%)의 피해를 입힌다.(재사용 대기 시간: 10초)',
+            '잊힌 성소': '축적: 스킬 혹은 기본 공격을 60회 사용 시, 화염, 번개 혹은 얼음의 힘으로 스스로를 감싸 주위 2.5m 범위에 5초 동안 0.1초마다 1.5m 범위를 (공격력×15%)의 피해로 공격하는 원소 화살을 난사한다.',
             
             // 무기 신화
-            '만 갈래 물길': '공격력이 15% 증가한다. 클래스 레벨 50을 달성할 때마다 추가로 공격력이 1%씩 증가하며 해당 효과는 최대 20회까지 중첩된다. (모든 클래스로 사용 가능하며, 캐릭터가 달성한 클래스 레벨 정보를 기준으로 효과 적용)',
-            '흰 까마귀': '공격, 이동, 스킬 사용 속도, 캐스팅 및 차지 속도, 재사용 대기 시간 회복 속도가 10% 증가한다. 장비를 +10 강화 시, 적에게 주는 피해가 7% 증가한다. 장비를 +15 강화 시, 공격력 7%가 증가한다.',
-            '메아리치는 진노': '연타 적중 시, 전방 넓은 범위의 적들에게 (공격력×n%)의 피해와 (공격력×n%)의 지속 피해: 빙결을 준다.\n강타 적중 시, 전방 넓은 범위의 적들에게 (공격력×n%)의 피해와 (공격력×n%)의 지속 피해: 화상을 준다.\n또한, 공격력이 5% 증가한다.\n장비를 +10, +15 강화 시 각각 공격력이 3% 추가로 증가한다.\n(재사용 대기 시간: 각 8초)',
-            '무한': '기본 공격 사용 시, 모든 스킬의 재사용 대기 시간이 9% 감소한다.\n공격력이 20% 증가하며, 스킬 사용 시 5초 동안 공격 속도가 12% 증가한다.',
+            '만 갈래 물길': '공격력이 15% 증가한다. 클래스 레벨 50을 달성할 때마다 추가로 공격력이 1%씩 증가하며 해당 효과는 최대 20회까지 중첩된다.(모든 클래스로 사용 가능하며, 캐릭터가 달성한 클래스 레벨 정보를 기준으로 효과 적용)',
+            '흰 까마귀': '공격, 이동, 스킬 사용 속도, 캐스팅 및 차지 속도, 재사용 대기 시간 회복 속도가 10% 증가한다.장비를 +10 강화 시, 적에게 주는 피해가 7% 증가한다.장비를 +15 강화 시, 공격력 7%가 증가한다.',
+            '메아리치는 진노': '연타 적중 시, 전방 넓은 범위의 적들에게 (공격력×110%)의 피해와 (공격력×35%)의 지속 피해: 빙결을 준다.강타 적중 시, 전방 넓은 범위의 적들에게 (공격력×110%)의 피해와 (공격력×35%)의 지속 피해: 화상을 준다.또한, 공격력이 5% 증가한다.장비를 +10, +15 강화 시 각각 공격력이 3% 추가로 증가한다.(재사용 대기 시간: 각 8초)',
+            '무한': '기본 공격 사용 시, 모든 스킬의 재사용 대기 시간이 9% 감소한다.공격력이 20% 증가하며, 스킬 사용 시 5초 동안 공격 속도가 12% 증가한다.',
             
             // 방어구 신화
-            '닫힌 운명': '공격 적중시, 결계를 생성하여 타겟과 그 주변에 (공격력×n%)의 피해를 입히고, 약화 효과: 방어구 파괴를 부여해 10초 동안 받는 피해를 10% 증가시킨다. 결계는 1, 2, 4겹으로 늘어나며 최대치까지 늘어난 이후에는 다시 1겹으로 돌아온다.(재사용 대기 시간: 5초)\n방어구 파괴는 중복 적용되지 않는다.',
-            '검게 물든 후광': '받는 피해가 15%, 적에게 주는 피해가 15% 증가한다.\n아군을 회복시키거나 물약을 사용하면 15초 동안 받는 피해 증가 효과가 무효화된다.\n장비를 +10, +15 강화 시 각각 적에게 주는 피해가 6% 추가로 증가한다.',
-            '그림자로 엮은 회랑': '전투 중 각각 2초, 3초, 4초마다 마력 사슬을 발사해 전방의 적들에게 (공격력×n%)의 피해를 준다.\n장비를 +15 강화 시, 5초마다 발사되는 마력 사슬이 추가된다.',
-            '바스러지는 빛': '스킬을 사용할 때마다 8초 동안 공격력이 5.5% 증가한다. 해당 효과는 최대 5회까지 중첩되며 지속 시간은 스택마다 개별로 가진다.\n장비를 +15 강화 시, 50% 확률로 추가 중첩이 발생한다.',
-            '세상을 삼키는 악의': '원소 지속 피해를 보유한 적에게 주는 피해가 16% 증가하고, 적에게 주는 무방비 피해가 16% 증가한다.\n장비를 +10, +15 강화 시 각각 적에게 주는 피해가 3% 추가로 증가한다.',
-            '이름 없는 혼돈': '전투 중, 5초마다 5초 동안 공격력이 10%~30% 증가한다.\n장비를 +15 강화 시, 공격력 증가 최대치가 40%로 변경된다.',
-            '영원': '모든 결함 효과를 제거한다.\n공격력이 10% 증가한다.',
-            '쏟아지는 별': '전투 중 15초마다 자신 주위 15m 범위 내의 무작위 적을 섬광으로 타격하여 대상에게 (공격력×n%)의 피해를 입히고 대상 주위 2m 범위 내의 대상에게 (공격력×n%)의 피해를 입힌다.\n궁극기를 사용했을 경우, 자신 주위 15m 범위 내의 모든 적들을 섬광으로 타격한다.',
+            '닫힌 운명': '공격 적중시, 결계를 생성하여 타겟과 그 주변에 (공격력×68%)의 피해를 입히고, 약화 효과: 방어구 파괴를 부여해 10초 동안 받는 피해를 10% 증가시킨다. 결계는 1, 2, 4겹으로 늘어나며 최대치까지 늘어난 이후에는 다시 1겹으로 돌아온다.(재사용 대기 시간: 5초)방어구 파괴는 중복 적용되지 않는다.',
+            '검게 물든 후광': '받는 피해가 15%, 적에게 주는 피해가 15% 증가한다.아군을 회복시키거나 물약을 사용하면 15초 동안 받는 피해 증가 효과가 무효화된다.장비를 +10, +15 강화 시 각각 적에게 주는 피해가 6% 추가로 증가한다.',
+            '그림자로 엮은 회랑': '전투 중 각각 2초, 3초, 4초마다 마력 사슬을 발사해 전방의 적들에게 (공격력×25%)의 피해를 준다.장비를 +15 강화 시, 5초마다 발사되는 마력 사슬이 추가된다.',
+            '바스러지는 빛': '스킬을 사용할 때마다 8초 동안 공격력이 5.5% 증가한다. 해당 효과는 최대 5회까지 중첩되며 지속 시간은 스택마다 개별로 가진다.장비를 +15 강화 시, 50% 확률로 추가 중첩이 발생한다.',
+            '세상을 삼키는 악의': '원소 지속 피해를 보유한 적에게 주는 피해가 16% 증가하고, 적에게 주는 무방비 피해가 16% 증가한다.장비를 +10, +15 강화 시 각각 적에게 주는 피해가 3% 추가로 증가한다.',
+            '이름 없는 혼돈': '전투 중, 5초마다 5초 동안 공격력이 10%~30% 증가한다.장비를 +15 강화 시, 공격력 증가 최대치가 40%로 변경된다.',
+            '영원': '모든 결함 효과를 제거한다.공격력이 10% 증가한다.',
+            '쏟아지는 별': '전투 중 15초마다 자신 주위 15m 범위 내의 무작위 적을 섬광으로 타격하여 대상에게 (공격력×315%)의 피해를 입히고 대상 주위 2m 범위 내의 대상에게 (공격력×45%)의 피해를 입힌다.궁극기를 사용했을 경우, 자신 주위 15m 범위 내의 모든 적들을 섬광으로 타격한다.',
             
             // 앰블럼 전설
-            '무자비한 포식자': '무방비 공격 시 각성하여 20초 동안 적에게 주는 스킬 피해가 55% 증가하며, 모든 스킬의 재사용 대기 시간이 초기화 된다.(재사용 대기 시간: 90초)\n상시 효과: 적에게 주는 피해가 21% 증가한다.',
-            '순수한 힘': '궁극기 사용 시, 30초 동안 적에게 주는 피해가 27% 증가한다.\n궁극기 게이지 획득량이 20% 증가한다.',
-            '부서진 하늘': '공격 시 50% 확률로 각성하여 20초 동안 연타 피해가 60% 증가한다. 또한, 지속 시간 동안 공격 적중 시 (공격력×n%)의 추가 피해를 입히며 이 효과는 0.5초마다 한 번만 적용된다.(재사용 대기 시간: 90초)\n상시 효과: 연타 피해가 8%, 재사용 대기 시간 회복 속도가 8% 증가한다.',
-            '인도하는 빛': '궁극기 사용 시, 자신과 주위 15m 내의 아군에게 15초 동안 8%의 공격력 증가 효과를 부여한다.\n아군 회복 시, 15초 동안 자신의 공격력이 20% 증가한다.',
-            '대마법사': '공격 시 50% 확률로 각성하여 20초 동안 공격력이 45%, 스킬 캐스팅 및 사용 속도가 25% 증가한다.(재사용 대기 시간: 90초)\n상시 효과: 스킬 사용 속도, 캐스팅 및 차지 속도가 14%, 차지 스킬의 피해량이 14% 증가한다.',
-            '흩날리는 검': '공격 시 50% 확률로 각성하여 35초 동안 공격력이 35%, 기본 공격 속도가 20%, 기본 공격의 추가타 확률이 20% 증가한다.(재사용 대기 시간: 90초)\n상시 효과: 기본 공격 속도가 24%, 기본 공격 추가타 확률이 24% 증가한다.',
-            '산맥 군주': '공격 시 50% 확률로 각성하여 20초 동안 강타 피해가 60% 증가한다. 또한 지속 시간 동안 공격 적중 시 (공격력×n%)의 추가 피해를 입히며 이 효과는 3초마다 한 번만 적용된다.(재사용 대기 시간: 90초)\n상시 효과: 강타 피해가 8%, 스킬 사용 속도가 8% 증가한다.',
-            '아득한 빛': '공격 시 50% 확률로 각성하여 20초 동안 치명타 확률이 20%, 치명타 피해량이 50% 증가한다.(재사용 대기 시간: 90초)\n상시 효과: 치명타 확률이 5%, 치명타 피해량이 10%, 적에게 주는 피해가 5% 증가한다.',
-            '갈라진 땅': '공격 시 50% 확률로 각성하여 35초 동안 추가타 확률이 30% 증가하며, 추가타 적중 시 다음 공격은 선행 타격의 18% 만큼의 피해를 주는 추가 공격이 발생한다.(재사용 대기 시간: 90초)\n상시 효과: 추가타 확률이 12% 증가한다.'
+            '무자비한 포식자': '무방비 공격 시 각성하여 20초 동안 적에게 주는 스킬 피해가 55% 증가하며, 모든 스킬의 재사용 대기 시간이 초기화 된다.(재사용 대기 시간: 90초)상시 효과: 적에게 주는 피해가 21% 증가한다.',
+            '순수한 힘': '궁극기 사용 시, 30초 동안 적에게 주는 피해가 27% 증가한다.궁극기 게이지 획득량이 20% 증가한다.',
+            '부서진 하늘': '공격 시 50% 확률로 각성하여 20초 동안 연타 피해가 60% 증가한다. 또한, 지속 시간 동안 공격 적중 시 (공격력×29%)의 추가 피해를 입히며 이 효과는 0.5초마다 한 번만 적용된다.(재사용 대기 시간: 90초)상시 효과: 연타 피해가 8%, 재사용 대기 시간 회복 속도가 8% 증가한다.',
+            '인도하는 빛': '궁극기 사용 시, 자신과 주위 15m 내의 아군에게 15초 동안 8%의 공격력 증가 효과를 부여한다.아군 회복 시, 15초 동안 자신의 공격력이 20% 증가한다.',
+            '대마법사': '공격 시 50% 확률로 각성하여 20초 동안 공격력이 45%, 스킬 캐스팅 및 사용 속도가 25% 증가한다.(재사용 대기 시간: 90초)상시 효과: 스킬 사용 속도, 캐스팅 및 차지 속도가 14%, 차지 스킬의 피해량이 14% 증가한다.',
+            '흩날리는 검': '공격 시 50% 확률로 각성하여 35초 동안 공격력이 35%, 기본 공격 속도가 20%, 기본 공격의 추가타 확률이 20% 증가한다.(재사용 대기 시간: 90초)상시 효과: 기본 공격 속도가 24%, 기본 공격 추가타 확률이 24% 증가한다.',
+            '산맥 군주': '공격 시 50% 확률로 각성하여 20초 동안 강타 피해가 60% 증가한다. 또한 지속 시간 동안 공격 적중 시 (공격력×155%)의 추가 피해를 입히며 이 효과는 3초마다 한 번만 적용된다.(재사용 대기 시간: 90초)상시 효과: 강타 피해가 8%, 스킬 사용 속도가 8% 증가한다.',
+            '아득한 빛': '공격 시 50% 확률로 각성하여 20초 동안 치명타 확률이 20%, 치명타 피해량이 50% 증가한다.(재사용 대기 시간: 90초)상시 효과: 치명타 확률이 5%, 치명타 피해량이 10%, 적에게 주는 피해가 5% 증가한다.',
+            '갈라진 땅': '공격 시 50% 확률로 각성하여 35초 동안 추가타 확률이 30% 증가하며, 추가타 적중 시 다음 공격은 선행 타격의 18% 만큼의 피해를 주는 추가 공격이 발생한다.(재사용 대기 시간: 90초)상시 효과: 추가타 확률이 12% 증가한다.',
+            
+            // 6성 전설
+            '천자루의 검': '검을 사용하는 클래스로 클래스 레벨 40을 달성할 때마다 공격력이 4%씩 증가하며 해당 효과는 최대 6회까지 중첩된다.',
+            '횃불': '지속 피해: 화상을 보유한 적 공격 시, 5초 동안 치명타 확률이 10% 증가한다.(재사용 대기 시간: 3초)',
+            '마나 격류': '스킬을 사용할 때마다 5초 동안 공격력이 3.5% 증가하며, 해당 효과는 최대 4회까지 중첩된다.',
+            '바위 거인': '강타 적중 시, 공격력이 3% 증가하며 해당 효과는 최대 3회까지 중첩된다.3중첩 도달 시, 중첩을 모두 소모하여 5초 동안 공격력이 20% 증가한다.',
+            '평원 방랑자': '이동 스킬 사용시, 10초 동안 적에게 주는 피해가 12% 증가하고 이동속도가 30% 증가한다.',
+            '파멸의 낙인': '공격 적중 시, 타겟에게 약화 효과: 파멸의 낙인을 부여해 1초마다 (공격력×9%)의 암흑 피해를 8초 동안 준다.파멸의 낙인은 하나의 대상에게만 부여된다.파멸의 낙인이 만료 될 때마다 다음 파멸의 낙인의 피해량이 10% 증가하며, 해당 효과는 최대 10회까지 증첩된다.공명의 수정의 각인을 보유한 경우, 초기 중첩 5회가 부여된다.',
+            '공명하는 수정': '전투 중 1초마다 강화 효과: 공명을 얻어 적에게 주는 피해가 2% 증가한다.해당 효과는 최대 12회 까지 중첩되며, 12회 중첩될 경우 중첩을 모두 잃을 때까지 중첩 수가 점점 감소한다.약화 효과: 파멸의 낙인을 보유한 적이 있을 경우 중첩 당 피해가 0.6% 추가 증가한다.',
+            '현란함': '치명타 확률이 10% 증가하며, 적에게 주는 치명타 피해가 30% 증가한다.'
         };
         
         // Set 폴백 (구형 브라우저 지원)
@@ -761,7 +1663,7 @@
             }
         }
 
-        var activeFilters = { type: createSet(), grade: createSet(), effect: createSet() };
+        var activeFilters = { type: createSet(), grade: createSet(), keyword: createSet(), feature: createSet() };
         var sortState = { columnIndex: 0, direction: 'asc', dataType: 'str' };
 
         // 디버깅용 환경 정보 출력
@@ -860,7 +1762,8 @@
                 
                 // 기본 데이터 확인
                 console.log('runeData 길이:', runeData.length);
-                console.log('effectCategories 키 개수:', Object.keys(effectCategories).length);
+                console.log('keywordCategories 키 개수:', Object.keys(keywordCategories).length);
+                console.log('featureCategories 길이:', featureCategories.length);
                 
                 generateTable();
                 console.log('테이블 생성 완료');
@@ -870,12 +1773,6 @@
                 
                 sortTable(0, 'str'); // Default sort by name
                 console.log('정렬 완료');
-                
-                initializeDescriptionToggle(); // 초기 상태 설정
-                console.log('설명 토글 초기화 완료');
-                
-                setupButtonEvents();
-                console.log('버튼 이벤트 설정 완료');
 
                 setupAutocomplete();
                 console.log('자동완성 설정 완료');
@@ -899,77 +1796,6 @@
             }
         });
 
-        function setupButtonEvents() {
-            // 아무것도 하지 않음 (initializeDescriptionToggle에서 모든 것을 처리)
-        }
-
-        function initializeDescriptionToggle() {
-            const toggleBtn = document.getElementById('toggleDescBtn');
-            if (!toggleBtn) {
-                console.error('toggleDescBtn을 찾을 수 없습니다');
-                return;
-            }
-            
-            // 텍스트 설정
-            toggleBtn.textContent = '설명';
-            
-            // 모든 환경에서 동일하게: 설명 열이 숨겨진 상태로 시작하고 버튼은 진하게
-            const descColumns = document.querySelectorAll('.description-column');
-            descColumns.forEach(col => {
-                col.classList.remove('force-show');
-                col.classList.add('force-hide');
-            });
-            toggleBtn.classList.remove('inactive'); // 설명이 숨겨져도 버튼은 진하게
-        }
-
-        function toggleDescription(event) {
-            // 터치 이벤트 중복 방지
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            
-            const descColumns = document.querySelectorAll('.description-column');
-            const toggleBtn = document.getElementById('toggleDescBtn');
-            
-            if (!descColumns.length || !toggleBtn) return;
-            
-            // 현재 상태 확인 - force-hide 클래스가 있으면 설명이 숨겨진 상태
-            const isHidden = descColumns[0].classList.contains('force-hide');
-            
-            if (isHidden) {
-                // 설명 보이기
-                descColumns.forEach(col => {
-                    col.classList.remove('force-hide');
-                    col.classList.add('force-show');
-                });
-                toggleBtn.classList.add('inactive'); // 설명이 보이면 버튼이 연하게
-            } else {
-                // 설명 숨기기
-                descColumns.forEach(col => {
-                    col.classList.remove('force-show');
-                    col.classList.add('force-hide');
-                });
-                toggleBtn.classList.remove('inactive'); // 설명이 숨겨지면 버튼이 진하게
-            }
-        }
-
-        // 화면 크기 변경 시 버튼 텍스트 및 색상 업데이트
-        window.addEventListener('resize', function() {
-            const toggleBtn = document.getElementById('toggleDescBtn');
-            const descColumns = document.querySelectorAll('.description-column');
-            
-            if (descColumns.length > 0) {
-                const isForceShow = descColumns[0].classList.contains('force-show');
-                const isForceHide = descColumns[0].classList.contains('force-hide');
-                
-                if (!isForceShow && !isForceHide) {
-                    // 자동 상태일 때만 버튼 상태 업데이트
-                    toggleBtn.textContent = '설명';
-                    toggleBtn.classList.remove('inactive'); // 초기 상태는 선명함
-                }
-            }
-        });
 
         function generateTable() {
             try {
@@ -985,15 +1811,12 @@
                 
                 for (var runeIndex = 0; runeIndex < runeData.length; runeIndex++) {
                     var rune = runeData[runeIndex];
-                    var rowSpan = rune.effects.length || 1;
                     var mainRow = document.createElement('tr');
-                    mainRow.setAttribute('data-rune-name', rune.name); // 메인 행에 룬 이름 추가
-                    var firstEffect = rune.effects[0] || { effect: '-', value: '-' };
+                    mainRow.setAttribute('data-rune-name', rune.name);
                     var description = allDescriptions[rune.name] || '설명 없음';
 
                     // 체크박스 셀 추가
                     var checkboxCell = document.createElement('td');
-                    checkboxCell.rowSpan = rowSpan;
                     var checkbox = document.createElement('input');
                     checkbox.type = 'checkbox';
                     checkbox.className = 'rune-checkbox';
@@ -1001,61 +1824,83 @@
                     checkbox.setAttribute('data-rune-name', rune.name);
                     checkbox.onclick = handleRuneSelection;
                     checkboxCell.appendChild(checkbox);
-
                     mainRow.appendChild(checkboxCell);
 
+                    // 이름 셀
                     var nameCell = document.createElement('td');
-                    nameCell.rowSpan = rowSpan;
                     nameCell.textContent = rune.name;
 
                     // 룬 등급에 따라 배경색과 글씨색 적용
                     if (rune.grade === '신화') {
-                        nameCell.style.backgroundColor = 'rgba(213, 166, 0, 0.7)'; // 신화 룬 배경색 (투명도 0.7)
-                        nameCell.style.color = 'black'; // 글씨색
-                        nameCell.style.fontWeight = 'bold'; // 글씨 굵기
+                        nameCell.style.backgroundColor = 'rgba(213, 166, 0, 0.7)';
+                        nameCell.style.color = 'black';
+                        nameCell.style.fontWeight = 'bold';
                     } else if (rune.grade === '전설') {
-                        nameCell.style.backgroundColor = 'rgba(181, 73, 15, 0.7)'; // 전설 룬 배경색 (투명도 0.7)
-                        nameCell.style.color = 'white'; // 글씨색
-                        nameCell.style.fontWeight = 'bold'; // 글씨 굵기
+                        nameCell.style.backgroundColor = 'rgba(181, 73, 15, 0.7)';
+                        nameCell.style.color = 'white';
+                        nameCell.style.fontWeight = 'bold';
+                    } else if (rune.grade === '6성 전설') {
+                        nameCell.style.backgroundColor = 'rgba(138, 43, 226, 0.7)';
+                        nameCell.style.color = 'white';
+                        nameCell.style.fontWeight = 'bold';
                     }
-                    
                     mainRow.appendChild(nameCell);
 
+                    // 키워드 셀
                     var keywordCell = document.createElement('td');
-                    keywordCell.rowSpan = rowSpan;
                     keywordCell.textContent = rune.keyword;
                     mainRow.appendChild(keywordCell);
 
-                    var effectCell = document.createElement('td');
-                    effectCell.textContent = firstEffect.effect;
-                    mainRow.appendChild(effectCell);
-
-                    var valueCell = document.createElement('td');
-                    valueCell.textContent = firstEffect.value;
-                    mainRow.appendChild(valueCell);
-
-                    var conditionCell = document.createElement('td');
-                    conditionCell.textContent = firstEffect.condition || rune.condition || '-';
-                    mainRow.appendChild(conditionCell);
-
+                    // 설명 셀
                     var descCell = document.createElement('td');
-                    descCell.className = 'description-column';
-                    descCell.rowSpan = rowSpan;
-                    descCell.textContent = description;
+                    // 마침표마다 줄바꿈 추가
+                    var formattedDescription = description
+                        .replace(/\)\./g, ').\n')
+                        .replace(/다\./g, '다.\n')
+                        .replace(/\n\n+/g, '\n');
+                    
+                    // 줄바꿈을 <br>로 먼저 변환
+                    formattedDescription = formattedDescription.replace(/\n/g, '<br>');
+                    
+                    // 결함이 있는 룬들의 설명을 하드코딩으로 처리
+                    if (rune.name === '투사+') {
+                        formattedDescription = '적에게 주는 피해가 <span style="color: #22c55e; font-weight: bold;">33%</span> 증가한다.<br>결함: 멀티히트 피해가 <span style="color: #ef4444; font-weight: bold;">10%</span> 감소한다.';
+                    } else if (rune.name === '은둔자+') {
+                        formattedDescription = '공격력이 <span style="color: #22c55e; font-weight: bold;">33%</span> 증가한다.<br>결함: 재사용 대기 시간 회복 속도가 <span style="color: #ef4444; font-weight: bold;">9%</span> 감소한다.';
+                    } else if (rune.name === '옛 마법사') {
+                        formattedDescription = '재사용 대기 시간 회복 속도가 <span style="color: #22c55e; font-weight: bold;">29%</span> 증가한다.<br>결함: 적에게 주는 피해가 <span style="color: #ef4444; font-weight: bold;">10%</span> 감소한다.';
+                    } else if (rune.name === '신전 기사') {
+                        formattedDescription = '공격력이 <span style="color: #22c55e; font-weight: bold;">23%</span> 증가한다.<br>결함: 치명타 확률이 <span style="color: #ef4444; font-weight: bold;">8%</span> 감소한다.';
+                    } else if (rune.name === '근위병+') {
+                        formattedDescription = '공격력이 <span style="color: #22c55e; font-weight: bold;">23%</span> 증가한다.<br>결함: 재사용 대기 시간 회복 속도가 <span style="color: #ef4444; font-weight: bold;">7%</span> 감소한다.';
+                    } else if (rune.name === '집정관') {
+                        formattedDescription = '공격력이 <span style="color: #22c55e; font-weight: bold;">23%</span> 증가한다.<br>결함: 스킬 사용 속도와 캐스팅 및 차지 속도가 <span style="color: #ef4444; font-weight: bold;">8%</span> 감소한다.';
+                    } else if (rune.name === '고대 수호자') {
+                        formattedDescription = '공격력이 <span style="color: #22c55e; font-weight: bold;">23%</span> 증가한다.<br>결함: 이동 속도가 <span style="color: #ef4444; font-weight: bold;">8%</span> 감소한다.';
+                    } else {
+                        // 결함이 없는 룬들은 일반 처리
+                        // (공격력×숫자%) 형태를 초록색으로 표시
+                        formattedDescription = formattedDescription
+                            .replace(/(\(공격력×\d+(?:\.\d+)?%\))/g, '<span style="color: #22c55e; font-weight: bold;">$1</span>');
+                        
+                        // 괄호 안의 내용을 초록색으로 표시 (이미 처리된 것 제외)
+                        formattedDescription = formattedDescription
+                            .replace(/(\([^)<]+\))/g, function(match) {
+                                if (match.includes('span')) return match;
+                                return '<span style="color: #22c55e; font-weight: bold;">' + match + '</span>';
+                            });
+                        
+                        // 나머지 숫자%를 초록색으로 표시 (이미 처리된 것 제외)
+                        formattedDescription = formattedDescription
+                            .replace(/(\d+(?:\.\d+)?%)/g, function(match) {
+                                return '<span style="color: #22c55e; font-weight: bold;">' + match + '</span>';
+                            });
+                    }
+                    
+                    descCell.innerHTML = formattedDescription;
                     mainRow.appendChild(descCell);
                     
                     tbody.appendChild(mainRow);
-
-                    for (var i = 1; i < rowSpan; i++) {
-                        var subRow = document.createElement('tr');
-                        subRow.setAttribute('data-rune-name', rune.name); // 서브 행에도 룬 이름 추가
-                        var effect = rune.effects[i];
-                        subRow.innerHTML = 
-                            '<td>' + effect.effect + '</td>' +
-                            '<td>' + effect.value + '</td>' +
-                            '<td>' + (effect.condition || '-') + '</td>';
-                        tbody.appendChild(subRow);
-                    }
                 }
                 
                 console.log('테이블 생성 완료. 총 룬 개수:', runeData.length);
@@ -1149,12 +1994,422 @@
         function calculateEffects() {
             const effectSums = {};
             const effectSources = {};
+            const specialEffectSums = {}; // 특수 계산된 효과들
+            
+            // 세트 효과 체크
+            const has눈먼예언자 = selectedRunes['방어구'].includes('눈 먼 예언자');
+            const has쌍둥이별 = selectedRunes['방어구'].includes('쌍둥이 별');
+            const has에메랄드숲 = selectedRunes['방어구'].includes('에메랄드 숲');
+            const has파멸의낙인 = selectedRunes['방어구'].includes('파멸의 낙인');
+            const has공명하는수정 = selectedRunes['방어구'].includes('공명하는 수정');
+            const has영원 = selectedRunes['방어구'].includes('영원');
+            
+            // 세트 효과 반영하여 특수 평균값 계산
+            const runeSpecialAverages = calculate150sAverage(has쌍둥이별, has에메랄드숲, has파멸의낙인, has공명하는수정);
+            
+            // 각성 앰블럼 룬이 선택되었는지 확인
+            const 각성앰블럼룬들 = ['무자비한 포식자', '부서진 하늘', '대마법사', '흩날리는 검', '산맥 군주', '아득한 빛', '갈라진 땅'];
+            const selected각성앰블럼 = selectedRunes['앰블럼'].find(name => 각성앰블럼룬들.includes(name));
+            
+            // 각성 룬별 지속시간 (초)
+            const 각성지속시간 = {
+                '무자비한 포식자': 20,
+                '부서진 하늘': 20,
+                '대마법사': 20,
+                '흩날리는 검': 35,
+                '산맥 군주': 20,
+                '아득한 빛': 20,
+                '갈라진 땅': 35
+            };
+            
+            // 각성 룬의 룬 피해 재사용대기시간 (X초마다)
+            const 각성룬피해쿨타임 = {
+                '부서진 하늘': 0.5,  // 0.5초마다
+                '산맥 군주': 3        // 3초마다
+            };
+            
+            // 각성 가동 시간 계산 함수 (150초 시뮬레이션)
+            // 반환값: 150초 동안의 평균 가동 시간(초)
+            // 로직: 각성 발동과 동시에 재사용 대기 시간 시작 (지속시간과 재사용대기 겹침)
+            function calculate각성가동시간(지속시간초, 재사용대기초, has눈먼예언자) {
+                // 눈먼예언자: 재사용 대기 시간 38초 감소
+                const 실제재사용 = has눈먼예언자 ? Math.max(1, 재사용대기초 - 38) : 재사용대기초;
+                
+                // 한 사이클 = 재사용대기 (지속시간은 재사용대기 안에 포함됨)
+                const 사이클시간 = 실제재사용;
+                
+                // 150초 동안 발동 가능 횟수 (0초에 시작 포함)
+                const 발동횟수 = Math.floor(150 / 사이클시간) + 1;
+                
+                // 각 발동의 실제 가동 시간 계산
+                let 총가동시간 = 0;
+                for (let i = 0; i < 발동횟수; i++) {
+                    const 발동시각 = i * 사이클시간;
+                    if (발동시각 >= 150) break;
+                    
+                    // 이번 발동의 가동 시간 (150초를 넘지 않도록)
+                    const 이번가동 = Math.min(지속시간초, 150 - 발동시각);
+                    총가동시간 += 이번가동;
+                }
+                
+                return 총가동시간;
+            }
+            
+            // 가동률 계산 (0~1 사이 값)
+            function calculate각성가동률(지속시간초, 재사용대기초, has눈먼예언자) {
+                return calculate각성가동시간(지속시간초, 재사용대기초, has눈먼예언자) / 150;
+            }
             
             // 선택된 모든 룬의 효과 수집
             Object.keys(selectedRunes).forEach(type => {
                 selectedRunes[type].forEach(runeName => {
                     const rune = runeData.find(r => r.name === runeName);
                     if (!rune) return;
+
+                    // 특수 계산이 필요한 룬들의 키워드별 처리
+                    const effData = runeEfficiencyData[runeName];
+                    if (effData && effData.keywords) {
+                        effData.keywords.forEach((keyword, index) => {
+                            let efficiency = effData.efficiencies[index] || 0;
+                            let displaySuffix = '';
+                            
+                            // 각성 룬 가동률 배율 계산
+                            if (rune.keyword === '각성') {
+                                const count = effData.counts[index];
+                                const 원본값 = effData.values[index];
+                                
+                                if (rune.type === '앰블럼' && 각성지속시간[runeName]) {
+                                    // 앰블럼 각성 룬인 경우
+                                    // counts가 150이 아닌 경우만 각성 효과 (원본값으로 재계산)
+                                    if (count !== 150) {
+                                        const 가동률 = calculate각성가동률(각성지속시간[runeName], 90, has눈먼예언자);
+                                        efficiency = 원본값 * 가동률;
+                                        if (has눈먼예언자) {
+                                displaySuffix = ' (각성+)';
+                                        }
+                                    }
+                                } else if (rune.type === '방어구') {
+                                    // 방어구 각성 룬인 경우 (압도적인 힘, 섬세한 손놀림)
+                                    if (count === 150) {
+                                        // 기본 옵션은 항상 적용 (efficiency 그대로)
+                                        // 앰블럼 각성이 선택되었을 때만 추가 효과
+                                        if (selected각성앰블럼) {
+                                            const 앰블럼가동률 = calculate각성가동률(각성지속시간[selected각성앰블럼], 90, has눈먼예언자);
+                                            // 기본값 + (기본값 × 앰블럼 각성 가동률)
+                                            efficiency = efficiency + (원본값 * 앰블럼가동률);
+                                            if (has눈먼예언자) {
+                                                displaySuffix = ' (각성+)';
+                                            }
+                                        }
+                                    } else if (count === 33) {
+                                        // counts=33은 중복 데이터이므로 무시
+                                        efficiency = 0;
+                                    }
+                                }
+                            }
+                            
+                            // 특수 계산 룬인 경우 - 키워드별로 정확히 매칭
+                            if (runeName === '검무+' && keyword === '공격력') {
+                                const adjustedValue = runeSpecialAverages['검무+_공격력'];
+                                if (!specialEffectSums['공격력 증가']) specialEffectSums['공격력 증가'] = 0;
+                                specialEffectSums['공격력 증가'] += adjustedValue;
+                                if (!effectSources['공격력 증가']) effectSources['공격력 증가'] = [];
+                                effectSources['공격력 증가'].push({ name: runeName + (has쌍둥이별 ? ' (누적+)' : ''), value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            } else if (runeName === '검무+' && keyword === '치명타 확률') {
+                                const adjustedValue = runeSpecialAverages['검무+_치명타확률'];
+                                if (!specialEffectSums['치명타 확률 증가']) specialEffectSums['치명타 확률 증가'] = 0;
+                                specialEffectSums['치명타 확률 증가'] += adjustedValue;
+                                if (!effectSources['치명타 확률 증가']) effectSources['치명타 확률 증가'] = [];
+                                effectSources['치명타 확률 증가'].push({ name: runeName + (has쌍둥이별 ? ' (누적+)' : ''), value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            } else if (runeName === '공명하는 수정' && keyword === '주는 피해') {
+                                if (!specialEffectSums['적에게 주는 피해 증가']) specialEffectSums['적에게 주는 피해 증가'] = 0;
+                                specialEffectSums['적에게 주는 피해 증가'] += runeSpecialAverages['공명하는 수정'];
+                                if (!effectSources['적에게 주는 피해 증가']) effectSources['적에게 주는 피해 증가'] = [];
+                                const 시너지표시 = has파멸의낙인 ? ' (시너지: 파멸의 낙인)' : '';
+                                effectSources['적에게 주는 피해 증가'].push({ name: runeName + 시너지표시, value: runeSpecialAverages['공명하는 수정'].toFixed(1) + '%', isSpecial: true });
+                            } else if (runeName === '황혼' && keyword === '주는 피해') {
+                                const adjustedValue = runeSpecialAverages['황혼'];
+                                if (!specialEffectSums['적에게 주는 피해 증가']) specialEffectSums['적에게 주는 피해 증가'] = 0;
+                                specialEffectSums['적에게 주는 피해 증가'] += adjustedValue;
+                                if (!effectSources['적에게 주는 피해 증가']) effectSources['적에게 주는 피해 증가'] = [];
+                                effectSources['적에게 주는 피해 증가'].push({ name: runeName + (has쌍둥이별 ? ' (누적+)' : ''), value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            } else if (runeName === '파멸의 낙인' && keyword === '룬 피해') {
+                                if (!specialEffectSums['룬 피해']) specialEffectSums['룬 피해'] = 0;
+                                specialEffectSums['룬 피해'] += runeSpecialAverages['파멸의 낙인'];
+                                if (!effectSources['룬 피해']) effectSources['룬 피해'] = [];
+                                const 시너지표시 = has공명하는수정 ? ' (시너지: 공명하는 수정)' : '';
+                                effectSources['룬 피해'].push({ name: runeName + 시너지표시, value: runeSpecialAverages['파멸의 낙인'].toFixed(1) + '%', isSpecial: true });
+                            } 
+                            // 각성 룬 피해 (X초마다 발동) - 산맥 군주, 부서진 하늘
+                            else if ((runeName === '산맥 군주' || runeName === '부서진 하늘') && keyword === '룬 피해') {
+                                // 룬 피해 DPS = 원본값 / X초 × 각성가동률
+                                const 지속시간 = 각성지속시간[runeName];
+                                const 가동률 = calculate각성가동률(지속시간, 90, has눈먼예언자);
+                                const X초 = 각성룬피해쿨타임[runeName];
+                                const 원본값 = effData.values[index]; // 155% (산맥 군주) 또는 29% (부서진 하늘)
+                                
+                                // DPS 계산: (원본값 / X초) × 가동률
+                                const DPS = (원본값 / X초) * 가동률;
+                                
+                                if (!specialEffectSums['룬 피해']) specialEffectSums['룬 피해'] = 0;
+                                specialEffectSums['룬 피해'] += DPS;
+                                if (!effectSources['룬 피해']) effectSources['룬 피해'] = [];
+                                
+                                const displayName = has눈먼예언자 ? runeName + ' (각성+)' : runeName;
+                                    effectSources['룬 피해'].push({ 
+                                    name: displayName, 
+                                    value: DPS.toFixed(1) + '%', 
+                                        isSpecial: true 
+                                    });
+                            }
+                            // 여명+ - 공격력 (누적+ 효과)
+                            else if (runeName === '여명+' && keyword === '공격력') {
+                                const adjustedValue = runeSpecialAverages['여명+'];
+                                if (!specialEffectSums['공격력 증가']) specialEffectSums['공격력 증가'] = 0;
+                                specialEffectSums['공격력 증가'] += adjustedValue;
+                                if (!effectSources['공격력 증가']) effectSources['공격력 증가'] = [];
+                                effectSources['공격력 증가'].push({ name: runeName + (has쌍둥이별 ? ' (누적+)' : ''), value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            } 
+                            // 저무는 달 - 공격력/방어력 (기본 + 누적 평균)
+                            else if (runeName === '저무는 달' && (keyword === '공격력' || keyword === '방어력')) {
+                                const adjustedValue = runeSpecialAverages['저무는달_총합'];
+                                const effectName = keyword + ' 증가';
+                                if (!specialEffectSums[effectName]) specialEffectSums[effectName] = 0;
+                                specialEffectSums[effectName] += adjustedValue;
+                                if (!effectSources[effectName]) effectSources[effectName] = [];
+                                effectSources[effectName].push({ name: runeName + (has쌍둥이별 ? ' (누적+)' : ''), value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            // 바스러지는 빛, 땅울림, 마나 격류, 바위 거인 - 공격력
+                            else if (['바스러지는 빛', '땅울림', '마나 격류', '바위 거인'].includes(runeName) && keyword === '공격력') {
+                                if (!specialEffectSums['공격력 증가']) specialEffectSums['공격력 증가'] = 0;
+                                specialEffectSums['공격력 증가'] += runeSpecialAverages[runeName];
+                                if (!effectSources['공격력 증가']) effectSources['공격력 증가'] = [];
+                                effectSources['공격력 증가'].push({ name: runeName, value: runeSpecialAverages[runeName].toFixed(1) + '%', isSpecial: true });
+                            } 
+                            // 푸른 거목 - 스킬 피해 (축적+ 효과)
+                            else if (runeName === '푸른 거목' && keyword === '스킬 피해') {
+                                const adjustedValue = runeSpecialAverages['푸른 거목'];
+                                if (!specialEffectSums['스킬 피해량 증가']) specialEffectSums['스킬 피해량 증가'] = 0;
+                                specialEffectSums['스킬 피해량 증가'] += adjustedValue;
+                                if (!effectSources['스킬 피해량 증가']) effectSources['스킬 피해량 증가'] = [];
+                                effectSources['스킬 피해량 증가'].push({ name: runeName + (has에메랄드숲 ? ' (축적+)' : ''), value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            // 새벽별 - 쿨타임 (누적+ 효과)
+                            else if (runeName === '새벽별' && keyword === '쿨타임') {
+                                const adjustedValue = runeSpecialAverages['새벽별'];
+                                if (!specialEffectSums['재사용 대기 시간 회복 속도 증가']) specialEffectSums['재사용 대기 시간 회복 속도 증가'] = 0;
+                                specialEffectSums['재사용 대기 시간 회복 속도 증가'] += adjustedValue;
+                                if (!effectSources['재사용 대기 시간 회복 속도 증가']) effectSources['재사용 대기 시간 회복 속도 증가'] = [];
+                                effectSources['재사용 대기 시간 회복 속도 증가'].push({ name: runeName + (has쌍둥이별 ? ' (누적+)' : ''), value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            // 바위 감시자 - 공격력 (축적+ 효과)
+                            else if (runeName === '바위 감시자' && keyword === '공격력') {
+                                const adjustedValue = runeSpecialAverages['바위 감시자'];
+                                if (!specialEffectSums['공격력 증가']) specialEffectSums['공격력 증가'] = 0;
+                                specialEffectSums['공격력 증가'] += adjustedValue;
+                                if (!effectSources['공격력 증가']) effectSources['공격력 증가'] = [];
+                                effectSources['공격력 증가'].push({ name: runeName + (has에메랄드숲 ? ' (축적+)' : ''), value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            // 요정 무리 - 쿨타임 (축적+ 효과)
+                            else if (runeName === '요정 무리' && keyword === '쿨타임') {
+                                const adjustedValue = runeSpecialAverages['요정 무리'];
+                                if (!specialEffectSums['재사용 대기 시간 회복 속도 증가']) specialEffectSums['재사용 대기 시간 회복 속도 증가'] = 0;
+                                specialEffectSums['재사용 대기 시간 회복 속도 증가'] += adjustedValue;
+                                if (!effectSources['재사용 대기 시간 회복 속도 증가']) effectSources['재사용 대기 시간 회복 속도 증가'] = [];
+                                effectSources['재사용 대기 시간 회복 속도 증가'].push({ name: runeName + (has에메랄드숲 ? ' (축적+)' : ''), value: adjustedValue.toFixed(1) + '초', isSpecial: true });
+                            }
+                            // 수정 꽃잎 - 룬피해 + 공격력 (축적+ 효과)
+                            else if (runeName === '수정 꽃잎' && keyword === '룬 피해') {
+                                const adjustedValue = runeSpecialAverages['수정꽃잎_룬피해'];
+                                if (!specialEffectSums['룬 피해']) specialEffectSums['룬 피해'] = 0;
+                                specialEffectSums['룬 피해'] += adjustedValue;
+                                if (!effectSources['룬 피해']) effectSources['룬 피해'] = [];
+                                effectSources['룬 피해'].push({ name: runeName + (has에메랄드숲 ? ' (축적+)' : ''), value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            else if (runeName === '수정 꽃잎' && keyword === '공격력') {
+                                const adjustedValue = runeSpecialAverages['수정꽃잎_공격력'];
+                                if (!specialEffectSums['공격력 증가']) specialEffectSums['공격력 증가'] = 0;
+                                specialEffectSums['공격력 증가'] += adjustedValue;
+                                if (!effectSources['공격력 증가']) effectSources['공격력 증가'] = [];
+                                effectSources['공격력 증가'].push({ name: runeName + (has에메랄드숲 ? ' (축적+)' : ''), value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            // 나무 사슴 - 룬피해 + 공격력 (축적+ 효과)
+                            else if (runeName === '나무 사슴' && keyword === '룬 피해') {
+                                const adjustedValue = runeSpecialAverages['나무사슴_룬피해'];
+                                if (!specialEffectSums['룬 피해']) specialEffectSums['룬 피해'] = 0;
+                                specialEffectSums['룬 피해'] += adjustedValue;
+                                if (!effectSources['룬 피해']) effectSources['룬 피해'] = [];
+                                effectSources['룬 피해'].push({ name: runeName + (has에메랄드숲 ? ' (축적+)' : ''), value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            else if (runeName === '나무 사슴' && keyword === '공격력') {
+                                const adjustedValue = runeSpecialAverages['나무사슴_공격력'];
+                                if (!specialEffectSums['공격력 증가']) specialEffectSums['공격력 증가'] = 0;
+                                specialEffectSums['공격력 증가'] += adjustedValue;
+                                if (!effectSources['공격력 증가']) effectSources['공격력 증가'] = [];
+                                effectSources['공격력 증가'].push({ name: runeName + (has에메랄드숲 ? ' (축적+)' : ''), value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            // 잊힌 성소 - 룬피해 (축적+ 효과)
+                            else if (runeName === '잊힌 성소' && keyword === '룬 피해') {
+                                const adjustedValue = runeSpecialAverages['잊힌 성소'];
+                                if (!specialEffectSums['룬 피해']) specialEffectSums['룬 피해'] = 0;
+                                specialEffectSums['룬 피해'] += adjustedValue;
+                                if (!effectSources['룬 피해']) effectSources['룬 피해'] = [];
+                                effectSources['룬 피해'].push({ name: runeName + (has에메랄드숲 ? ' (축적+)' : ''), value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            // 끝없는 순환 - 룬피해 + 룬회복 (축적+ 효과)
+                            else if (runeName === '끝없는 순환' && keyword === '룬 피해') {
+                                const adjustedValue = runeSpecialAverages['끝없는순환_공격'];
+                                if (!specialEffectSums['룬 피해']) specialEffectSums['룬 피해'] = 0;
+                                specialEffectSums['룬 피해'] += adjustedValue;
+                                if (!effectSources['룬 피해']) effectSources['룬 피해'] = [];
+                                effectSources['룬 피해'].push({ name: runeName + (has에메랄드숲 ? ' (축적+)' : ''), value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            else if (runeName === '끝없는 순환' && keyword === '룬 회복') {
+                                const adjustedValue = runeSpecialAverages['끝없는순환_회복'];
+                                if (!specialEffectSums['룬 회복']) specialEffectSums['룬 회복'] = 0;
+                                specialEffectSums['룬 회복'] += adjustedValue;
+                                if (!effectSources['룬 회복']) effectSources['룬 회복'] = [];
+                                effectSources['룬 회복'].push({ name: runeName + (has에메랄드숲 ? ' (축적+)' : ''), value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            // 종언+ - 공격력 (누적 + 기본)
+                            else if (runeName === '종언+' && keyword === '공격력') {
+                                const 누적값 = runeSpecialAverages['종언+_누적'] || 0;
+                                const 기본값 = runeSpecialAverages['종언+_기본'];
+                                const adjustedValue = 누적값 + 기본값;
+                                if (!specialEffectSums['공격력 증가']) specialEffectSums['공격력 증가'] = 0;
+                                specialEffectSums['공격력 증가'] += adjustedValue;
+                                if (!effectSources['공격력 증가']) effectSources['공격력 증가'] = [];
+                                // 누적값이 0이어도 쌍둥이별 선택 시 표시 (실제 적용은 0)
+                                effectSources['공격력 증가'].push({ name: runeName + (has쌍둥이별 && 누적값 > 0 ? ' (누적+)' : ''), value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            // 어두운 징조 - 공격력/치명타 확률/주는 피해 (누적)
+                            else if (runeName === '어두운 징조' && keyword === '공격력') {
+                                const adjustedValue = runeSpecialAverages['어두운징조_공격력'];
+                                if (!specialEffectSums['공격력 증가']) specialEffectSums['공격력 증가'] = 0;
+                                specialEffectSums['공격력 증가'] += adjustedValue;
+                                if (!effectSources['공격력 증가']) effectSources['공격력 증가'] = [];
+                                effectSources['공격력 증가'].push({ name: runeName + (has쌍둥이별 ? ' (누적+)' : ''), value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            else if (runeName === '어두운 징조' && keyword === '치명타 확률') {
+                                const adjustedValue = runeSpecialAverages['어두운징조_치명타확률'];
+                                if (!specialEffectSums['치명타 확률 증가']) specialEffectSums['치명타 확률 증가'] = 0;
+                                specialEffectSums['치명타 확률 증가'] += adjustedValue;
+                                if (!effectSources['치명타 확률 증가']) effectSources['치명타 확률 증가'] = [];
+                                effectSources['치명타 확률 증가'].push({ name: runeName + (has쌍둥이별 ? ' (누적+)' : ''), value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            else if (runeName === '어두운 징조' && keyword === '주는 피해') {
+                                const adjustedValue = runeSpecialAverages['어두운징조_주는피해'];
+                                if (!specialEffectSums['적에게 주는 피해 증가']) specialEffectSums['적에게 주는 피해 증가'] = 0;
+                                specialEffectSums['적에게 주는 피해 증가'] += adjustedValue;
+                                if (!effectSources['적에게 주는 피해 증가']) effectSources['적에게 주는 피해 증가'] = [];
+                                effectSources['적에게 주는 피해 증가'].push({ name: runeName + (has쌍둥이별 ? ' (누적+)' : ''), value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            // 필사+ - 기본 + 추가 공격력 (조건부)
+                            else if (runeName === '필사+' && keyword === '공격력') {
+                                const 기본값 = runeSpecialAverages['필사+_기본'];
+                                const 추가값 = runeSpecialAverages['필사+_추가'];
+                                const adjustedValue = 기본값 + 추가값;
+                                if (!specialEffectSums['공격력 증가']) specialEffectSums['공격력 증가'] = 0;
+                                specialEffectSums['공격력 증가'] += adjustedValue;
+                                if (!effectSources['공격력 증가']) effectSources['공격력 증가'] = [];
+                                effectSources['공격력 증가'].push({ name: runeName, value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            // 성역+ - 공격력 + 보호막 (조건부)
+                            else if (runeName === '성역+' && keyword === '공격력') {
+                                const adjustedValue = runeSpecialAverages['성역+_공격력'];
+                                if (!specialEffectSums['공격력 증가']) specialEffectSums['공격력 증가'] = 0;
+                                specialEffectSums['공격력 증가'] += adjustedValue;
+                                if (!effectSources['공격력 증가']) effectSources['공격력 증가'] = [];
+                                effectSources['공격력 증가'].push({ name: runeName, value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            else if (runeName === '성역+' && keyword === '보호막') {
+                                const adjustedValue = runeSpecialAverages['성역+_보호막'];
+                                if (!specialEffectSums['보호막']) specialEffectSums['보호막'] = 0;
+                                specialEffectSums['보호막'] += adjustedValue;
+                                if (!effectSources['보호막']) effectSources['보호막'] = [];
+                                effectSources['보호막'].push({ name: runeName, value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            // 만 갈래 물길 - 공격력 (조건부)
+                            else if (runeName === '만 갈래 물길' && keyword === '공격력') {
+                                const 기본값 = runeSpecialAverages['만갈래물길_기본'];
+                                const 추가값 = runeSpecialAverages['만갈래물길_추가'];
+                                const adjustedValue = 기본값 + 추가값;
+                                if (!specialEffectSums['공격력 증가']) specialEffectSums['공격력 증가'] = 0;
+                                specialEffectSums['공격력 증가'] += adjustedValue;
+                                if (!effectSources['공격력 증가']) effectSources['공격력 증가'] = [];
+                                effectSources['공격력 증가'].push({ name: runeName, value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            // 무한 - 쿨타임 (조건부)
+                            else if (runeName === '무한' && keyword === '쿨타임') {
+                                const adjustedValue = runeSpecialAverages['무한_쿨타임'];
+                                if (!specialEffectSums['재사용 대기 시간 회복 속도 증가']) specialEffectSums['재사용 대기 시간 회복 속도 증가'] = 0;
+                                specialEffectSums['재사용 대기 시간 회복 속도 증가'] += adjustedValue;
+                                if (!effectSources['재사용 대기 시간 회복 속도 증가']) effectSources['재사용 대기 시간 회복 속도 증가'] = [];
+                                effectSources['재사용 대기 시간 회복 속도 증가'].push({ name: runeName, value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            // 이름 없는 혼돈 - 공격력 (조건부)
+                            else if (runeName === '이름 없는 혼돈' && keyword === '공격력') {
+                                const adjustedValue = runeSpecialAverages['이름없는혼돈'];
+                                if (!specialEffectSums['공격력 증가']) specialEffectSums['공격력 증가'] = 0;
+                                specialEffectSums['공격력 증가'] += adjustedValue;
+                                if (!effectSources['공격력 증가']) effectSources['공격력 증가'] = [];
+                                effectSources['공격력 증가'].push({ name: runeName, value: adjustedValue.toFixed(1) + '%', isSpecial: true });
+                            }
+                            // 영원 룬 - 결함 제거 + 공격력 (처리)
+                            else if (runeName === '영원' && keyword === '결함 제거') {
+                                // 결함 제거 효과 표시
+                                if (!specialEffectSums['결함 제거']) specialEffectSums['결함 제거'] = 0;
+                                if (!effectSources['결함 제거']) effectSources['결함 제거'] = [];
+                                const 결함룬목록 = [...selectedRunes['무기'], ...selectedRunes['방어구']]
+                                    .filter(name => {
+                                        const r = runeData.find(rd => rd.name === name);
+                                        return r && r.keyword && r.keyword.includes('결함');
+                                    });
+                                const 결함표시 = 결함룬목록.length > 0 ? 
+                                    ' (제거된 결함: ' + 결함룬목록.join(', ') + ')' : '';
+                                effectSources['결함 제거'].push({ 
+                                    name: runeName + 결함표시, 
+                                    value: '모든 결함 효과 제거', 
+                                    isSpecial: true 
+                                });
+                            }
+                            else if (runeName === '영원' && keyword === '공격력') {
+                                if (!specialEffectSums['공격력 증가']) specialEffectSums['공격력 증가'] = 0;
+                                specialEffectSums['공격력 증가'] += 10.0;
+                                if (!effectSources['공격력 증가']) effectSources['공격력 증가'] = [];
+                                effectSources['공격력 증가'].push({ name: runeName, value: '10.0%', isSpecial: true });
+                            }
+                            else if (efficiency !== 0 || keyword === '결함 제거') {
+                                // 결함 효과 체크: 영원 룬이 있고 결함 룬의 패널티 효과면 무시
+                                const is결함패널티 = rune.keyword && rune.keyword.includes('결함') && efficiency < 0;
+                                if (has영원 && is결함패널티) {
+                                    // 결함 패널티 무시하지만 표시는 함 (영원 효과 표시)
+                                    const effectName = keyword + (keyword.includes('증가') || keyword.includes('피해') || keyword.includes('확률') ? '' : ' 증가');
+                                    if (!specialEffectSums[effectName]) specialEffectSums[effectName] = 0;
+                                    // 합계에는 0 추가 (패널티 제거)
+                                    if (!effectSources[effectName]) effectSources[effectName] = [];
+                                    effectSources[effectName].push({ 
+                                        name: runeName + ' (결함 제거됨)', 
+                                        value: '0% (원래: ' + efficiency.toFixed(1) + '%)', 
+                                        isSpecial: true 
+                                    });
+                                    return;
+                                }
+                                
+                                // 일반 효과 처리 (특수 계산이 아닌 경우)
+                                if (efficiency !== 0) {
+                                    const effectName = keyword + (keyword.includes('증가') || keyword.includes('피해') || keyword.includes('확률') ? '' : ' 증가');
+                                    if (!specialEffectSums[effectName]) specialEffectSums[effectName] = 0;
+                                    specialEffectSums[effectName] += efficiency;
+                                    if (!effectSources[effectName]) effectSources[effectName] = [];
+                                    const displayName = runeName + displaySuffix;
+                                    const valueStr = (efficiency >= 0 ? '' : '') + efficiency.toFixed(1) + '%';
+                                    effectSources[effectName].push({ name: displayName, value: valueStr, isSpecial: true });
+                                }
+                            }
+                        });
+                        return; // 이미 처리했으므로 다음 룬으로
+                    }
 
                     rune.effects.forEach(effect => {
                         if (!effect.value) return;
@@ -1164,12 +2419,13 @@
                         
                         if (!effectSums[effectName]) {
                             effectSums[effectName] = 0;
-                            effectSources[effectName] = [];
+                            effectSources[effectName] = effectSources[effectName] || [];
                         }
                         effectSums[effectName] += value;
                         effectSources[effectName].push({
                             name: runeName,
-                            value: effect.value
+                            value: effect.value,
+                            isSpecial: false
                         });
                     });
                 });
@@ -1179,9 +2435,41 @@
             const resultDiv = document.getElementById('effect-sums');
             resultDiv.innerHTML = '';
             
+            // 특수 계산 효과 먼저 표시
+            // specialEffectSums의 모든 키와 effectSources의 특수 효과 키를 합침
+            const allSpecialEffects = new Set([
+                ...Object.keys(specialEffectSums),
+                ...Object.keys(effectSources).filter(key => effectSources[key]?.some(s => s.isSpecial))
+            ]);
+            
+            allSpecialEffects.forEach(effect => {
+                const sources = effectSources[effect]?.filter(s => s.isSpecial) || [];
+                if (sources.length === 0) return;
+                
+                const total = (specialEffectSums[effect] || 0).toFixed(1) + '%';
+                const parts = sources.map(s => s.value).join(' + ');
+                const runes = sources.map(s => `[${s.name}]`).join(' + ');
+                
+                const effectDiv = document.createElement('div');
+                effectDiv.className = 'effect-sum';
+                // 음수 효과는 빨간색, 양수는 파란색, 0은 회색
+                const effectValue = specialEffectSums[effect] || 0;
+                const borderColor = effectValue > 0 ? '#2196F3' : 
+                                   effectValue < 0 ? '#f44336' : '#9E9E9E';
+                effectDiv.style.borderLeft = `4px solid ${borderColor}`;
+                effectDiv.innerHTML = `
+                    <div><strong>${effect}:</strong> ${total} = ${parts}</div>
+                    <div class="rune-list" style="color: ${borderColor};">${runes}</div>
+                `;
+                resultDiv.appendChild(effectDiv);
+            });
+            
+            // 일반 효과 표시
             Object.keys(effectSums).forEach(effect => {
                 if (effectSums[effect] > 0) {
-                    const sources = effectSources[effect];
+                    const sources = effectSources[effect].filter(s => !s.isSpecial);
+                    if (sources.length === 0) return; // 특수 계산만 있는 경우 스킵
+                    
                     const total = effectSums[effect].toFixed(1) + '%';
                     const parts = sources.map(s => s.value).join(' + ');
                     const runes = sources.map(s => `[${s.name}]`).join(' + ');
@@ -1197,7 +2485,438 @@
             });
 
             document.getElementById('calculation-result').style.display = 
-                Object.keys(effectSums).length > 0 ? 'block' : 'none';
+                (Object.keys(effectSums).length > 0 || Object.keys(specialEffectSums).length > 0) ? 'block' : 'none';
+            
+            // 대미지 배율 계산 실행
+            calculateDamageMultiplier(effectSums);
+        }
+        
+        function calculateDamageMultiplier(runeEffects) {
+            // 세트 효과 체크
+            const has눈먼예언자 = selectedRunes['방어구'].includes('눈 먼 예언자');
+            const has쌍둥이별 = selectedRunes['방어구'].includes('쌍둥이 별');
+            const has에메랄드숲 = selectedRunes['방어구'].includes('에메랄드 숲');
+            const has파멸의낙인 = selectedRunes['방어구'].includes('파멸의 낙인');
+            const has공명하는수정 = selectedRunes['방어구'].includes('공명하는 수정');
+            const has영원 = selectedRunes['방어구'].includes('영원');
+            
+            // 세트 효과 반영하여 특수 평균값 계산
+            const runeSpecialAverages = calculate150sAverage(has쌍둥이별, has에메랄드숲, has파멸의낙인, has공명하는수정);
+            
+            // 각성 앰블럼 룬이 선택되었는지 확인
+            const 각성앰블럼룬들 = ['무자비한 포식자', '부서진 하늘', '대마법사', '흩날리는 검', '산맥 군주', '아득한 빛', '갈라진 땅'];
+            const selected각성앰블럼 = selectedRunes['앰블럼'].find(name => 각성앰블럼룬들.includes(name));
+            
+            // 각성 룬별 지속시간 (초)
+            const 각성지속시간 = {
+                '무자비한 포식자': 20,
+                '부서진 하늘': 20,
+                '대마법사': 20,
+                '흩날리는 검': 35,
+                '산맥 군주': 20,
+                '아득한 빛': 20,
+                '갈라진 땅': 35
+            };
+            
+            // 각성 룬의 룬 피해 재사용대기시간 (X초마다)
+            const 각성룬피해쿨타임 = {
+                '부서진 하늘': 0.5,  // 0.5초마다
+                '산맥 군주': 3        // 3초마다
+            };
+            
+            // 각성 가동 시간 계산 함수 (150초 시뮬레이션)
+            // 반환값: 150초 동안의 평균 가동 시간(초)
+            // 로직: 각성 발동과 동시에 재사용 대기 시간 시작 (지속시간과 재사용대기 겹침)
+            function calculate각성가동시간(지속시간초, 재사용대기초, has눈먼예언자) {
+                // 눈먼예언자: 재사용 대기 시간 38초 감소
+                const 실제재사용 = has눈먼예언자 ? Math.max(1, 재사용대기초 - 38) : 재사용대기초;
+                
+                // 한 사이클 = 재사용대기 (지속시간은 재사용대기 안에 포함됨)
+                const 사이클시간 = 실제재사용;
+                
+                // 150초 동안 발동 가능 횟수 (0초에 시작 포함)
+                const 발동횟수 = Math.floor(150 / 사이클시간) + 1;
+                
+                // 각 발동의 실제 가동 시간 계산
+                let 총가동시간 = 0;
+                for (let i = 0; i < 발동횟수; i++) {
+                    const 발동시각 = i * 사이클시간;
+                    if (발동시각 >= 150) break;
+                    
+                    // 이번 발동의 가동 시간 (150초를 넘지 않도록)
+                    const 이번가동 = Math.min(지속시간초, 150 - 발동시각);
+                    총가동시간 += 이번가동;
+                }
+                
+                return 총가동시간;
+            }
+            
+            // 가동률 계산 (0~1 사이 값)
+            function calculate각성가동률(지속시간초, 재사용대기초, has눈먼예언자) {
+                return calculate각성가동시간(지속시간초, 재사용대기초, has눈먼예언자) / 150;
+            }
+            
+            // 스탯 값 가져오기
+            const stats = {
+                강타강화: parseFloat(document.getElementById('stat-강타강화')?.value || 0),
+                연타강화: parseFloat(document.getElementById('stat-연타강화')?.value || 0),
+                콤보강화: parseFloat(document.getElementById('stat-콤보강화')?.value || 0),
+                광역강화: parseFloat(document.getElementById('stat-광역강화')?.value || 0),
+                스킬위력: parseFloat(document.getElementById('stat-스킬위력')?.value || 0),
+                치명타: parseFloat(document.getElementById('stat-치명타')?.value || 0),
+                추가타: parseFloat(document.getElementById('stat-추가타')?.value || 0)
+            };
+            
+            // 스킬 대미지율 가져오기 (%)
+            const skillDmg = {
+                공격력: parseFloat(document.getElementById('skill-공격력')?.value || 0) / 100,
+                연타피해: parseFloat(document.getElementById('skill-연타피해')?.value || 0) / 100,
+                강타피해: parseFloat(document.getElementById('skill-강타피해')?.value || 0) / 100,
+                광역피해: parseFloat(document.getElementById('skill-광역피해')?.value || 0) / 100,
+                콤보피해: parseFloat(document.getElementById('skill-콤보피해')?.value || 0) / 100,
+                추가피해: parseFloat(document.getElementById('skill-추가피해')?.value || 0) / 100,
+                치명타피해: parseFloat(document.getElementById('skill-치명타피해')?.value || 0) / 100,
+                치명타확률: parseFloat(document.getElementById('skill-치명타확률')?.value || 0) / 100,
+                추가타확률: parseFloat(document.getElementById('skill-추가타확률')?.value || 0) / 100
+            };
+            
+            // 시너지 대미지 가져오기 (%)
+            const synergy = {
+                주는피해: parseFloat(document.getElementById('synergy-주는피해')?.value || 0) / 100,
+                받는피해: parseFloat(document.getElementById('synergy-받는피해')?.value || 0) / 100
+            };
+            
+            // 강화류 사용 유무
+            const use강타 = document.getElementById('use-강타')?.checked ? 1 : 0;
+            const use연타 = document.getElementById('use-연타')?.checked ? 1 : 0;
+            const use광역 = document.getElementById('use-광역')?.checked ? 1 : 0;
+            const use콤보 = document.getElementById('use-콤보')?.checked ? 1 : 0;
+            
+            // 룬 효과 값 (%) - 가동률이 적용된 실제 효과
+            let runeAtk = 0;
+            let rune강타 = 0;
+            let rune연타 = 0;
+            let rune광역 = 0;
+            let rune콤보 = 0;
+            let rune스킬피해 = 0;
+            let rune주는피해 = 0;
+            let rune치명타확률 = 0;
+            let rune치명타피해 = 0;
+            let rune추가타확률 = 0;
+            let rune방어구파괴 = 0;
+            
+            // 선택된 룬들의 효율 데이터에서 가동률이 적용된 값 사용
+            Object.keys(selectedRunes).forEach(type => {
+                selectedRunes[type].forEach(runeName => {
+                    const effData = runeEfficiencyData[runeName];
+                    const rune = runeData.find(r => r.name === runeName);
+                    
+                    // 각성 룬 처리 (눈 먼 예언자 효과 반영)
+                    if (rune && rune.keyword === '각성') {
+                            if (effData && effData.keywords) {
+                                effData.keywords.forEach((keyword, index) => {
+                                    let efficiency = effData.efficiencies[index] || 0;
+                                const count = effData.counts[index];
+                                const 원본값 = effData.values[index];
+                                
+                                // 앰블럼 각성 룬인 경우
+                                if (rune.type === '앰블럼' && 각성지속시간[runeName]) {
+                                    // counts가 150이 아닌 경우만 각성 효과 (원본값으로 재계산)
+                                    if (count !== 150) {
+                                        const 가동률 = calculate각성가동률(각성지속시간[runeName], 90, has눈먼예언자);
+                                        efficiency = 원본값 * 가동률;
+                                    }
+                                }
+                                // 방어구 각성 룬인 경우 (압도적인 힘, 섬세한 손놀림)
+                                else if (rune.type === '방어구') {
+                                    if (count === 150) {
+                                        // 기본 옵션은 항상 적용
+                                        // 앰블럼 각성이 선택되었을 때만 추가 효과
+                                        if (selected각성앰블럼) {
+                                            const 앰블럼가동률 = calculate각성가동률(각성지속시간[selected각성앰블럼], 90, has눈먼예언자);
+                                            efficiency = efficiency + (원본값 * 앰블럼가동률);
+                                        }
+                                    } else if (count === 33) {
+                                        // counts=33은 중복 데이터이므로 무시
+                                        efficiency = 0;
+                                    }
+                                }
+                                
+                                if (keyword === '공격력') {
+                                    runeAtk += efficiency / 100;
+                                } else if (keyword === '강타 피해') {
+                                    rune강타 += efficiency / 100;
+                                } else if (keyword === '연타 피해') {
+                                    rune연타 += efficiency / 100;
+                                } else if (keyword === '치명타 확률') {
+                                    rune치명타확률 += efficiency / 100;
+                                } else if (keyword === '치명타 피해') {
+                                    rune치명타피해 += efficiency / 100;
+                                } else if (keyword === '추가타 확률') {
+                                    rune추가타확률 += efficiency / 100;
+                                    } else if (keyword === '주는 피해') {
+                                        rune주는피해 += efficiency / 100;
+                                    }
+                                });
+                        }
+                        return;
+                    }
+                    
+                    // 검무+ 특수 처리 (누적+ 효과)
+                    if (runeName === '검무+') {
+                        runeAtk += runeSpecialAverages['검무+_공격력'] / 100;
+                        rune치명타확률 += runeSpecialAverages['검무+_치명타확률'] / 100;
+                        return;
+                    }
+                    
+                    // 공명하는 수정 특수 처리
+                    if (runeName === '공명하는 수정') {
+                        rune주는피해 += runeSpecialAverages['공명하는 수정'] / 100;
+                        return;
+                    }
+                    
+                    // 황혼 특수 처리 (누적+ 효과)
+                    if (runeName === '황혼') {
+                        rune주는피해 += runeSpecialAverages['황혼'] / 100;
+                        return;
+                    }
+                    
+                    // 파멸의 낙인은 룬 피해에 포함 (아래에서 처리)
+                    if (runeName === '파멸의 낙인') {
+                        return; // 룬 피해 섹션에서 처리
+                    }
+                    
+                    // 축적 룬들 - 에메랄드 숲 효과 반영
+                    if (runeName === '바위 감시자') {
+                        runeAtk += runeSpecialAverages['바위 감시자'] / 100;
+                        return;
+                    }
+                    
+                    if (runeName === '수정 꽃잎') {
+                        runeAtk += runeSpecialAverages['수정꽃잎_공격력'] / 100;
+                        // 룬 피해는 아래에서 처리
+                        return;
+                    }
+                    
+                    if (runeName === '나무 사슴') {
+                        runeAtk += runeSpecialAverages['나무사슴_공격력'] / 100;
+                        // 룬 피해는 아래에서 처리
+                        return;
+                    }
+                    
+                    // 푸른 거목 - 스킬 피해 (축적+ 효과)
+                    if (runeName === '푸른 거목') {
+                        rune스킬피해 += runeSpecialAverages['푸른 거목'] / 100;
+                        return;
+                    }
+                    
+                    // 잊힌 성소, 끝없는 순환 - 룬 피해만 (아래에서 처리)
+                    if (runeName === '잊힌 성소' || runeName === '끝없는 순환') {
+                        return; // 룬 피해 섹션에서 처리
+                    }
+                    
+                    // 새벽별, 요정 무리 - 쿨타임 (대미지 계산에 직접 영향 없음)
+                    if (runeName === '새벽별' || runeName === '요정 무리') {
+                        return; // 쿨타임은 대미지 계산에 포함되지 않음
+                    }
+                    
+                    // 여명+ - 공격력 (누적+ 효과)
+                    if (runeName === '여명+') {
+                        runeAtk += runeSpecialAverages['여명+'] / 100;
+                        return;
+                    }
+                    
+                    // 저무는 달 - 공격력 (기본 + 누적 평균)
+                    if (runeName === '저무는 달') {
+                        runeAtk += runeSpecialAverages['저무는달_총합'] / 100;
+                        return;
+                    }
+                    
+                    // 종언+ - 공격력 (누적 + 기본)
+                    if (runeName === '종언+') {
+                        const 누적값 = runeSpecialAverages['종언+_누적'] || 0;
+                        const 기본값 = runeSpecialAverages['종언+_기본'];
+                        runeAtk += (누적값 + 기본값) / 100;
+                        return;
+                    }
+                    
+                    // 어두운 징조 - 공격력, 치명타 확률, 주는 피해 (누적)
+                    if (runeName === '어두운 징조') {
+                        runeAtk += runeSpecialAverages['어두운징조_공격력'] / 100;
+                        rune치명타확률 += runeSpecialAverages['어두운징조_치명타확률'] / 100;
+                        rune주는피해 += runeSpecialAverages['어두운징조_주는피해'] / 100;
+                        return;
+                    }
+                    
+                    // 필사+ - 기본 + 추가 공격력 (조건부)
+                    if (runeName === '필사+') {
+                        const 기본값 = runeSpecialAverages['필사+_기본'];
+                        const 추가값 = runeSpecialAverages['필사+_추가'];
+                        runeAtk += (기본값 + 추가값) / 100;
+                        return;
+                    }
+                    
+                    // 성역+ - 공격력 (조건부)
+                    if (runeName === '성역+') {
+                        runeAtk += runeSpecialAverages['성역+_공격력'] / 100;
+                        return;
+                    }
+                    
+                    // 만 갈래 물길 - 공격력 (조건부)
+                    if (runeName === '만 갈래 물길') {
+                        const 기본값 = runeSpecialAverages['만갈래물길_기본'];
+                        const 추가값 = runeSpecialAverages['만갈래물길_추가'];
+                        runeAtk += (기본값 + 추가값) / 100;
+                        return;
+                    }
+                    
+                    // 이름 없는 혼돈 - 공격력 (조건부)
+                    if (runeName === '이름 없는 혼돈') {
+                        runeAtk += runeSpecialAverages['이름없는혼돈'] / 100;
+                        return;
+                    }
+                    
+                    // 영원 룬 - 공격력 10% (결함 제거는 위에서 처리)
+                    if (runeName === '영원') {
+                        runeAtk += 10.0 / 100;
+                        return;
+                    }
+                    
+                    // 바스러지는 빛, 땅울림, 마나 격류, 바위 거인 - 공격력
+                    if (runeSpecialAverages[runeName]) {
+                        runeAtk += runeSpecialAverages[runeName] / 100;
+                        return;
+                    }
+                    
+                    // effData는 이미 위에서 선언됨
+                    if (effData && effData.keywords) {
+                        effData.keywords.forEach((keyword, index) => {
+                            const efficiency = effData.efficiencies[index] || 0;
+                            
+                            // 키워드에 따라 적절한 변수에 누적
+                            if (keyword === '공격력') {
+                                runeAtk += efficiency / 100;
+                            } else if (keyword === '강타 피해') {
+                                rune강타 += efficiency / 100;
+                            } else if (keyword === '연타 피해') {
+                                rune연타 += efficiency / 100;
+                            } else if (keyword === '광역 피해') {
+                                rune광역 += efficiency / 100;
+                            } else if (keyword === '콤보 피해') {
+                                rune콤보 += efficiency / 100;
+                            } else if (keyword === '스킬 피해') {
+                                rune스킬피해 += efficiency / 100;
+                            } else if (keyword === '주는 피해') {
+                                rune주는피해 += efficiency / 100;
+                            } else if (keyword === '치명타 확률') {
+                                rune치명타확률 += efficiency / 100;
+                            } else if (keyword === '치명타 피해') {
+                                rune치명타피해 += efficiency / 100;
+                            } else if (keyword === '추가타 확률') {
+                                rune추가타확률 += efficiency / 100;
+                            } else if (keyword === '방어구 파괴') {
+                                rune방어구파괴 += efficiency / 100;
+                            }
+                        });
+                    }
+                });
+            });
+            
+            // 1. 공격력
+            const attack = runeAtk + skillDmg.공격력 + 1;
+            
+            // 2. 강화류 (체크박스에 따라 사용 유무 결정)
+            const 강타 = ((1 + stats.강타강화 / 8500) * (1 + rune강타 + skillDmg.강타피해) - 1) * use강타;
+            const 연타 = ((1 + stats.연타강화 / 8500) * (1 + rune연타 + skillDmg.연타피해) - 1) * use연타;
+            const 광역 = ((1 + stats.광역강화 / 8500) * (1 + rune광역 + skillDmg.광역피해) - 1) * use광역;
+            const 콤보 = ((1 + stats.콤보강화 / 17500) * (1 + rune콤보 + skillDmg.콤보피해) - 1) * 4 * use콤보;
+            const enhancement = 강타 + 연타 + 광역 + 콤보 + 1;
+            
+            // 3. 피해증가 (주는 피해와 받는 피해를 곱연산)
+            const 주는피해 = (1 + stats.스킬위력 / 8500) * (1 + rune스킬피해) + rune주는피해 + skillDmg.추가피해 + synergy.주는피해;
+            const 받는피해 = rune방어구파괴 + synergy.받는피해 + 1;
+            const damageIncrease = 주는피해 * 받는피해;
+            
+            // 4. 치명타
+            const 치명확률 = (0.5 - 1 / (2 + stats.치명타 / 1000)) + rune치명타확률 + skillDmg.치명타확률;
+            const critical = 치명확률 * (1.4 + stats.치명타 / 5000) * (1 + rune치명타피해 + skillDmg.치명타피해);
+            
+            // 5. 추가타
+            const additional = stats.추가타 / 13000 + rune추가타확률 + skillDmg.추가타확률 + 1;
+            
+            // 6. 룬 피해 계수 계산
+            let runeDamageTotal = 0;
+            let runeDOTTotal = 0;
+            
+            // 선택된 룬들의 효율 데이터에서 룬 피해 추출
+            Object.keys(selectedRunes).forEach(type => {
+                selectedRunes[type].forEach(runeName => {
+                    // 파멸의 낙인 특수 처리 - 6-1 룬 피해 계수에 포함
+                    if (runeName === '파멸의 낙인') {
+                        runeDamageTotal += runeSpecialAverages['파멸의 낙인'];
+                        return;
+                    }
+                    
+                    // 축적 룬 피해들
+                    if (runeName === '수정 꽃잎') {
+                        runeDamageTotal += runeSpecialAverages['수정꽃잎_룬피해'];
+                        return;
+                    }
+                    if (runeName === '나무 사슴') {
+                        runeDamageTotal += runeSpecialAverages['나무사슴_룬피해'];
+                        return;
+                    }
+                    if (runeName === '잊힌 성소') {
+                        runeDamageTotal += runeSpecialAverages['잊힌 성소'];
+                        return;
+                    }
+                    if (runeName === '끝없는 순환') {
+                        runeDamageTotal += runeSpecialAverages['끝없는순환_공격'];
+                        return;
+                    }
+                    
+                    const effData = runeEfficiencyData[runeName];
+                    if (effData && effData.keywords) {
+                        effData.keywords.forEach((keyword, index) => {
+                            if (keyword === '룬 피해') {
+                                // 각성 룬 피해 (X초마다 발동) - 산맥 군주, 부서진 하늘
+                                if (runeName === '산맥 군주' || runeName === '부서진 하늘') {
+                                    const 지속시간 = 각성지속시간[runeName];
+                                    const 가동률 = calculate각성가동률(지속시간, 90, has눈먼예언자);
+                                    const X초 = 각성룬피해쿨타임[runeName];
+                                    const 원본값 = effData.values[index];
+                                    const DPS = (원본값 / X초) * 가동률;
+                                    runeDamageTotal += DPS;
+                                } else {
+                                    // 일반 룬 피해
+                                    runeDamageTotal += (effData.efficiencies[index] || 0);
+                                }
+                            } else if (keyword === '지속 피해') {
+                                // 지속 피해 계수
+                                runeDOTTotal += (effData.efficiencies[index] || 0);
+                            }
+                        });
+                    }
+                });
+            });
+            
+            const runeDamage = 1 + (runeDamageTotal / 100);
+            const runeDOT = 1 + (runeDOTTotal / 100);
+            
+            // 7. 최종 대미지 배율
+            const directDamage = attack * enhancement * damageIncrease * critical * additional * runeDamage;
+            const indirectDamage = attack * damageIncrease * runeDOT;
+            
+            // UI 업데이트
+            document.getElementById('calc-attack').textContent = attack.toFixed(2);
+            document.getElementById('calc-enhancement').textContent = enhancement.toFixed(2);
+            document.getElementById('calc-damage-increase').textContent = damageIncrease.toFixed(2);
+            document.getElementById('calc-critical').textContent = critical.toFixed(2);
+            document.getElementById('calc-additional').textContent = additional.toFixed(2);
+            document.getElementById('calc-rune-damage').textContent = runeDamage.toFixed(2);
+            document.getElementById('calc-rune-dot').textContent = runeDOT.toFixed(2);
+            document.getElementById('final-direct').textContent = directDamage.toFixed(2) + '배';
+            document.getElementById('final-indirect').textContent = indirectDamage.toFixed(2) + '배';
         }
 
         function generateFilterButtons() {
@@ -1210,7 +2929,7 @@
                     return;
                 }
                 
-                var typeItems = ['무기', '방어구', '앰블럼', '장신구'];
+                var typeItems = ['무기', '방어구', '앰블럼'];
                 for (var i = 0; i < typeItems.length; i++) {
                     var item = typeItems[i];
                     var button = document.createElement('button');
@@ -1231,7 +2950,7 @@
                     return;
                 }
                 
-                var gradeItems = ['전설', '신화'];
+                var gradeItems = ['전설', '신화', '6성 전설'];
                 for (var j = 0; j < gradeItems.length; j++) {
                     var item = gradeItems[j];
                     var button = document.createElement('button');
@@ -1246,26 +2965,46 @@
                 }
                 console.log('등급 필터 버튼 생성 완료');
                 
-                const effectContainer = document.getElementById('effect-filters');
-                if (!effectContainer) {
-                    console.error('effect-filters 컨테이너를 찾을 수 없습니다');
+                const keywordContainer = document.getElementById('keyword-filters');
+                if (!keywordContainer) {
+                    console.error('keyword-filters 컨테이너를 찾을 수 없습니다');
                     return;
                 }
                 
-                var categories = Object.keys(effectCategories);
-                for (var k = 0; k < categories.length; k++) {
-                    var category = categories[k];
+                var keywords = Object.keys(keywordCategories);
+                for (var k = 0; k < keywords.length; k++) {
+                    var keyword = keywords[k];
                     var button = document.createElement('button');
                     button.className = 'filter-btn';
-                    button.textContent = category;
-                    button.setAttribute('data-filter-type', 'effect');
-                    button.setAttribute('data-filter-value', category);
+                    button.textContent = keyword;
+                    button.setAttribute('data-filter-type', 'keyword');
+                    button.setAttribute('data-filter-value', keyword);
                     button.onclick = function() {
                         toggleFilter(this.getAttribute('data-filter-type'), this.getAttribute('data-filter-value'), this);
                     };
-                    effectContainer.appendChild(button);
+                    keywordContainer.appendChild(button);
                 }
-                console.log('효과 필터 버튼 생성 완료');
+                console.log('키워드 필터 버튼 생성 완료');
+                
+                const featureContainer = document.getElementById('feature-filters');
+                if (!featureContainer) {
+                    console.error('feature-filters 컨테이너를 찾을 수 없습니다');
+                    return;
+                }
+                
+                for (var m = 0; m < featureCategories.length; m++) {
+                    var feature = featureCategories[m];
+                    var button = document.createElement('button');
+                    button.className = 'filter-btn';
+                    button.textContent = feature;
+                    button.setAttribute('data-filter-type', 'feature');
+                    button.setAttribute('data-filter-value', feature);
+                    button.onclick = function() {
+                        toggleFilter(this.getAttribute('data-filter-type'), this.getAttribute('data-filter-value'), this);
+                    };
+                    featureContainer.appendChild(button);
+                }
+                console.log('특징 필터 버튼 생성 완료');
                 
             } catch (error) {
                 console.error('필터 버튼 생성 오류:', error);
@@ -1290,22 +3029,35 @@
             
             const runeGroups = getRuneGroups();
             runeGroups.forEach(group => {
-                // group.mainRow 대신 data-rune-name을 사용하여 룬 데이터 찾기
                 const runeNameFromRow = group.mainRow.getAttribute('data-rune-name');
                 const rune = runeData.find(r => r.name === runeNameFromRow);
                 if (!rune) return;
 
                 console.log('\nChecking rune:', rune.name);
-                console.log('Rune effects:', rune.effects);
 
                 const typeMatch = activeFilters.type.size === 0 || activeFilters.type.has(rune.type);
                 const gradeMatch = activeFilters.grade.size === 0 || activeFilters.grade.has(rune.grade);
                 
-                // 효과 필터 체크
-                const effectMatch = activeFilters.effect.size === 0 || Array.from(activeFilters.effect).every(category => {
-                    const match = rune.effects.some(eff => checkEffectAgainstCategory(eff.effect, eff.value, category));
-                    console.log(`Effect match for ${category}:`, match);
-                    return match;
+                // 키워드 필터 체크 (runeEfficiencyData 기반)
+                const keywordMatch = activeFilters.keyword.size === 0 || Array.from(activeFilters.keyword).every(category => {
+                    const effData = runeEfficiencyData[rune.name];
+                    if (!effData || !effData.keywords) return false;
+                    
+                    const categoryKeywords = keywordCategories[category];
+                    return effData.keywords.some(keyword => categoryKeywords.includes(keyword));
+                });
+                
+                // 특징 필터 체크
+                const featureMatch = activeFilters.feature.size === 0 || Array.from(activeFilters.feature).every(selectedFeature => {
+                    if (selectedFeature === '기타') {
+                        // 특징이 비어있거나 특수 특징이 아닌 경우
+                        return !rune.keyword || rune.keyword === '';
+                    }
+                    // 특징이 정확히 일치하는지 확인 (누적+, 각성+, 축적+, 결함+ 포함)
+                    if (rune.keyword.includes('+')) {
+                        return rune.keyword.startsWith(selectedFeature);
+                    }
+                    return rune.keyword === selectedFeature;
                 });
 
                 // 이름 검색 조건
@@ -1315,7 +3067,7 @@
                     rune.name.toLowerCase().includes(nameSearch) || 
                     getInitialConsonant(rune.name.toLowerCase()).includes(initialValue);
 
-                const shouldShow = typeMatch && gradeMatch && effectMatch && nameMatch;
+                const shouldShow = typeMatch && gradeMatch && keywordMatch && featureMatch && nameMatch;
                 console.log('Final visibility:', shouldShow);
 
                 group.rows.forEach(row => {
@@ -1345,38 +3097,6 @@
             return runeGroups;
         }
 
-        function checkEffectAgainstCategory(effectText, effectValue, category) {
-            console.log('Checking effect:', effectText, 'value:', effectValue, 'for category:', category);
-            
-            // 공격력 증가 카테고리 특별 처리
-            if (category === '공격력 증가') {
-                // 효과 이름에 '공격력'이 포함되어 있고, 값에 숫자가 있는지 확인
-                const hasAttackPower = effectText.includes('공격력');
-                const hasNumber = effectValue && /\d+/.test(effectValue);
-                
-                console.log('Effect check:', {
-                    text: effectText,
-                    value: effectValue,
-                    hasAttackPower,
-                    hasNumber
-                });
-                
-                return hasAttackPower && hasNumber;
-            }
-            
-            // 다른 카테고리들의 처리
-            const normalizedEffect = effectText.toUpperCase().split(' (')[0].trim();
-            const categoryKeywords = effectCategories[category].map(e => e.toUpperCase());
-            
-            // 쉼표로 구분된 여러 효과가 있는 경우 (예: '영웅' 룬)
-            if (normalizedEffect.includes(',')) {
-                return categoryKeywords.some(keyword => 
-                    normalizedEffect.includes(keyword.replace(/ 증가| 피해/g, '').trim())
-                );
-            }
-            
-            return categoryKeywords.includes(normalizedEffect);
-        }
 
         function clearAllFilters(event) {
             try {
@@ -1442,63 +3162,23 @@
         }
         
         function getGroupSortValue(group, columnIndex) {
-            const runeName = group.mainRow.getAttribute('data-rune-name'); // data-rune-name 사용
+            const runeName = group.mainRow.getAttribute('data-rune-name');
             const rune = runeData.find(r => r.name === runeName);
             if (!rune) return null;
-            
-            // 수치 열의 경우 숫자만 추출
-            if (columnIndex === 4) {  // 수치 열
-                const activeEffectFilters = Array.from(activeFilters.effect);
-                
-                // 공격력 증가 필터가 활성화된 경우
-                if (activeEffectFilters.includes('공격력 증가')) {
-                    const attackPowerEffects = rune.effects.filter(effect => 
-                        effect.effect.includes('공격력') && 
-                        effect.effect.includes('증가') &&
-                        !effect.effect.includes('추가') &&
-                        effect.value
-                    );
-                    
-                    if (attackPowerEffects.length > 0) {
-                        return Math.max(...attackPowerEffects.map(effect => getNumericValue(effect.value)));
-                    }
-                    return -Infinity;
-                }
-
-                // 피해 증가 필터가 활성화된 경우
-                if (activeEffectFilters.includes('피해 증가')) {
-                    const damageEffects = rune.effects.filter(effect => 
-                        effectCategories['피해 증가'].some(keyword => 
-                            effect.effect.toUpperCase() === keyword.toUpperCase()
-                        ) &&
-                        effect.value
-                    );
-                    
-                    if (damageEffects.length > 0) {
-                        return Math.max(...damageEffects.map(effect => getNumericValue(effect.value)));
-                    }
-                    return -Infinity;
-                }
-                
-                // 다른 경우는 모든 효과의 수치 중 가장 큰 값을 찾음
-                let maxValue = -Infinity;
-                rune.effects.forEach(effect => {
-                    if (effect.value) {
-                        const value = getNumericValue(effect.value);
-                        if (value > maxValue) maxValue = value;
-                    }
-                });
-                return maxValue;
-            }
             
             // 이름 열의 경우 룬 이름 직접 참조
             if (columnIndex === 1) {
                 return rune.name;
             }
 
-            // 키워드 열의 경우 룬 키워드 직접 참조
+            // 특징 열의 경우 룬 키워드 직접 참조
             if (columnIndex === 2) {
-                return rune.keyword;
+                return rune.keyword || '';
+            }
+            
+            // 설명 열
+            if (columnIndex === 3) {
+                return group.mainRow.cells[columnIndex].innerText;
             }
             
             return group.mainRow.cells[columnIndex].innerText;
@@ -1555,6 +3235,57 @@
                     applyFilters();
                 });
             }
+            
+            // 스탯 입력 시 대미지 계산 업데이트
+            const statInputs = [
+                'stat-강타강화', 'stat-연타강화', 'stat-콤보강화', 'stat-광역강화',
+                'stat-스킬위력', 'stat-치명타', 'stat-추가타',
+                'skill-공격력', 'skill-연타피해', 'skill-강타피해', 'skill-광역피해',
+                'skill-콤보피해', 'skill-추가피해', 'skill-치명타피해', 
+                'skill-치명타확률', 'skill-추가타확률',
+                'synergy-주는피해', 'synergy-받는피해'
+            ];
+            
+            function recalculateDamage() {
+                // 선택된 룬이 있다면 효과 재계산
+                const effectSums = {};
+                Object.keys(selectedRunes).forEach(type => {
+                    selectedRunes[type].forEach(runeName => {
+                        const rune = runeData.find(r => r.name === runeName);
+                        if (!rune) return;
+                        rune.effects.forEach(effect => {
+                            if (!effect.value) return;
+                            const effectName = effect.effect;
+                            const valueMatch = effect.value.match(/(\d+(?:\.\d+)?)/);
+                            const value = valueMatch ? parseFloat(valueMatch[1]) : 0;
+                            if (!effectSums[effectName]) {
+                                effectSums[effectName] = 0;
+                            }
+                            effectSums[effectName] += value;
+                        });
+                    });
+                });
+                calculateDamageMultiplier(effectSums);
+            }
+            
+            statInputs.forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.addEventListener('input', recalculateDamage);
+                }
+            });
+            
+            // 강화류 체크박스 이벤트 리스너
+            const enhancementCheckboxes = ['use-강타', 'use-연타', 'use-광역', 'use-콤보'];
+            enhancementCheckboxes.forEach(id => {
+                const checkbox = document.getElementById(id);
+                if (checkbox) {
+                    checkbox.addEventListener('change', recalculateDamage);
+                }
+            });
+            
+            // 초기 계산 실행
+            calculateDamageMultiplier({});
         });
 
         function getNumericValue(text) {
