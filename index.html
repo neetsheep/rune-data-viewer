@@ -363,18 +363,35 @@
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             background: white;
+            table-layout: fixed;
         }
         
-        /* 키워드 열 너비를 이름 열과 동일하게 설정 */
+        /* 컬럼 폭 설정 */
+        table th:nth-child(1),
+        table td:nth-child(1) {
+            width: 5%;
+            min-width: 5%;
+        }
+        
         table th:nth-child(2),
-        table td:nth-child(2),
+        table td:nth-child(2) {
+            width: 15%;
+            min-width: 15%;
+        }
+        
         table th:nth-child(3),
         table td:nth-child(3) {
-            width: 150px;
-            min-width: 150px;
+            width: 10%;
+            min-width: 10%;
         }
         
-        /* 선택, 이름, 키워드 열 가운데 정렬 */
+        table th:nth-child(4),
+        table td:nth-child(4) {
+            width: 70%;
+            min-width: 70%;
+        }
+        
+        /* 선택, 이름, 특징 열 가운데 정렬 */
         table th:nth-child(1),
         table td:nth-child(1),
         table th:nth-child(2),
@@ -391,6 +408,9 @@
             vertical-align: middle;
             transition: background-color 0.2s;
             font-size: clamp(10px, 2vw, 14px); /* 셀 텍스트 크기도 조정 */
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
         }
         
         th {
@@ -448,6 +468,358 @@
             }
             th {
                 font-size: clamp(7px, 1.5vw, 10px);
+            }
+        }
+        
+        /* 작은 화면 (400px 이하) 최적화 */
+        @media screen and (max-width: 400px) {
+            * {
+                box-sizing: border-box;
+            }
+            
+            body {
+                padding: 3px;
+                overflow-x: hidden;
+            }
+            
+            .container {
+                padding: 5px;
+                width: 100%;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+            
+            h1 {
+                font-size: 16px;
+                margin-bottom: 8px;
+                word-break: keep-all;
+            }
+            
+            h1 small {
+                font-size: 11px;
+                display: block;
+                margin-top: 2px;
+            }
+            
+            /* 필터 섹션 최적화 */
+            .controls {
+                padding: 5px;
+                gap: 5px;
+            }
+            
+            .filter-section {
+                gap: 3px;
+                width: 100%;
+            }
+            
+            .filter-section strong {
+                font-size: 10px;
+            }
+            
+            .filter-group {
+                gap: 3px;
+                flex-wrap: wrap;
+            }
+            
+            .filter-group button {
+                padding: 3px 5px;
+                font-size: 8px;
+                white-space: nowrap;
+                line-height: 1.2;
+            }
+            
+            #clearFilterBtn {
+                padding: 4px 8px;
+                font-size: 9px;
+            }
+            
+            #name-search {
+                font-size: 11px;
+                padding: 5px;
+                width: 100% !important;
+                max-width: 150px;
+            }
+            
+            /* 테이블 컬럼 비율 재조정 */
+            table th:nth-child(1),
+            table td:nth-child(1) {
+                width: 6%;
+                min-width: 6%;
+                padding: 2px 1px;
+            }
+            
+            table th:nth-child(2),
+            table td:nth-child(2) {
+                width: 20%;
+                min-width: 20%;
+            }
+            
+            table th:nth-child(3),
+            table td:nth-child(3) {
+                width: 15%;
+                min-width: 15%;
+            }
+            
+            table th:nth-child(4),
+            table td:nth-child(4) {
+                width: 59%;
+                min-width: 59%;
+            }
+            
+            /* 테이블 텍스트 크기 */
+            table {
+                font-size: 9px;
+            }
+            
+            th, td {
+                padding: 2px 3px;
+                font-size: 9px;
+                line-height: 1.2;
+            }
+            
+            th {
+                font-size: 8px;
+                padding: 3px 2px;
+            }
+            
+            /* 체크박스 크기 조정 */
+            .rune-checkbox {
+                width: 15px !important;
+                height: 15px !important;
+                margin: 0 !important;
+            }
+            
+            /* 선택된 룬 카운트 */
+            .selected-count {
+                gap: 8px;
+                padding: 6px;
+            }
+            
+            .count-item {
+                min-width: 60px;
+                padding: 6px;
+                max-width: 80px;
+            }
+            
+            .count-label {
+                font-size: 9px;
+            }
+            
+            .count-value {
+                font-size: 12px;
+            }
+            
+            .count-value span {
+                font-size: 12px;
+            }
+            
+            /* 스테이터스 섹션 */
+            .user-stats-section {
+                padding: 10px;
+            }
+            
+            .user-stats-section h2,
+            .user-stats-section h3 {
+                font-size: 13px;
+                margin: 8px 0 6px 0;
+            }
+            
+            .stats-container {
+                gap: 5px;
+                flex-direction: column;
+            }
+            
+            .stats-column {
+                gap: 4px;
+                width: 100%;
+            }
+            
+            .stat-row {
+                gap: 3px;
+            }
+            
+            .stat-row label {
+                font-size: 9px;
+                min-width: 50px;
+                flex-shrink: 0;
+            }
+            
+            .stat-row input {
+                font-size: 10px;
+                padding: 4px;
+                min-width: 0;
+                flex: 1;
+            }
+            
+            .percent-symbol {
+                font-size: 9px;
+            }
+            
+            /* 강화류 토글 */
+            .enhancement-toggles {
+                gap: 5px;
+                flex-wrap: wrap;
+            }
+            
+            .toggle-item {
+                padding: 4px 6px;
+                font-size: 8px;
+            }
+            
+            .toggle-item input[type="checkbox"] {
+                width: 12px;
+                height: 12px;
+            }
+            
+            /* 대미지 배율 계산 */
+            .damage-calculation {
+                padding: 10px;
+            }
+            
+            .damage-calculation h3 {
+                font-size: 13px;
+                margin-bottom: 8px;
+            }
+            
+            .damage-calculation h4 {
+                font-size: 11px;
+                margin-bottom: 6px;
+            }
+            
+            .damage-details {
+                gap: 10px;
+            }
+            
+            .damage-section {
+                padding: 8px;
+            }
+            
+            .damage-final {
+                padding: 8px;
+                min-width: 0;
+            }
+            
+            .final-row {
+                flex-wrap: wrap;
+            }
+            
+            .final-row .final-label {
+                flex: 1;
+                min-width: 0;
+            }
+            
+            .final-row .final-value {
+                flex-shrink: 0;
+            }
+            
+            .calc-row,
+            .final-row {
+                padding: 5px 0;
+            }
+            
+            .calc-label,
+            .final-label {
+                font-size: 8px;
+                line-height: 1.3;
+            }
+            
+            .calc-value {
+                font-size: 9px;
+            }
+            
+            .final-value {
+                font-size: 11px;
+                font-weight: 600;
+            }
+            
+            /* 세팅 섹션 */
+            .settings-section {
+                padding: 10px;
+            }
+            
+            .settings-section h3 {
+                font-size: 14px;
+            }
+            
+            .settings-buttons {
+                gap: 4px;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+            
+            .settings-buttons button {
+                padding: 6px 8px;
+                font-size: 9px;
+                flex: 0 1 auto;
+                min-width: auto;
+                white-space: nowrap;
+                writing-mode: horizontal-tb;
+                text-orientation: mixed;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            /* 모달 */
+            .modal-content {
+                width: 95%;
+                padding: 12px;
+                margin: 5% auto;
+            }
+            
+            .modal-header {
+                padding-bottom: 10px;
+                margin-bottom: 15px;
+            }
+            
+            .modal-header h3 {
+                font-size: 15px;
+            }
+            
+            .modal-body {
+                max-height: 70vh;
+            }
+            
+            .modal-body input {
+                font-size: 12px;
+                padding: 6px;
+            }
+            
+            .save-item {
+                padding: 10px;
+                margin: 8px 0;
+            }
+            
+            .save-item-name {
+                font-size: 13px;
+            }
+            
+            .save-item-date {
+                font-size: 10px;
+            }
+            
+            .modal-footer {
+                padding-top: 10px;
+                margin-top: 15px;
+            }
+            
+            .modal-footer button {
+                padding: 7px 12px;
+                font-size: 12px;
+            }
+            
+            /* 비교 결과 */
+            .compare-item h4 {
+                font-size: 13px;
+            }
+            
+            .compare-stat {
+                font-size: 9px;
+                padding: 5px;
+            }
+            
+            .compare-difference {
+                font-size: 10px;
+                padding: 10px;
             }
         }
         
@@ -661,6 +1033,343 @@
             outline: none;
             border-color: #4CAF50;
             box-shadow: 0 0 0 3px rgba(76,175,80,0.1);
+        }
+        
+        /* 세팅 섹션 스타일 */
+        .settings-section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        
+        .settings-section h3 {
+            margin: 0 0 20px 0;
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: 600;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        
+        .settings-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .settings-buttons button {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            white-space: nowrap;
+            writing-mode: horizontal-tb;
+        }
+        
+        .settings-buttons button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .settings-buttons button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        
+        .settings-buttons button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #ccc !important;
+        }
+        
+        .btn-save {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-save:hover:not(:disabled) {
+            background: #45a049;
+        }
+        
+        .btn-load {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .btn-load:hover:not(:disabled) {
+            background: #0b7dda;
+        }
+        
+        .btn-update {
+            background: #FF9800;
+            color: white;
+        }
+        
+        .btn-update:hover:not(:disabled) {
+            background: #e68900;
+        }
+        
+        .btn-delete {
+            background: #f44336;
+            color: white;
+        }
+        
+        .btn-delete:hover:not(:disabled) {
+            background: #da190b;
+        }
+        
+        .btn-compare {
+            background: #9C27B0;
+            color: white;
+        }
+        
+        .btn-compare:hover:not(:disabled) {
+            background: #7b1fa2;
+        }
+        
+        /* 모달 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .modal-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 22px;
+        }
+        
+        .modal-body {
+            margin: 20px 0;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        
+        /* 스크롤바 스타일 */
+        .modal-body::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .modal-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        .modal-body::-webkit-scrollbar-thumb {
+            background: #4CAF50;
+            border-radius: 4px;
+        }
+        
+        .modal-body::-webkit-scrollbar-thumb:hover {
+            background: #45a049;
+        }
+        
+        .modal-body input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        .modal-body input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        
+        .save-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 15px 0;
+        }
+        
+        /* save-list 스크롤바 스타일 */
+        .save-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .save-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        .save-list::-webkit-scrollbar-thumb {
+            background: #4CAF50;
+            border-radius: 4px;
+        }
+        
+        .save-list::-webkit-scrollbar-thumb:hover {
+            background: #45a049;
+        }
+        
+        .save-item {
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        .save-item:hover {
+            border-color: #4CAF50;
+            background: #e8f5e9;
+            transform: translateX(5px);
+        }
+        
+        .save-item.selected {
+            border-color: #4CAF50;
+            background: #c8e6c9;
+        }
+        
+        .save-item-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .save-item-date {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #e0e0e0;
+        }
+        
+        .modal-footer button {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-btn-confirm {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .modal-btn-confirm:hover {
+            background: #45a049;
+        }
+        
+        .modal-btn-cancel {
+            background: #9e9e9e;
+            color: white;
+        }
+        
+        .modal-btn-cancel:hover {
+            background: #757575;
+        }
+        
+        /* 비교 결과 스타일 */
+        .compare-result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .compare-item {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            background: white;
+        }
+        
+        .compare-item h4 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 18px;
+        }
+        
+        .compare-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .compare-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+        
+        .compare-difference {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 4px;
+        }
+        
+        .compare-difference.positive {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+        
+        .compare-difference.negative {
+            background: #f8d7da;
+            border-left-color: #dc3545;
         }
     </style>
 </head>
@@ -916,6 +1625,102 @@
                         <span class="final-value" id="final-indirect">1.00배</span>
                     </div>
                 </div>
+            </div>
+        </div>
+        
+        <!-- 세팅 섹션 -->
+        <div class="settings-section">
+            <h3>세팅</h3>
+            <div class="settings-buttons">
+                <button id="btn-save" class="btn-save">저장</button>
+                <button id="btn-load" class="btn-load">불러오기</button>
+                <button id="btn-update" class="btn-update">변경</button>
+                <button id="btn-delete" class="btn-delete">삭제</button>
+                <button id="btn-compare" class="btn-compare">비교</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 저장 모달 -->
+    <div id="saveModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>세팅 저장</h3>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="saveNameInput" placeholder="세팅 이름을 입력하세요">
+            </div>
+            <div class="modal-footer">
+                <button id="saveModalConfirm" class="modal-btn-confirm">저장</button>
+                <button id="saveModalCancel" class="modal-btn-cancel">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 불러오기 모달 -->
+    <div id="loadModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>세팅 불러오기</h3>
+            </div>
+            <div class="modal-body">
+                <div id="loadList" class="save-list"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="loadModalConfirm" class="modal-btn-confirm">불러오기</button>
+                <button id="loadModalCancel" class="modal-btn-cancel">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 변경 모달 -->
+    <div id="updateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>세팅 변경</h3>
+            </div>
+            <div class="modal-body">
+                <div id="updateList" class="save-list"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="updateModalConfirm" class="modal-btn-confirm">변경</button>
+                <button id="updateModalCancel" class="modal-btn-cancel">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 삭제 모달 -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>세팅 삭제</h3>
+            </div>
+            <div class="modal-body">
+                <div id="deleteList" class="save-list"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="deleteModalConfirm" class="modal-btn-confirm">삭제</button>
+                <button id="deleteModalCancel" class="modal-btn-cancel">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 비교 모달 -->
+    <div id="compareModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3>세팅 비교</h3>
+            </div>
+            <div class="modal-body">
+                <h4 style="margin-bottom: 10px;">첫 번째 세팅 선택</h4>
+                <div id="compareList1" class="save-list"></div>
+                <h4 style="margin: 20px 0 10px 0;">두 번째 세팅 선택</h4>
+                <div id="compareList2" class="save-list"></div>
+                <div id="compareResult"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="compareModalConfirm" class="modal-btn-confirm">비교</button>
+                <button id="compareModalCancel" class="modal-btn-cancel">닫기</button>
             </div>
         </div>
     </div>
@@ -3310,6 +4115,634 @@
             // 여러 숫자 중 가장 큰 값 반환
             return Math.max(...matches.map(m => parseFloat(m)));
         }
+        
+        // ============================================
+        // 세팅 저장/불러오기 기능
+        // ============================================
+        
+        // 로컬스토리지 키
+        const STORAGE_KEY = 'mabi_rune_save_list';
+        
+        // 선택된 항목 추적
+        let selectedLoadItem = null;
+        let selectedUpdateItem = null;
+        let selectedDeleteItem = null;
+        let selectedCompareItem1 = null;
+        let selectedCompareItem2 = null;
+        
+        // 현재 세팅 데이터 수집
+        function getCurrentSet() {
+            // 선택된 룬 정보
+            const selectedRunesData = {
+                '무기': selectedRunes['무기'].slice(),
+                '방어구': selectedRunes['방어구'].slice(),
+                '앰블럼': selectedRunes['앰블럼'].slice()
+            };
+            
+            // 스테이터스
+            const stats = {
+                강타강화: parseFloat(document.getElementById('stat-강타강화')?.value) || 0,
+                연타강화: parseFloat(document.getElementById('stat-연타강화')?.value) || 0,
+                콤보강화: parseFloat(document.getElementById('stat-콤보강화')?.value) || 0,
+                광역강화: parseFloat(document.getElementById('stat-광역강화')?.value) || 0,
+                스킬위력: parseFloat(document.getElementById('stat-스킬위력')?.value) || 0,
+                치명타: parseFloat(document.getElementById('stat-치명타')?.value) || 0,
+                추가타: parseFloat(document.getElementById('stat-추가타')?.value) || 0
+            };
+            
+            // 캐릭터 스킬 관련
+            const skills = {
+                공격력: parseFloat(document.getElementById('skill-공격력')?.value) || 0,
+                연타피해: parseFloat(document.getElementById('skill-연타피해')?.value) || 0,
+                강타피해: parseFloat(document.getElementById('skill-강타피해')?.value) || 0,
+                광역피해: parseFloat(document.getElementById('skill-광역피해')?.value) || 0,
+                콤보피해: parseFloat(document.getElementById('skill-콤보피해')?.value) || 0,
+                추가피해: parseFloat(document.getElementById('skill-추가피해')?.value) || 0,
+                치명타피해: parseFloat(document.getElementById('skill-치명타피해')?.value) || 0,
+                치명타확률: parseFloat(document.getElementById('skill-치명타확률')?.value) || 0,
+                추가타확률: parseFloat(document.getElementById('skill-추가타확률')?.value) || 0
+            };
+            
+            // 강화류 사용 유무
+            const enhancements = {
+                강타: document.getElementById('use-강타')?.checked || false,
+                연타: document.getElementById('use-연타')?.checked || false,
+                광역: document.getElementById('use-광역')?.checked || false,
+                콤보: document.getElementById('use-콤보')?.checked || false
+            };
+            
+            // 시너지 대미지
+            const synergy = parseFloat(document.getElementById('synergy-주는피해')?.value) || 0;
+            
+            // 대미지 배율 계산 결과
+            const damageCalculation = {
+                attack: document.getElementById('calc-attack')?.textContent || '1.00',
+                enhancement: document.getElementById('calc-enhancement')?.textContent || '1.00',
+                damageIncrease: document.getElementById('calc-damage-increase')?.textContent || '1.00',
+                critical: document.getElementById('calc-critical')?.textContent || '1.00',
+                additional: document.getElementById('calc-additional')?.textContent || '1.00',
+                runeDamage: document.getElementById('calc-rune-damage')?.textContent || '1.00',
+                runeDot: document.getElementById('calc-rune-dot')?.textContent || '1.00',
+                finalDirect: document.getElementById('final-direct')?.textContent || '1.00배',
+                finalIndirect: document.getElementById('final-indirect')?.textContent || '1.00배'
+            };
+            
+            return {
+                runes: selectedRunesData,
+                stats: stats,
+                skills: skills,
+                enhancements: enhancements,
+                synergy: synergy,
+                damageCalculation: damageCalculation,
+                timestamp: new Date().toISOString()
+            };
+        }
+        
+        // 세팅 데이터 로드
+        function loadSet(setData) {
+            if (!setData) return;
+            
+            // 먼저 모든 체크박스 해제
+            document.querySelectorAll('input[type="checkbox"][data-name]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            // selectedRunes 초기화
+            selectedRunes = { '무기': [], '방어구': [], '앰블럼': [] };
+            
+            // 룬 선택 복원
+            if (setData.runes) {
+                Object.keys(setData.runes).forEach(type => {
+                    setData.runes[type].forEach(runeName => {
+                        const checkbox = document.querySelector(`input[type="checkbox"][data-name="${runeName}"]`);
+                        if (checkbox) {
+                            checkbox.checked = true;
+                            selectedRunes[type].push(runeName);
+                        }
+                    });
+                });
+            }
+            
+            // 스테이터스 복원
+            if (setData.stats) {
+                if (document.getElementById('stat-강타강화'))
+                    document.getElementById('stat-강타강화').value = setData.stats.강타강화 || 0;
+                if (document.getElementById('stat-연타강화'))
+                    document.getElementById('stat-연타강화').value = setData.stats.연타강화 || 0;
+                if (document.getElementById('stat-콤보강화'))
+                    document.getElementById('stat-콤보강화').value = setData.stats.콤보강화 || 0;
+                if (document.getElementById('stat-광역강화'))
+                    document.getElementById('stat-광역강화').value = setData.stats.광역강화 || 0;
+                if (document.getElementById('stat-스킬위력'))
+                    document.getElementById('stat-스킬위력').value = setData.stats.스킬위력 || 0;
+                if (document.getElementById('stat-치명타'))
+                    document.getElementById('stat-치명타').value = setData.stats.치명타 || 0;
+                if (document.getElementById('stat-추가타'))
+                    document.getElementById('stat-추가타').value = setData.stats.추가타 || 0;
+            }
+            
+            // 스킬 복원
+            if (setData.skills) {
+                if (document.getElementById('skill-공격력'))
+                    document.getElementById('skill-공격력').value = setData.skills.공격력 || 0;
+                if (document.getElementById('skill-연타피해'))
+                    document.getElementById('skill-연타피해').value = setData.skills.연타피해 || 0;
+                if (document.getElementById('skill-강타피해'))
+                    document.getElementById('skill-강타피해').value = setData.skills.강타피해 || 0;
+                if (document.getElementById('skill-광역피해'))
+                    document.getElementById('skill-광역피해').value = setData.skills.광역피해 || 0;
+                if (document.getElementById('skill-콤보피해'))
+                    document.getElementById('skill-콤보피해').value = setData.skills.콤보피해 || 0;
+                if (document.getElementById('skill-추가피해'))
+                    document.getElementById('skill-추가피해').value = setData.skills.추가피해 || 0;
+                if (document.getElementById('skill-치명타피해'))
+                    document.getElementById('skill-치명타피해').value = setData.skills.치명타피해 || 0;
+                if (document.getElementById('skill-치명타확률'))
+                    document.getElementById('skill-치명타확률').value = setData.skills.치명타확률 || 0;
+                if (document.getElementById('skill-추가타확률'))
+                    document.getElementById('skill-추가타확률').value = setData.skills.추가타확률 || 0;
+            }
+            
+            // 강화류 복원
+            if (setData.enhancements) {
+                if (document.getElementById('use-강타')) 
+                    document.getElementById('use-강타').checked = setData.enhancements.강타 || false;
+                if (document.getElementById('use-연타')) 
+                    document.getElementById('use-연타').checked = setData.enhancements.연타 || false;
+                if (document.getElementById('use-광역')) 
+                    document.getElementById('use-광역').checked = setData.enhancements.광역 || false;
+                if (document.getElementById('use-콤보')) 
+                    document.getElementById('use-콤보').checked = setData.enhancements.콤보 || false;
+            }
+            
+            // 시너지 복원
+            if (setData.synergy !== undefined && document.getElementById('synergy-주는피해')) {
+                document.getElementById('synergy-주는피해').value = setData.synergy;
+            }
+            
+            // UI 업데이트
+            updateSelectedCounts();
+            calculateEffects();
+        }
+        
+        // 로컬스토리지에서 저장 목록 가져오기
+        function getSaveList() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            return data ? JSON.parse(data) : {};
+        }
+        
+        // 로컬스토리지에 저장 목록 저장
+        function setSaveList(saveList) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(saveList));
+        }
+        
+        // 버튼 활성화/비활성화 업데이트
+        function updateButtonStates() {
+            const saveList = getSaveList();
+            const count = Object.keys(saveList).length;
+            
+            document.getElementById('btn-load').disabled = count < 1;
+            document.getElementById('btn-update').disabled = count < 1;
+            document.getElementById('btn-delete').disabled = count < 1;
+            document.getElementById('btn-compare').disabled = count < 2;
+        }
+        
+        // 모달 열기/닫기
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            // 선택 초기화
+            if (modalId === 'loadModal') selectedLoadItem = null;
+            if (modalId === 'updateModal') selectedUpdateItem = null;
+            if (modalId === 'deleteModal') selectedDeleteItem = null;
+            if (modalId === 'compareModal') {
+                selectedCompareItem1 = null;
+                selectedCompareItem2 = null;
+                document.getElementById('compareResult').innerHTML = '';
+            }
+            if (modalId === 'saveModal') {
+                document.getElementById('saveNameInput').value = '';
+            }
+        }
+        
+        // 모달 외부 클릭 시 닫기
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+        
+        // 저장 모달 열기
+        function openSaveModal() {
+            openModal('saveModal');
+            document.getElementById('saveNameInput').focus();
+        }
+        
+        // 현재 세팅 저장
+        function saveCurrentSet() {
+            const saveName = document.getElementById('saveNameInput').value.trim();
+            
+            if (!saveName) {
+                alert('세팅 이름을 입력해주세요.');
+                return;
+            }
+            
+            const saveList = getSaveList();
+            
+            if (saveList[saveName]) {
+                if (!confirm(`'${saveName}' 이름의 세팅이 이미 존재합니다. 덮어쓰시겠습니까?`)) {
+                    return;
+                }
+            }
+            
+            const currentSet = getCurrentSet();
+            saveList[saveName] = currentSet;
+            setSaveList(saveList);
+            
+            alert(`'${saveName}' 세팅이 저장되었습니다.`);
+            closeModal('saveModal');
+            updateButtonStates();
+        }
+        
+        // 불러오기 모달 열기
+        function openLoadModal() {
+            const saveList = getSaveList();
+            const count = Object.keys(saveList).length;
+            
+            if (count < 1) return;
+            
+            const listHtml = Object.keys(saveList).map(name => {
+                const data = saveList[name];
+                const date = new Date(data.timestamp).toLocaleString('ko-KR');
+                return `
+                    <div class="save-item" data-name="${name}">
+                        <div class="save-item-name">${name}</div>
+                        <div class="save-item-date">${date}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('loadList').innerHTML = listHtml;
+            selectedLoadItem = null;
+            openModal('loadModal');
+        }
+        
+        // 불러오기 항목 선택
+        function selectLoadItem(name) {
+            selectedLoadItem = name;
+            document.querySelectorAll('#loadList .save-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            document.querySelector(`#loadList .save-item[data-name="${name}"]`).classList.add('selected');
+        }
+        
+        // 선택된 세팅 불러오기
+        function loadSelectedSet() {
+            if (!selectedLoadItem) {
+                alert('불러올 세팅을 선택해주세요.');
+                return;
+            }
+            
+            const saveList = getSaveList();
+            const setData = saveList[selectedLoadItem];
+            
+            if (!setData) {
+                alert('세팅을 찾을 수 없습니다.');
+                return;
+            }
+            
+            loadSet(setData);
+            alert(`'${selectedLoadItem}' 세팅을 불러왔습니다.`);
+            closeModal('loadModal');
+        }
+        
+        // 변경 모달 열기
+        function openUpdateModal() {
+            const saveList = getSaveList();
+            const count = Object.keys(saveList).length;
+            
+            if (count < 1) return;
+            
+            const listHtml = Object.keys(saveList).map(name => {
+                const data = saveList[name];
+                const date = new Date(data.timestamp).toLocaleString('ko-KR');
+                return `
+                    <div class="save-item" data-name="${name}">
+                        <div class="save-item-name">${name}</div>
+                        <div class="save-item-date">${date}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('updateList').innerHTML = listHtml;
+            selectedUpdateItem = null;
+            openModal('updateModal');
+        }
+        
+        // 변경 항목 선택
+        function selectUpdateItem(name) {
+            selectedUpdateItem = name;
+            document.querySelectorAll('#updateList .save-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            document.querySelector(`#updateList .save-item[data-name="${name}"]`).classList.add('selected');
+        }
+        
+        // 선택된 세팅 변경
+        function updateSelectedSet() {
+            if (!selectedUpdateItem) {
+                alert('변경할 세팅을 선택해주세요.');
+                return;
+            }
+            
+            if (!confirm(`'${selectedUpdateItem}' 세팅을 현재 값으로 덮어쓰시겠습니까?`)) {
+                return;
+            }
+            
+            const saveList = getSaveList();
+            const currentSet = getCurrentSet();
+            saveList[selectedUpdateItem] = currentSet;
+            setSaveList(saveList);
+            
+            alert(`'${selectedUpdateItem}' 세팅이 변경되었습니다.`);
+            closeModal('updateModal');
+        }
+        
+        // 삭제 모달 열기
+        function openDeleteModal() {
+            const saveList = getSaveList();
+            const count = Object.keys(saveList).length;
+            
+            if (count < 1) return;
+            
+            const listHtml = Object.keys(saveList).map(name => {
+                const data = saveList[name];
+                const date = new Date(data.timestamp).toLocaleString('ko-KR');
+                return `
+                    <div class="save-item" data-name="${name}">
+                        <div class="save-item-name">${name}</div>
+                        <div class="save-item-date">${date}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('deleteList').innerHTML = listHtml;
+            selectedDeleteItem = null;
+            openModal('deleteModal');
+        }
+        
+        // 삭제 항목 선택
+        function selectDeleteItem(name) {
+            selectedDeleteItem = name;
+            document.querySelectorAll('#deleteList .save-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            document.querySelector(`#deleteList .save-item[data-name="${name}"]`).classList.add('selected');
+        }
+        
+        // 선택된 세팅 삭제
+        function deleteSelectedSet() {
+            if (!selectedDeleteItem) {
+                alert('삭제할 세팅을 선택해주세요.');
+                return;
+            }
+            
+            if (!confirm(`'${selectedDeleteItem}' 세팅을 삭제하시겠습니까?`)) {
+                return;
+            }
+            
+            const saveList = getSaveList();
+            delete saveList[selectedDeleteItem];
+            setSaveList(saveList);
+            
+            alert(`'${selectedDeleteItem}' 세팅이 삭제되었습니다.`);
+            closeModal('deleteModal');
+            updateButtonStates();
+        }
+        
+        // 비교 모달 열기
+        function openCompareModal() {
+            const saveList = getSaveList();
+            const count = Object.keys(saveList).length;
+            
+            if (count < 2) return;
+            
+            const listHtml1 = Object.keys(saveList).map(name => {
+                const data = saveList[name];
+                const date = new Date(data.timestamp).toLocaleString('ko-KR');
+                return `
+                    <div class="save-item" data-name="${name}">
+                        <div class="save-item-name">${name}</div>
+                        <div class="save-item-date">${date}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            const listHtml2 = Object.keys(saveList).map(name => {
+                const data = saveList[name];
+                const date = new Date(data.timestamp).toLocaleString('ko-KR');
+                return `
+                    <div class="save-item" data-name="${name}">
+                        <div class="save-item-name">${name}</div>
+                        <div class="save-item-date">${date}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('compareList1').innerHTML = listHtml1;
+            document.getElementById('compareList2').innerHTML = listHtml2;
+            document.getElementById('compareResult').innerHTML = '';
+            selectedCompareItem1 = null;
+            selectedCompareItem2 = null;
+            openModal('compareModal');
+        }
+        
+        // 비교 항목 1 선택
+        function selectCompareItem1(name) {
+            selectedCompareItem1 = name;
+            document.querySelectorAll('#compareList1 .save-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            document.querySelector(`#compareList1 .save-item[data-name="${name}"]`).classList.add('selected');
+        }
+        
+        // 비교 항목 2 선택
+        function selectCompareItem2(name) {
+            selectedCompareItem2 = name;
+            document.querySelectorAll('#compareList2 .save-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            document.querySelector(`#compareList2 .save-item[data-name="${name}"]`).classList.add('selected');
+        }
+        
+        // 선택된 세팅 비교
+        function compareSelectedSets() {
+            if (!selectedCompareItem1 || !selectedCompareItem2) {
+                alert('비교할 두 개의 세팅을 모두 선택해주세요.');
+                return;
+            }
+            
+            if (selectedCompareItem1 === selectedCompareItem2) {
+                alert('서로 다른 세팅을 선택해주세요.');
+                return;
+            }
+            
+            const saveList = getSaveList();
+            const set1 = saveList[selectedCompareItem1];
+            const set2 = saveList[selectedCompareItem2];
+            
+            if (!set1 || !set2) {
+                alert('세팅을 찾을 수 없습니다.');
+                return;
+            }
+            
+            // 대미지 배율 비교
+            const damage1Direct = parseFloat(set1.damageCalculation.finalDirect.replace('배', '')) || 0;
+            const damage1Indirect = parseFloat(set1.damageCalculation.finalIndirect.replace('배', '')) || 0;
+            const damage2Direct = parseFloat(set2.damageCalculation.finalDirect.replace('배', '')) || 0;
+            const damage2Indirect = parseFloat(set2.damageCalculation.finalIndirect.replace('배', '')) || 0;
+            
+            const diffDirect = damage2Direct - damage1Direct;
+            const diffIndirect = damage2Indirect - damage1Indirect;
+            const diffDirectPercent = damage1Direct !== 0 ? ((diffDirect / damage1Direct) * 100).toFixed(2) : 0;
+            const diffIndirectPercent = damage1Indirect !== 0 ? ((diffIndirect / damage1Indirect) * 100).toFixed(2) : 0;
+            
+            const resultHtml = `
+                <div class="compare-result">
+                    <div class="compare-item">
+                        <h4>${selectedCompareItem1}</h4>
+                        <div class="compare-stats">
+                            <div class="compare-stat">
+                                <span>직접 피해:</span>
+                                <strong>${set1.damageCalculation.finalDirect}</strong>
+                            </div>
+                            <div class="compare-stat">
+                                <span>간접 피해:</span>
+                                <strong>${set1.damageCalculation.finalIndirect}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="compare-item">
+                        <h4>${selectedCompareItem2}</h4>
+                        <div class="compare-stats">
+                            <div class="compare-stat">
+                                <span>직접 피해:</span>
+                                <strong>${set2.damageCalculation.finalDirect}</strong>
+                            </div>
+                            <div class="compare-stat">
+                                <span>간접 피해:</span>
+                                <strong>${set2.damageCalculation.finalIndirect}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="compare-difference ${diffDirect > 0 ? 'positive' : diffDirect < 0 ? 'negative' : ''}">
+                        <strong>직접 피해 차이:</strong> ${diffDirect > 0 ? '+' : ''}${diffDirect.toFixed(2)}배 (${diffDirectPercent > 0 ? '+' : ''}${diffDirectPercent}%)
+                    </div>
+                    
+                    <div class="compare-difference ${diffIndirect > 0 ? 'positive' : diffIndirect < 0 ? 'negative' : ''}">
+                        <strong>간접 피해 차이:</strong> ${diffIndirect > 0 ? '+' : ''}${diffIndirect.toFixed(2)}배 (${diffIndirectPercent > 0 ? '+' : ''}${diffIndirectPercent}%)
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('compareResult').innerHTML = resultHtml;
+        }
+        
+        // 페이지 로드 시 이벤트 리스너 등록
+        document.addEventListener('DOMContentLoaded', function() {
+            // 버튼 상태 업데이트
+            updateButtonStates();
+            
+            // 세팅 섹션 버튼 이벤트 리스너
+            document.getElementById('btn-save').addEventListener('click', openSaveModal);
+            document.getElementById('btn-load').addEventListener('click', openLoadModal);
+            document.getElementById('btn-update').addEventListener('click', openUpdateModal);
+            document.getElementById('btn-delete').addEventListener('click', openDeleteModal);
+            document.getElementById('btn-compare').addEventListener('click', openCompareModal);
+            
+            // 저장 모달 버튼
+            document.getElementById('saveModalConfirm').addEventListener('click', saveCurrentSet);
+            document.getElementById('saveModalCancel').addEventListener('click', function() {
+                closeModal('saveModal');
+            });
+            
+            // 불러오기 모달 버튼
+            document.getElementById('loadModalConfirm').addEventListener('click', loadSelectedSet);
+            document.getElementById('loadModalCancel').addEventListener('click', function() {
+                closeModal('loadModal');
+            });
+            
+            // 변경 모달 버튼
+            document.getElementById('updateModalConfirm').addEventListener('click', updateSelectedSet);
+            document.getElementById('updateModalCancel').addEventListener('click', function() {
+                closeModal('updateModal');
+            });
+            
+            // 삭제 모달 버튼
+            document.getElementById('deleteModalConfirm').addEventListener('click', deleteSelectedSet);
+            document.getElementById('deleteModalCancel').addEventListener('click', function() {
+                closeModal('deleteModal');
+            });
+            
+            // 비교 모달 버튼
+            document.getElementById('compareModalConfirm').addEventListener('click', compareSelectedSets);
+            document.getElementById('compareModalCancel').addEventListener('click', function() {
+                closeModal('compareModal');
+            });
+            
+            // 저장 모달에서 Enter 키 처리
+            document.getElementById('saveNameInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    saveCurrentSet();
+                }
+            });
+            
+            // 이벤트 위임: 동적으로 생성되는 리스트 항목 클릭
+            document.getElementById('loadList').addEventListener('click', function(e) {
+                const item = e.target.closest('.save-item');
+                if (item) {
+                    const name = item.getAttribute('data-name');
+                    selectLoadItem(name);
+                }
+            });
+            
+            document.getElementById('updateList').addEventListener('click', function(e) {
+                const item = e.target.closest('.save-item');
+                if (item) {
+                    const name = item.getAttribute('data-name');
+                    selectUpdateItem(name);
+                }
+            });
+            
+            document.getElementById('deleteList').addEventListener('click', function(e) {
+                const item = e.target.closest('.save-item');
+                if (item) {
+                    const name = item.getAttribute('data-name');
+                    selectDeleteItem(name);
+                }
+            });
+            
+            document.getElementById('compareList1').addEventListener('click', function(e) {
+                const item = e.target.closest('.save-item');
+                if (item) {
+                    const name = item.getAttribute('data-name');
+                    selectCompareItem1(name);
+                }
+            });
+            
+            document.getElementById('compareList2').addEventListener('click', function(e) {
+                const item = e.target.closest('.save-item');
+                if (item) {
+                    const name = item.getAttribute('data-name');
+                    selectCompareItem2(name);
+                }
+            });
+        });
     </script>
 </body>
 </html> 
