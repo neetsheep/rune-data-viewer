@@ -6008,47 +6008,13 @@
         
         // runeSpecialAverages는 calculateEffects 내에서 동적으로 계산됨
         
-        // 룬 효율 계산을 위한 상세 데이터
-        const runeEfficiencyData = {
-            '불길': { keywords: ['치명타 확률', '지속 피해'], values: [18.0, 356.0], counts: [150, 15], efficiencies: [18.0, 35.6] },
-            '결정': { keywords: ['추가타 확률', '지속 피해'], values: [18.0, 356.0], counts: [150, 15], efficiencies: [18.0, 35.6] },
-            '뇌명': { keywords: ['강타 피해', '지속 피해'], values: [20.0, 356.0], counts: [150, 15], efficiencies: [20.0, 35.6] },
-            '독사+': { keywords: ['연타 피해', '지속 피해'], values: [20.0, 356.0], counts: [150, 15], efficiencies: [20.0, 35.6] },
-            '공포': { keywords: ['치명타 피해', '지속 피해'], values: [18.0, 356.0], counts: [150, 15], efficiencies: [18.0, 35.6] },
-            '집행자': { keywords: ['회복량', '주는 피해', '지속 피해'], values: [20.0, 10.0, 533.0], counts: [150, 150, 15], efficiencies: [20.0, 10.0, 53.3] },
-            '야수+': { keywords: ['주는 피해', '지속 피해'], values: [20.0, 356.0], counts: [150, 15], efficiencies: [20.0, 35.6] },
-            '밤+': { keywords: ['공격력', '지속 피해'], values: [20.0, 356.0], counts: [150, 15], efficiencies: [20.0, 35.6] },
-            '투사+': { keywords: ['주는 피해', '광역 피해'], values: [33.0, -10.0], counts: [150, 150], efficiencies: [33.0, -10.0] },
-            '은둔자+': { keywords: ['공격력', '쿨타임'], values: [33.0, -9.0], counts: [150, 150], efficiencies: [33.0, -9.0] },
-            '망각+': { keywords: ['공격력', '쿨타임'], values: [19.0, 9.0], counts: [150, 150], efficiencies: [19.0, 9.0] },
-            '서리바람+': { keywords: ['공격력', '캐스팅 속도', '차지 속도'], values: [20.0, 25.0, 25.0], counts: [150, 150, 150], efficiencies: [20.0, 25.0, 25.0] },
-            '옛 마법사': { keywords: ['쿨타임', '주는 피해'], values: [29.0, -10.0], counts: [150, 150], efficiencies: [29.0, -10.0] },
-            '물결치는 날': { keywords: ['룬 피해', '빠른 공격'], values: [152.0, 10.0], counts: [100, 100], efficiencies: [101.3, 6.7] },
-            '파괴자+': { keywords: ['공격력', '무방비 피해'], values: [18.0, 48.0], counts: [150, 1], efficiencies: [18.0, 0.3] },
-            '검무+': { keywords: ['공격력', '치명타 확률'], values: [2.0, 1.0], counts: [145, 145], efficiencies: [1.9, 1.0] },
-            '무수한 궤적': { keywords: ['공격력', '빠른 공격', '평타 추가타'], values: [10.0, 30.0, 30.0], counts: [150, 150, 150], efficiencies: [10.0, 30.0, 30.0] },
-            '수정 꽃잎': { keywords: ['룬 피해', '공격력'], values: [45.0, 12.0], counts: [50, 150], efficiencies: [15.0, 12.0] },
-            '나무 사슴': { keywords: ['룬 피해', '공격력'], values: [56.0, 12.0], counts: [38, 150], efficiencies: [14.0, 12.0] },
-            '에메랄드 숲': { keywords: ['축적 횟수', '주는 피해'], values: [1, 10.0], counts: [150, 150], efficiencies: [1, 10.0] },
-            '불사': { keywords: ['주는 피해', '룬 회복', '받는 피해'], values: [18.0, 100.0, 80.0], counts: [150, 1, 1], efficiencies: [18.0, 0.7, 0.5] },
-            '싸움꾼': { keywords: ['주는 피해', '받는 피해'], values: [12.0, 8.0], counts: [150, 150], efficiencies: [12.0, 8.0] },
-            '약탈자': { keywords: ['룬 회복', '추가타 확률'], values: [3.0, 10.0], counts: [150, 150], efficiencies: [3.0, 10.0] },
-            '원소 조화': { keywords: ['룬 피해'], values: [42.0], counts: [90], efficiencies: [25.2] },
-            '다가오는 죽음': { keywords: ['룬 피해'], values: [185.75], counts: [15], efficiencies: [18.6] },
-            '잊힌 성소': { keywords: ['룬 피해'], values: [15.0], counts: [250], efficiencies: [25.0] },
-            '만 갈래 물길': { keywords: ['공격력', '공격력'], values: [15.0, 20.0], counts: [150, 150], efficiencies: [15.0, 20.0] },
-            '흰 까마귀': { keywords: ['빠른 공격', '이동 속도', '빠른 스킬', '캐스팅 속도', '차지 속도', '쿨타임', '주는 피해', '공격력'], values: [10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 7.0, 7.0], counts: [150, 150, 150, 150, 150, 150, 150, 150], efficiencies: [10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 7.0, 7.0] },
-            '메아리치는 진노': { keywords: ['룬 피해', '지속 피해', '룬 피해', '지속 피해', '공격력', '공격력', '공격력'], values: [110.0, 35.0, 110.0, 35.0, 5.0, 3.0, 3.0], counts: [19, 19, 19, 19, 150, 150, 150], efficiencies: [13.8, 4.4, 13.8, 4.4, 5.0, 3.0, 3.0] },
-            '무한': { keywords: ['쿨타임', '공격력', '빠른 공격'], values: [9.0, 20.0, 12.0], counts: [75, 150, 150], efficiencies: [4.5, 20.0, 12.0] },
-            '닫힌 운명': { keywords: ['룬 피해', '룬 피해', '룬 피해', '방어구 파괴'], values: [68.0, 136.0, 272.0, 10.0], counts: [10, 10, 10, 150], efficiencies: [4.5, 9.1, 18.1, 10.0] },
-            '검게 물든 후광': { keywords: ['받는 피해', '주는 피해', '주는 피해', '주는 피해'], values: [-15.0, 15.0, 6.0, 6.0], counts: [150, 150, 150, 150], efficiencies: [-15.0, 15.0, 6.0, 6.0] }
-        }; // [모든 unreachable code 제거 완료]
-        
         // ========================================
         // calculateEffects 함수 시작
         // ========================================
         
         function calculateEffects() {
+            const combinedEffects = {};
+            
             // 가동률 계산 (0~1 사이 값)
             function calculate각성가동률(지속시간초, 재사용대기초, has눈먼예언자) {
                 return calculate각성가동시간(지속시간초, 재사용대기초, has눈먼예언자) / 150;
@@ -6068,68 +6034,42 @@
                             let displaySuffix = '';
                             
                             // 각성 룬 가동률 배율 계산
-            const 잊힌성소사이클 = 잊힌성소축적시간 + 잊힌성소지속시간;
-            const 잊힌성소발동 = Math.floor(150 / 잊힌성소사이클);
-            // 5초 동안 0.1초마다 15% = 50회 × 15% = 750%
-            const 잊힌성소총피해 = 15.0 * 50;
-            averages['잊힌 성소'] = 잊힌성소총피해 * 잊힌성소발동 / 150;
+                            if (runeName === '대마법사' || runeName === '무자비한 포식자' || runeName === '부서진 하늘' || 
+                                runeName === '산맥 군주' || runeName === '흩날리는 검' || runeName === '아득한 빛' || 
+                                runeName === '갈라진 땅') {
+                                // 각성 앰블럼: 눈먼 예언자 효과 반영
+                                if (selectedRunes['앰블럼'] && selectedRunes['앰블럼'].includes('눈 먼 예언자')) {
+                                    displaySuffix = ' (눈먼)';
+                                }
+                            }
+                            
+                            if (!combinedEffects[keyword]) {
+                                combinedEffects[keyword] = { value: 0, details: [] };
+                            }
+                            combinedEffects[keyword].value += efficiency;
+                            combinedEffects[keyword].details.push({
+                                rune: runeName,
+                                value: efficiency,
+                                suffix: displaySuffix
+                            });
+                        });
+                    }
+                });
+            });
             
-            // === 조건부 룬들 (가동률 재계산 필요) ===
-            // 필사+: 기본 10% + 체력 50% 이하 시 20% (20초 지속)
-            // 클래스마다 다름, 평균 5% 가동률로 가정
-            const 필사가동률 = 0.05; // 150초 중 7.5초
-            averages['필사+_기본'] = 10.0;
-            averages['필사+_추가'] = 20.0 * 필사가동률;
+            // === 새 시스템(runeDataV2)으로 계산 ===
+            const calcManager = new RuneCalculationManager(selectedRunes);
+            const detailedResults = calcManager.calculateAll();
+            const aggregatedEffects = calcManager.aggregate(detailedResults);
             
-            // 성역+: 보호막 유지 시 공격력 17%
-            // 포션 5개 + 30초마다 자동 (최대 5회)
-            // 보호막이 겹치므로 거의 100% 유지 가정
-            averages['성역+_공격력'] = 17.0 * 0.9; // 90% 가동
-            averages['성역+_보호막'] = 13.9; // 보호막 자체는 10회 생성
+            // 기존 시스템 결과 표시
+            renderCombinedEffects(combinedEffects);
             
-            // 만 갈래 물길: 클래스 레벨 50마다 1% (최대 20회)
-            // 모든 클래스 20개 레벨 50 달성 가정
-            averages['만갈래물길_기본'] = 15.0;
-            averages['만갈래물길_추가'] = 1.0 * 20; // 20클래스 최대
+            // 새 시스템 결과 표시
+            renderEffectSummary(detailedResults, aggregatedEffects);
             
-            // 무한: 기본 공격 시 쿨타임 9% 감소
-            // 기본 공격 0.5초마다, 스킬 위주 빌드는 적게 사용
-            // 평균 50%만 기본 공격 사용으로 가정 (150회)
-            averages['무한_쿨타임'] = 9.0 * 0.5; // 50% 가동
-            
-            // 이름 없는 혼돈: 5초마다 5초 동안 10~30%
-            // "5초마다 5초 동안" = 5초 발동 종료 후 즉시 다음 5초 발동
-            // 가동률: 100% (항상 발동 중)
-            // +15 강화: 10~40% (평균 25%)
-            // +15 가정
-            averages['이름없는혼돈'] = 25.0; // 평균 25%, 가동률 100%
-            
-            // 끝없는 순환: 공격 20회 or 회복 20회 (중첩 안됨)
-            // [계산 로직]
-            // - 공격 0.5초, 20회 축적 = 10초
-            // - 에메랄드 숲: 20회 → 10회 축적 = 5초
-            // - 발동 후 4.5초 동안 0.5초마다 21% 피해 (총 9회 = 189%)
-            // - 사이클: 10초(축적) + 4.5초(지속) = 14.5초
-            // - 에메랄드: 5초(축적) + 4.5초(지속) = 9.5초
-            // - 150초 / 14.5초 = 10.3회 → 10회 발동
-            // - 에메랄드: 150초 / 9.5초 = 15.8회 → 15회 발동
-            // - DPS = 189% × 10회 / 150초 = 12.6%
-            // - 에메랄드 DPS = 189% × 15회 / 150초 = 18.9%
-            const 끝없는순환필요횟수 = has에메랄드숲 ? Math.ceil(20 / 2) : 20;
-            const 끝없는순환축적시간 = 0.5 * 끝없는순환필요횟수;
-            const 끝없는순환지속시간 = 4.5;
-            const 끝없는순환사이클 = 끝없는순환축적시간 + 끝없는순환지속시간;
-            const 끝없는순환발동 = Math.floor(150 / 끝없는순환사이클);
-            // 4.5초 동안 0.5초마다 21% = 9회 × 21% = 189%
-            const 끝없는순환총피해 = 21.0 * 9;
-            const 끝없는순환총회복 = 0.5 * 9;
-            averages['끝없는순환_공격'] = 끝없는순환총피해 * 끝없는순환발동 / 150;
-            averages['끝없는순환_회복'] = 끝없는순환총회복 * 끝없는순환발동 / 150;
-            
-            return averages;
+            return aggregatedEffects;
         }
-        
-        // runeSpecialAverages는 calculateEffects 내에서 동적으로 계산됨
         
         // 룬 효율 계산을 위한 상세 데이터
         const runeEfficiencyData = {
