@@ -7165,8 +7165,8 @@
             });
             } // 기존 시스템 블록 끝
             
-            const runeDamage = 1 + (runeDamageTotal / 100);
-            const runeDOT = 1 + (runeDOTTotal / 100) + skillDmg.지속피해;
+            const runeDamage = 1 + runeDamageTotal;
+            const runeDOT = 1 + runeDOTTotal + skillDmg.지속피해;
             
             // 7. 최종 대미지 배율
             const directDamage = attack * enhancement * damageIncrease * critical * additional * runeDamage;
