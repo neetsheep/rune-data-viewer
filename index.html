@@ -1531,6 +1531,98 @@
                 font-size: 12px;
             }
         }
+        
+        /* ========================================
+           타임라인 그래프 스타일 (Phase 8)
+           ======================================== */
+        
+        .timeline-container {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+        
+        .timeline-header {
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .timeline-graph {
+            display: flex;
+            height: 30px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            overflow: hidden;
+            background: white;
+        }
+        
+        .timeline-segment {
+            height: 100%;
+            transition: opacity 0.2s;
+            cursor: pointer;
+        }
+        
+        .timeline-segment:hover {
+            opacity: 0.8;
+        }
+        
+        .timeline-legend {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .timeline-legend span {
+            margin-right: 15px;
+        }
+        
+        .timeline-markers {
+            position: relative;
+            height: 20px;
+            margin-bottom: 3px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .timeline-marker {
+            position: absolute;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+        
+        .marker-tick {
+            width: 1px;
+            height: 6px;
+            background: #999;
+            margin: 0 auto;
+        }
+        
+        .marker-label {
+            font-size: 9px;
+            color: #666;
+            margin-top: 2px;
+            white-space: nowrap;
+        }
+        
+        .rune-section {
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        .summary-section {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
@@ -1680,8 +1772,13 @@
                 </div>
                 <div class="stats-column">
                     <div class="stat-row">
-                        <label>추가 피해</label>
+                        <label>피해 증가</label>
                         <input type="number" id="skill-추가피해" placeholder="0.0" min="0" step="0.1">
+                        <span class="percent-symbol">%</span>
+                    </div>
+                    <div class="stat-row">
+                        <label>지속 피해</label>
+                        <input type="number" id="skill-지속피해" placeholder="0.0" min="0" step="0.1">
                         <span class="percent-symbol">%</span>
                     </div>
                     <div class="stat-row">
@@ -1742,7 +1839,6 @@
                 </div>
             </div>
         </div>
-        
         <!-- 계산 결과 표시 영역 -->
         <div id="calculation-result" class="calculation-result" style="display: none;">
             <h3>선택된 룬 효과 계산 결과</h3>
@@ -1929,6 +2025,3778 @@
     </div>
 
     <script>
+        // ========================================
+        // Phase 1: 새로운 계산 시스템
+        // ========================================
+        
+        // 트리거 발동 간격 상수 (초)
+        const TRIGGER_INTERVALS = {
+            "공격 적중": 0.5,
+            "치명타 적중": 0.8,
+            "추가타 적중": 1.0,
+            "강타 적중": 0.5,
+            "연타 적중": 0.5,
+            "스킬 사용": 1.0,
+            "무방비 공격": 60,  // 브레이크와 동일 (브레이크 = 무방비 공격)
+            "브레이크": 60,      // 무방비 공격과 동일
+            "궁극기": 20,
+            "포션 사용": 30,
+            "퀵슬롯 사용": 12.5,
+            "상시": 1
+        };
+        
+        // 전투 설정
+        const BATTLE_CONFIG = {
+            duration: 150  // 150초 전투
+        };
+        
+        // 새로운 룬 데이터 구조 (샘플 5개)
+        const runeDataV2 = [
+            // 1. 불길 (상시 + 가동률형)
+            {
+                name: "불길",
+                type: "무기",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "치명타 확률",
+                        baseValue: 18,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "지속 피해",
+                        element: "화상",
+                        baseValue: 356,
+                        calcType: "A",
+                        trigger: "공격 적중",
+                        cooldown: 10
+                    }
+                ]
+            },
+            
+            // 2. 검무+ (누적형)
+            {
+                name: "검무+",
+                type: "무기",
+                grade: "전설",
+                keyword: "누적",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 2,
+                        maxValue: 20,
+                        maxStacks: 10,
+                        calcType: "B",
+                        trigger: "공격 적중",
+                        stackDuration: 10
+                    },
+                    {
+                        id: 2,
+                        category: "치명타 확률",
+                        baseValue: 1,
+                        maxValue: 10,
+                        maxStacks: 10,
+                        calcType: "B",
+                        trigger: "공격 적중",
+                        stackDuration: 10
+                    }
+                ]
+            },
+            
+            // 3. 수정 꽃잎 (축적형)
+            {
+                name: "수정 꽃잎",
+                type: "방어구",
+                grade: "전설",
+                keyword: "축적",
+                effects: [
+                    {
+                        id: 1,
+                        category: "룬 피해",
+                        baseValue: 45,  // 치명타 6회 축적 시 45% 피해
+                        calcType: "A",
+                        trigger: "치명타 적중",
+                        requiredCount: 6,
+                        cooldown: 3
+                    },
+                    {
+                        id: 2,
+                        category: "공격력",
+                        baseValue: 12,
+                        calcType: "B",
+                        trigger: "치명타 적중",
+                        requiredCount: 6,
+                        cooldown: 3,
+                        duration: 10
+                    }
+                ]
+            },
+            
+            // 4. 파멸의 낙인 (복잡한 중첩)
+            {
+                name: "파멸의 낙인",
+                type: "방어구",
+                grade: "6성 전설",
+                keyword: "중첩",
+                effects: [
+                    {
+                        id: 1,
+                        category: "지속 피해",
+                        element: "파멸의 낙인",
+                        baseValue: 9,
+                        calcType: "A",
+                        trigger: "상시",
+                        cooldown: 1,  // 1초마다
+                        duration: 8
+                    }
+                    // 중첩 효과는 나중에 특수 처리
+                ]
+            },
+            
+            // 5. 대마법사 (각성 - 반복형)
+            {
+                name: "대마법사",
+                type: "앰블럼",
+                grade: "6성 전설",
+                keyword: "각성",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 45,
+                        calcType: "B",
+                        trigger: "각성",
+                        cooldown: 90,
+                        duration: 20
+                    },
+                    {
+                        id: 2,
+                        category: "캐스팅 속도",
+                        baseValue: 25,
+                        calcType: "B",
+                        trigger: "각성",
+                        cooldown: 90,
+                        duration: 20
+                    },
+                    {
+                        id: 3,
+                        category: "빠른 스킬",
+                        baseValue: 25,
+                        calcType: "B",
+                        trigger: "각성",
+                        cooldown: 90,
+                        duration: 20
+                    },
+                    {
+                        id: 4,
+                        category: "캐스팅 속도",
+                        baseValue: 14,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 5,
+                        category: "차지 속도",
+                        baseValue: 14,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 6,
+                        category: "차지 스킬 피해",
+                        baseValue: 14,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // ========== Phase 6.1: 무기 전설 룬 추가 ==========
+            
+            // 6. 결정 (추가타 + DOT)
+            {
+                name: "결정",
+                type: "무기",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "추가타 확률",
+                        baseValue: 18,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "지속 피해",
+                        element: "빙결",
+                        baseValue: 356,
+                        calcType: "A",
+                        trigger: "공격 적중",
+                        cooldown: 10
+                    }
+                ]
+            },
+            
+            // 7. 뇌명 (강타 + DOT)
+            {
+                name: "뇌명",
+                type: "무기",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "강타 피해",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "지속 피해",
+                        element: "감전",
+                        baseValue: 356,
+                        calcType: "A",
+                        trigger: "공격 적중",
+                        cooldown: 10
+                    }
+                ]
+            },
+            
+            // 8. 독사+ (연타 + DOT)
+            {
+                name: "독사+",
+                type: "무기",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "연타 피해",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "지속 피해",
+                        element: "중독",
+                        baseValue: 356,
+                        calcType: "A",
+                        trigger: "공격 적중",
+                        cooldown: 10
+                    }
+                ]
+            },
+            
+            // 9. 공포 (치명타 피해 + DOT)
+            {
+                name: "공포",
+                type: "무기",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "치명타 피해",
+                        baseValue: 18,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "지속 피해",
+                        element: "암흑",
+                        baseValue: 356,
+                        calcType: "A",
+                        trigger: "공격 적중",
+                        cooldown: 10
+                    }
+                ]
+            },
+            
+            // 10. 집행자 (주는 피해 + 회복 + DOT)
+            {
+                name: "집행자",
+                type: "무기",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "주는 피해",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "회복량",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 3,
+                        category: "지속 피해",
+                        element: "신성",
+                        baseValue: 533,
+                        calcType: "A",
+                        trigger: "공격 적중",
+                        cooldown: 10
+                    }
+                ]
+            },
+            
+            // 11. 야수+ (주는 피해 + DOT)
+            {
+                name: "야수+",
+                type: "무기",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "주는 피해",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "지속 피해",
+                        element: "출혈",
+                        baseValue: 356,
+                        calcType: "A",
+                        trigger: "공격 적중",
+                        cooldown: 10
+                    }
+                ]
+            },
+            
+            // 12. 밤+ (공격력 + DOT)
+            {
+                name: "밤+",
+                type: "무기",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "지속 피해",
+                        element: "정신",
+                        baseValue: 356,
+                        calcType: "A",
+                        trigger: "공격 적중",
+                        cooldown: 10
+                    }
+                ]
+            },
+            
+            // 13. 투사+ (결함: 주는 피해 + 광역 피해 감소)
+            {
+                name: "투사+",
+                type: "무기",
+                grade: "전설",
+                keyword: "결함",
+                effects: [
+                    {
+                        id: 1,
+                        category: "주는 피해",
+                        baseValue: 33,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "광역 피해",
+                        baseValue: -10,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 14. 은둔자+ (결함: 공격력 + 쿨타임 감소)
+            {
+                name: "은둔자+",
+                type: "무기",
+                grade: "전설",
+                keyword: "결함",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 33,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "쿨타임",
+                        baseValue: -9,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // ========== Phase 6.2: 방어구 전설 룬 추가 ==========
+            
+            // 15. 나무 사슴 (축적: 추가타 6회 + 룬피해 + 공격력)
+            {
+                name: "나무 사슴",
+                type: "방어구",
+                grade: "전설",
+                keyword: "축적",
+                effects: [
+                    {
+                        id: 1,
+                        category: "룬 피해",
+                        baseValue: 56,  // 추가타 6회 축적 시 56% 피해
+                        calcType: "A",
+                        trigger: "추가타 적중",
+                        requiredCount: 6,
+                        cooldown: 4
+                    },
+                    {
+                        id: 2,
+                        category: "공격력",
+                        baseValue: 12,
+                        calcType: "B",
+                        trigger: "추가타 적중",
+                        requiredCount: 6,
+                        cooldown: 4,
+                        duration: 10
+                    }
+                ]
+            },
+            
+            // 16. 바위 감시자 (축적: 공격력)
+            {
+                name: "바위 감시자",
+                type: "방어구",
+                grade: "전설",
+                keyword: "축적",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 22,
+                        maxValue: 22,
+                        calcType: "B",
+                        trigger: "상시"
+                        // 축적 효과는 평균값으로 처리 (에메랄드 숲 시너지 포함)
+                    }
+                ]
+            },
+            
+            // 17. 푸른 거목 (축적: 스킬 피해)
+            {
+                name: "푸른 거목",
+                type: "방어구",
+                grade: "전설",
+                keyword: "축적",
+                effects: [
+                    {
+                        id: 1,
+                        category: "스킬 피해",
+                        baseValue: 2.2,
+                        maxValue: 22,
+                        maxStacks: 10,
+                        calcType: "B",
+                        trigger: "스킬 사용",
+                        requiredCount: 5,  // 스킬 5회마다 1스택
+                        stackDuration: 999  // 영구 (최대 스택까지)
+                    }
+                ]
+            },
+            
+            // 18. 황혼 (누적: 주는 피해)
+            {
+                name: "황혼",
+                type: "앰블럼",
+                grade: "6성 전설",
+                keyword: "누적",
+                effects: [
+                    {
+                        id: 1,
+                        category: "주는 피해",
+                        baseValue: 1.4,
+                        maxValue: 14,
+                        maxStacks: 10,
+                        calcType: "B",
+                        trigger: "공격 적중",
+                        stackDuration: 10
+                    }
+                ]
+            },
+            
+            // 19. 어두운 징조 (누적: 공격력/치명타/주는 피해)
+            {
+                name: "어두운 징조",
+                type: "방어구",
+                grade: "전설",
+                keyword: "누적",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 0.6,
+                        maxValue: 18,
+                        maxStacks: 30,
+                        calcType: "B",
+                        trigger: "궁극기",
+                        stackDuration: 999  // 영구 (최대 스택까지)
+                    },
+                    {
+                        id: 2,
+                        category: "치명타 확률",
+                        baseValue: 0.6,
+                        maxValue: 18,
+                        maxStacks: 30,
+                        calcType: "B",
+                        trigger: "궁극기",
+                        stackDuration: 999
+                    },
+                    {
+                        id: 3,
+                        category: "주는 피해",
+                        baseValue: 0.6,
+                        maxValue: 18,
+                        maxStacks: 30,
+                        calcType: "B",
+                        trigger: "궁극기",
+                        stackDuration: 999
+                    }
+                ]
+            },
+            
+            // 20. 지휘관 (중첩: 5가지 공격)
+            {
+                name: "지휘관",
+                type: "방어구",
+                grade: "전설",
+                keyword: "중첩",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 4.5,
+                        maxValue: 22.5,
+                        maxStacks: 5,
+                        calcType: "B",
+                        trigger: "강타 적중",  // 강타/연타/무방비/치명타/추가타 중 가장 빠른 것
+                        stackDuration: 8
+                    }
+                ]
+            },
+            
+            // 21. 땅울림 (조건부: 전투 시작 감소형)
+            {
+                name: "땅울림",
+                type: "방어구",
+                grade: "전설",
+                keyword: "조건부",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 8,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "공격력",
+                        baseValue: 30,  // 시작 30%, 3초마다 2% 감소
+                        calcType: "B",
+                        trigger: "상시",
+                        // 특수: 시간에 따라 감소 (평균 계산 필요)
+                        specialType: "decaying"
+                    }
+                ]
+            },
+            
+            // 22. 불안정한 힘 (조건부: 브레이크 변수)
+            {
+                name: "불안정한 힘",
+                type: "방어구",
+                grade: "전설",
+                keyword: "조건부",
+                effects: [
+                    {
+                        id: 1,
+                        category: "주는 피해",
+                        baseValue: 22,
+                        calcType: "B",
+                        trigger: "상시",
+                        // 기본 100% 가동, 브레이크 시 효과 사라짐
+                        duration: 150,  // 최대 지속
+                        cooldown: 1
+                    }
+                ]
+            },
+            
+            // 23. 갈퀴발톱+ (상시: 브레이크/무방비 피해)
+            {
+                name: "갈퀴발톱+",
+                type: "방어구",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "브레이크 피해",
+                        baseValue: 24,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "무방비 피해",
+                        baseValue: 24,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // ========== Phase 6.3: 앰블럼 룬 추가 ==========
+            
+            // 24. 무자비한 포식자 (각성)
+            {
+                name: "무자비한 포식자",
+                type: "앰블럼",
+                grade: "6성 전설",
+                keyword: "각성",
+                effects: [
+                    {
+                        id: 1,
+                        category: "스킬 피해",
+                        baseValue: 55,
+                        calcType: "A",
+                        trigger: "각성",
+                        cooldown: 90,
+                        duration: 0  // 즉시 발동
+                    },
+                    {
+                        id: 2,
+                        category: "쿨타임",
+                        baseValue: 100,
+                        calcType: "A",
+                        trigger: "각성",
+                        cooldown: 90,
+                        duration: 0
+                    },
+                    {
+                        id: 3,
+                        category: "주는 피해",
+                        baseValue: 21,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 25. 부서진 하늘 (각성 + 룬피해)
+            {
+                name: "부서진 하늘",
+                type: "앰블럼",
+                grade: "6성 전설",
+                keyword: "각성",
+                effects: [
+                    {
+                        id: 1,
+                        category: "연타 피해",
+                        baseValue: 60,
+                        calcType: "B",
+                        trigger: "각성",
+                        cooldown: 90,
+                        duration: 20
+                    },
+                    {
+                        id: 2,
+                        category: "룬 피해",
+                        baseValue: 29,  // 0.5초마다 발동
+                        calcType: "A",
+                        trigger: "각성",
+                        cooldown: 0.5,
+                        duration: 20,
+                        specialType: "awakening_only"
+                    },
+                    {
+                        id: 3,
+                        category: "연타 피해",
+                        baseValue: 8,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 4,
+                        category: "쿨타임",
+                        baseValue: 8,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 26. 산맥 군주 (각성 + 룬피해)
+            {
+                name: "산맥 군주",
+                type: "앰블럼",
+                grade: "6성 전설",
+                keyword: "각성",
+                effects: [
+                    {
+                        id: 1,
+                        category: "강타 피해",
+                        baseValue: 60,
+                        calcType: "B",
+                        trigger: "각성",
+                        cooldown: 90,
+                        duration: 20
+                    },
+                    {
+                        id: 2,
+                        category: "룬 피해",
+                        baseValue: 155,  // 3초마다 발동
+                        calcType: "A",
+                        trigger: "각성",
+                        cooldown: 3,
+                        duration: 20,
+                        specialType: "awakening_only"
+                    },
+                    {
+                        id: 3,
+                        category: "강타 피해",
+                        baseValue: 8,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 4,
+                        category: "빠른 스킬",
+                        baseValue: 8,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 27. 흩날리는 검 (각성 - 35초 지속)
+            {
+                name: "흩날리는 검",
+                type: "앰블럼",
+                grade: "6성 전설",
+                keyword: "각성",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 35,
+                        calcType: "B",
+                        trigger: "각성",
+                        cooldown: 90,
+                        duration: 35
+                    },
+                    {
+                        id: 2,
+                        category: "빠른 공격",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "각성",
+                        cooldown: 90,
+                        duration: 35
+                    },
+                    {
+                        id: 3,
+                        category: "평타 추가타",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "각성",
+                        cooldown: 90,
+                        duration: 35
+                    },
+                    {
+                        id: 4,
+                        category: "빠른 공격",
+                        baseValue: 24,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 5,
+                        category: "평타 추가타",
+                        baseValue: 24,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // ========== Phase 9.1: 6성 전설 시너지 룬 추가 ==========
+            
+            // 28. 눈 먼 예언자 (각성 쿨타임 감소)
+            {
+                name: "눈 먼 예언자",
+                type: "방어구",
+                grade: "6성 전설",
+                keyword: "시너지",
+                effects: [
+                    {
+                        id: 1,
+                        category: "각성 쿨타임",
+                        baseValue: -38,  // 각성 쿨타임 38초 감소
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 29. 쌍둥이 별 (누적 시너지)
+            {
+                name: "쌍둥이 별",
+                type: "방어구",
+                grade: "6성 전설",
+                keyword: "시너지",
+                effects: [
+                    {
+                        id: 1,
+                        category: "누적 횟수",
+                        baseValue: 1,  // 누적 횟수 +1 (스택 2배)
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "캐스팅 속도",
+                        baseValue: 7,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 3,
+                        category: "빠른 스킬",
+                        baseValue: 7,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 30. 에메랄드 숲 (축적 시너지)
+            {
+                name: "에메랄드 숲",
+                type: "방어구",
+                grade: "6성 전설",
+                keyword: "시너지",
+                effects: [
+                    {
+                        id: 1,
+                        category: "축적 횟수",
+                        baseValue: -1,  // 축적 횟수 -1
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "주는 피해",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 31. 공명하는 수정 (파멸의 낙인 시너지)
+            {
+                name: "공명하는 수정",
+                type: "방어구",
+                grade: "6성 전설",
+                keyword: "시너지",
+                effects: [
+                    {
+                        id: 1,
+                        category: "룬 피해",
+                        baseValue: 49,
+                        calcType: "A",
+                        trigger: "치명타 적중",
+                        cooldown: 3,
+                        requiredCount: 5
+                    },
+                    {
+                        id: 2,
+                        category: "공격력",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "치명타 적중",
+                        cooldown: 3,
+                        requiredCount: 5,
+                        duration: 10
+                    }
+                ]
+            },
+            
+            // 32. 영원 (결함 제거)
+            {
+                name: "영원",
+                type: "방어구",
+                grade: "6성 전설",
+                keyword: "시너지",
+                effects: [
+                    {
+                        id: 1,
+                        category: "룬 피해",
+                        baseValue: 89,
+                        calcType: "A",
+                        trigger: "치명타 적중",
+                        cooldown: 4
+                    }
+                ]
+            },
+            
+            // ========== Phase 9.2: 나머지 각성 앰블럼 룬 ==========
+            
+            // 33. 아득한 빛 (각성 - 치명타)
+            {
+                name: "아득한 빛",
+                type: "앰블럼",
+                grade: "6성 전설",
+                keyword: "각성",
+                effects: [
+                    {
+                        id: 1,
+                        category: "치명타 확률",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "각성",
+                        cooldown: 90,
+                        duration: 20
+                    },
+                    {
+                        id: 2,
+                        category: "치명타 피해",
+                        baseValue: 50,
+                        calcType: "B",
+                        trigger: "각성",
+                        cooldown: 90,
+                        duration: 20
+                    },
+                    {
+                        id: 3,
+                        category: "치명타 확률",
+                        baseValue: 5,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 4,
+                        category: "치명타 피해",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 5,
+                        category: "주는 피해",
+                        baseValue: 5,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 34. 갈라진 땅 (각성 - 추가타, 35초)
+            {
+                name: "갈라진 땅",
+                type: "앰블럼",
+                grade: "6성 전설",
+                keyword: "각성",
+                effects: [
+                    {
+                        id: 1,
+                        category: "추가타 확률",
+                        baseValue: 30,
+                        calcType: "B",
+                        trigger: "각성",
+                        cooldown: 90,
+                        duration: 35
+                    },
+                    {
+                        id: 2,
+                        category: "추가 공격",
+                        baseValue: 18,
+                        calcType: "B",
+                        trigger: "각성",
+                        cooldown: 90,
+                        duration: 35
+                    },
+                    {
+                        id: 3,
+                        category: "추가타 확률",
+                        baseValue: 12,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 35. 순수한 힘 (조건부 - 궁극기)
+            {
+                name: "순수한 힘",
+                type: "앰블럼",
+                grade: "전설",
+                keyword: "조건부",
+                effects: [
+                    {
+                        id: 1,
+                        category: "주는 피해",
+                        baseValue: 27,
+                        calcType: "B",
+                        trigger: "궁극기",
+                        cooldown: 20,
+                        duration: 30
+                    },
+                    {
+                        id: 2,
+                        category: "궁극기 게이지",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 36. 인도하는 빛 (조건부 - 궁극기/회복)
+            {
+                name: "인도하는 빛",
+                type: "앰블럼",
+                grade: "전설",
+                keyword: "조건부",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 8,
+                        calcType: "B",
+                        trigger: "궁극기",
+                        cooldown: 20,
+                        duration: 15
+                    },
+                    {
+                        id: 2,
+                        category: "공격력",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // ========== Phase 9.3: 각성 방어구 룬 ==========
+            
+            // 37. 압도적인 힘 (각성 방어구)
+            {
+                name: "압도적인 힘",
+                type: "방어구",
+                grade: "6성 전설",
+                keyword: "각성",
+                effects: [
+                    {
+                        id: 1,
+                        category: "강타 피해",
+                        baseValue: 6,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "공격력",
+                        baseValue: 6,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 3,
+                        category: "치명타 확률",
+                        baseValue: 4,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 4,
+                        category: "강타 피해",
+                        baseValue: 6,
+                        calcType: "B",
+                        trigger: "각성",
+                        cooldown: 90,  // 앰블럼 각성과 연동
+                        duration: 20
+                    },
+                    {
+                        id: 5,
+                        category: "공격력",
+                        baseValue: 6,
+                        calcType: "B",
+                        trigger: "각성",
+                        cooldown: 90,
+                        duration: 20
+                    },
+                    {
+                        id: 6,
+                        category: "치명타 확률",
+                        baseValue: 4,
+                        calcType: "B",
+                        trigger: "각성",
+                        cooldown: 90,
+                        duration: 20
+                    }
+                ]
+            },
+            
+            // 38. 섬세한 손놀림 (각성 방어구)
+            {
+                name: "섬세한 손놀림",
+                type: "방어구",
+                grade: "6성 전설",
+                keyword: "각성",
+                effects: [
+                    {
+                        id: 1,
+                        category: "연타 피해",
+                        baseValue: 6,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "공격력",
+                        baseValue: 6,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 3,
+                        category: "추가타 확률",
+                        baseValue: 4,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 4,
+                        category: "연타 피해",
+                        baseValue: 6,
+                        calcType: "B",
+                        trigger: "각성",
+                        cooldown: 90,
+                        duration: 20
+                    },
+                    {
+                        id: 5,
+                        category: "공격력",
+                        baseValue: 6,
+                        calcType: "B",
+                        trigger: "각성",
+                        cooldown: 90,
+                        duration: 20
+                    },
+                    {
+                        id: 6,
+                        category: "추가타 확률",
+                        baseValue: 4,
+                        calcType: "B",
+                        trigger: "각성",
+                        cooldown: 90,
+                        duration: 20
+                    }
+                ]
+            },
+            
+            // ========== Phase 9.4: 상시 스탯 및 특수 룬 (20개) ==========
+            
+            // 39. 망각+ (상시 공격력 + 쿨타임)
+            {
+                name: "망각+",
+                type: "무기",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 19,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "쿨타임",
+                        baseValue: 9,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 40. 서리바람+ (상시 공격력 + 캐스팅/차지)
+            {
+                name: "서리바람+",
+                type: "무기",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "캐스팅 속도",
+                        baseValue: 25,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 3,
+                        category: "차지 속도",
+                        baseValue: 25,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 41. 절개+ (상시 공격력)
+            {
+                name: "절개+",
+                type: "무기",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 42. 황금 들판 (상시 공격력)
+            {
+                name: "황금 들판",
+                type: "방어구",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 43. 준비된 자 (상시 주는 피해)
+            {
+                name: "준비된 자",
+                type: "방어구",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "주는 피해",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 44. 들불 (상시 치명타 확률)
+            {
+                name: "들불",
+                type: "무기",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "치명타 확률",
+                        baseValue: 14,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 45. 설산 (상시 추가타 확률)
+            {
+                name: "설산",
+                type: "무기",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "추가타 확률",
+                        baseValue: 16,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 46. 무도가+ (상시 공격력 + 궁극기)
+            {
+                name: "무도가+",
+                type: "무기",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 12,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "궁극기 게이지",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 47. 해결사+ (상시 빠른 공격 + 평타 추가타)
+            {
+                name: "해결사+",
+                type: "무기",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "빠른 공격",
+                        baseValue: 30,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "평타 추가타",
+                        baseValue: 30,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 48. 집념+ (상시 캐스팅/차지 + 주는 피해)
+            {
+                name: "집념+",
+                type: "방어구",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "캐스팅 속도",
+                        baseValue: 25,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "차지 속도",
+                        baseValue: 25,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 3,
+                        category: "주는 피해",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 49. 환영+ (상시 공격력 + 방어구 파괴)
+            {
+                name: "환영+",
+                type: "무기",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 18,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "방어구 파괴",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 50. 돌격대장+ (상시 방어구 파괴 + 공격력)
+            {
+                name: "돌격대장+",
+                type: "방어구",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "방어구 파괴",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "공격력",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 51. 신성한 칙령 (상시 공격력 + 회복량)
+            {
+                name: "신성한 칙령",
+                type: "방어구",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 15,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "회복량",
+                        baseValue: 9,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 52. 싸움꾼 (상시 주는 피해 + 받는 피해)
+            {
+                name: "싸움꾼",
+                type: "방어구",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "주는 피해",
+                        baseValue: 12,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "받는 피해",
+                        baseValue: 8,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 53. 약탈자 (상시 룬 회복 + 추가타)
+            {
+                name: "약탈자",
+                type: "방어구",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "룬 회복",
+                        baseValue: 3,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "추가타 확률",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 54. 만 갈래 물길 (상시 공격력 2개)
+            {
+                name: "만 갈래 물길",
+                type: "방어구",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 15,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "공격력",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 55. 무수한 궤적 (상시 공격력 + 빠른 공격 + 평타 추가타)
+            {
+                name: "무수한 궤적",
+                type: "무기",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "빠른 공격",
+                        baseValue: 30,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 3,
+                        category: "평타 추가타",
+                        baseValue: 30,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 56. 무한 (상시 쿨타임 + 공격력, 스킬 사용 시 빠른 공격)
+            {
+                name: "무한",
+                type: "방어구",
+                grade: "전설",
+                keyword: "조건부",
+                effects: [
+                    {
+                        id: 1,
+                        category: "쿨타임",
+                        baseValue: 9,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "공격력",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 3,
+                        category: "빠른 공격",
+                        baseValue: 12,
+                        calcType: "B",
+                        trigger: "스킬 사용",
+                        cooldown: 1,
+                        duration: 5
+                    }
+                ]
+            },
+            
+            // 57. 천자루의 검 (상시 공격력)
+            {
+                name: "천자루의 검",
+                type: "앰블럼",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 24,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 58. 영웅 (상시 7가지 피해 4.3%)
+            {
+                name: "영웅",
+                type: "앰블럼",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 4.3,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "연타 피해",
+                        baseValue: 4.3,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 3,
+                        category: "강타 피해",
+                        baseValue: 4.3,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 4,
+                        category: "콤보 피해",
+                        baseValue: 4.3,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 5,
+                        category: "스킬 피해",
+                        baseValue: 4.3,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 6,
+                        category: "치명타 피해",
+                        baseValue: 4.3,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 7,
+                        category: "광역 피해",
+                        baseValue: 4.3,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 59. 집정관 (상시 공격력, 결함: 속도 감소)
+            {
+                name: "집정관",
+                type: "무기",
+                grade: "전설",
+                keyword: "결함",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 23,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 60. 고대 수호자 (상시 공격력, 결함: 이동속도 감소)
+            {
+                name: "고대 수호자",
+                type: "방어구",
+                grade: "전설",
+                keyword: "결함",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 23,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 61. 현란함 (상시 치명타)
+            {
+                name: "현란함",
+                type: "앰블럼",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "치명타 확률",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "치명타 피해",
+                        baseValue: 30,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 62. 응징+ (상시 공격력)
+            {
+                name: "응징+",
+                type: "무기",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 12,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 63. 분쇄+ (상시 공격력 + 브레이크 시 조건부)
+            {
+                name: "분쇄+",
+                type: "무기",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 6,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "주는 피해",
+                        baseValue: 28,
+                        calcType: "B",
+                        trigger: "브레이크",
+                        duration: 10,
+                        cooldown: 60
+                    }
+                ]
+            },
+            
+            // 64. 파멸+ (궁극기: 예열 20초 + 이후 상시 발동)
+            {
+                name: "파멸+",
+                type: "방어구",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 25,
+                        calcType: "B",
+                        trigger: "궁극기",
+                        duration: 130,  // 20~150초 = 130초 지속
+                        cooldown: 150,  // 전투 중 1회만 발동 (예열 후 상시)
+                        warmup: 20      // 궁극기 게이지 채우는 시간
+                    }
+                ]
+            },
+            
+            // 65. 불사 (상시 주는 피해 + 부활 효과)
+            {
+                name: "불사",
+                type: "앰블럼",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "주는 피해",
+                        baseValue: 18,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "회복량",
+                        baseValue: 100,  // 대량 회복 (부활 효과)
+                        calcType: "A",
+                        trigger: "상시",
+                        cooldown: 180  // 150초 전투 중 1회 발동
+                    }
+                ]
+            },
+            
+            // 66. 새벽별 (누적: 스킬 사용 시 쿨타임 회복 속도)
+            {
+                name: "새벽별",
+                type: "무기",
+                grade: "전설",
+                keyword: "누적",
+                effects: [
+                    {
+                        id: 1,
+                        category: "쿨타임",
+                        baseValue: 3,
+                        maxValue: 18,  // 3% × 6중첩
+                        maxStacks: 6,
+                        calcType: "B",
+                        trigger: "스킬 사용",
+                        stackDuration: 8
+                    }
+                ]
+            },
+            
+            // 67. 요정 무리 (축적: 스킬 7회 사용 시 쿨타임 감소, 7초마다 발동)
+            {
+                name: "요정 무리",
+                type: "방어구",
+                grade: "전설",
+                keyword: "축적",
+                effects: [
+                    {
+                        id: 1,
+                        category: "쿨타임 감소",  // 절대값 (초 단위)
+                        baseValue: 2.1,  // 초 단위 쿨타임 감소 (발동당)
+                        calcType: "A",
+                        trigger: "스킬 사용",
+                        requiredCount: 7,  // 스킬 7회 = 7초
+                        cooldown: 7,  // 7초마다 발동
+                        unit: "초"  // 절대값 표시
+                    }
+                ]
+            },
+            
+            // 68. 횃불 (상시: 치명타 확률)
+            {
+                name: "횃불",
+                type: "앰블럼",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "치명타 확률",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시"  // 화상 조건 무시 (최적 시나리오)
+                    }
+                ]
+            },
+            
+            // ========================================
+            // Phase 9.6: 조건부 룬 (중간 난이도) - 12개
+            // ========================================
+            
+            // 69. 마나 격류 (누적: 스킬 사용 시 공격력)
+            {
+                name: "마나 격류",
+                type: "방어구",
+                grade: "전설",
+                keyword: "누적",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 3.5,
+                        maxValue: 14,  // 3.5 × 4
+                        maxStacks: 4,
+                        calcType: "B",
+                        trigger: "스킬 사용",
+                        stackDuration: 5,
+                        specialType: "progressive"
+                    }
+                ]
+            },
+            
+            // 70. 바위 거인 (복합: 누적 3스택 후 발동)
+            {
+                name: "바위 거인",
+                type: "방어구",
+                grade: "전설",
+                keyword: "축적+발동",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 20,  // 3중첩 시 발동되는 버프
+                        calcType: "B",
+                        trigger: "강타 적중",
+                        requiredCount: 3,  // 3회 적중 시 발동 (0.5 × 3 = 1.5초)
+                        cooldown: 1.5,  // 첫 발동까지 1.5초
+                        duration: 5  // 5초 유지
+                    }
+                ]
+            },
+            
+            // 71. 평원 방랑자 (조건부: 이동 스킬 사용 시, 쿨타임 없음)
+            {
+                name: "평원 방랑자",
+                type: "방어구",
+                grade: "전설",
+                keyword: "조건부",
+                effects: [
+                    {
+                        id: 1,
+                        category: "주는 피해",
+                        baseValue: 12,
+                        calcType: "B",
+                        trigger: "스킬 사용",  // 이동 스킬 사용 시 (쿨타임 없음)
+                        duration: 10,  // 10초 유지
+                        cooldown: 10   // 10초 후 재발동 가능 (duration과 동일)
+                    },
+                    {
+                        id: 2,
+                        category: "이동 속도",
+                        baseValue: 30,
+                        calcType: "B",
+                        trigger: "스킬 사용",
+                        duration: 10,
+                        cooldown: 10
+                    }
+                ]
+            },
+            
+            // 72. 성역+ (조건부: 보호막 + DOT)
+            {
+                name: "성역+",
+                type: "방어구",
+                grade: "전설",
+                keyword: "보호막",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 17,
+                        calcType: "B",
+                        trigger: "상시",  // 보호막 유지율 80%로 가정
+                        duration: 150,
+                        cooldown: 150,
+                        specialType: "cyclic"
+                    },
+                    {
+                        id: 2,
+                        category: "보호막",
+                        baseValue: 13.9,  // 흡수량 비례
+                        calcType: "A",
+                        trigger: "포션 사용",  // 30초마다
+                        cooldown: 30
+                    }
+                ]
+            },
+            
+            // 73. 검게 물든 후광 (조건부: 회복 시)
+            {
+                name: "검게 물든 후광",
+                type: "방어구",
+                grade: "신화",
+                keyword: "조건부",
+                effects: [
+                    {
+                        id: 1,
+                        category: "받는 피해",
+                        baseValue: -15,  // 패널티
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "주는 피해",
+                        baseValue: 15,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 3,
+                        category: "주는 피해",
+                        baseValue: 6,  // +10 강화
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 4,
+                        category: "주는 피해",
+                        baseValue: 6,  // +15 강화
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 74. 닫힌 운명 (순환: 1겹/2겹/4겹 각 15초씩 순환)
+            {
+                name: "닫힌 운명",
+                type: "방어구",
+                grade: "신화",
+                keyword: "순환",
+                effects: [
+                    {
+                        id: 1,
+                        category: "룬 피해",
+                        baseValue: 68,  // 1겹 (0~15초)
+                        calcType: "A",
+                        trigger: "공격 적중",
+                        cooldown: 15  // 15초마다 1회 발동 (150/15 = 10회)
+                    },
+                    {
+                        id: 2,
+                        category: "룬 피해",
+                        baseValue: 136,  // 2겹 (15~30초, 45~60초...)
+                        calcType: "A",
+                        trigger: "공격 적중",
+                        cooldown: 15  // 15초마다 1회 발동 (150/15 = 10회)
+                    },
+                    {
+                        id: 3,
+                        category: "룬 피해",
+                        baseValue: 272,  // 4겹 (30~45초, 60~75초...)
+                        calcType: "A",
+                        trigger: "공격 적중",
+                        cooldown: 15  // 15초마다 1회 발동 (150/15 = 10회)
+                    },
+                    {
+                        id: 4,
+                        category: "방어구 파괴",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 75. 그림자로 엮은 회랑 (반복: 2/3/4/5초마다 발동, 강화 조건 무시)
+            {
+                name: "그림자로 엮은 회랑",
+                type: "방어구",
+                grade: "신화",
+                keyword: "반복",
+                effects: [
+                    {
+                        id: 1,
+                        category: "룬 피해",
+                        baseValue: 25,
+                        calcType: "A",
+                        trigger: "상시",
+                        cooldown: 2  // 2초마다 (150/2 = 75회)
+                    },
+                    {
+                        id: 2,
+                        category: "룬 피해",
+                        baseValue: 25,
+                        calcType: "A",
+                        trigger: "상시",
+                        cooldown: 3  // 3초마다 (150/3 = 50회)
+                    },
+                    {
+                        id: 3,
+                        category: "룬 피해",
+                        baseValue: 25,
+                        calcType: "A",
+                        trigger: "상시",
+                        cooldown: 4  // 4초마다 (150/4 = 37.5회)
+                    },
+                    {
+                        id: 4,
+                        category: "룬 피해",
+                        baseValue: 25,
+                        calcType: "A",
+                        trigger: "상시",
+                        cooldown: 5  // 5초마다 (150/5 = 30회)
+                    }
+                ]
+            },
+            
+            // 76. 바스러지는 빛 (누적: 스킬 사용 시, 개별 지속 시간)
+            {
+                name: "바스러지는 빛",
+                type: "방어구",
+                grade: "신화",
+                keyword: "누적",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 5.5,
+                        maxValue: 27.5,  // 5.5 × 5
+                        maxStacks: 5,
+                        calcType: "B",
+                        trigger: "스킬 사용",
+                        stackDuration: 8,  // 개별 스택 8초 유지
+                        specialType: "progressive"
+                    }
+                ]
+            },
+            
+            // 77. 세상을 삼키는 악의 (조건부: 원소 DOT 적 + 무방비)
+            {
+                name: "세상을 삼키는 악의",
+                type: "방어구",
+                grade: "신화",
+                keyword: "조건부",
+                effects: [
+                    {
+                        id: 1,
+                        category: "주는 피해",
+                        baseValue: 16,  // 원소 DOT 보유 적 (100% 가정)
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "무방비 피해",
+                        baseValue: 16,
+                        calcType: "B",  // A가 아니라 B (duration 동안 유지)
+                        trigger: "브레이크",  // 60초마다 브레이크
+                        cooldown: 60,
+                        duration: 3  // 브레이크 후 3초간 무방비 상태
+                    },
+                    {
+                        id: 3,
+                        category: "주는 피해",
+                        baseValue: 3,  // +10 강화
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 4,
+                        category: "주는 피해",
+                        baseValue: 3,  // +15 강화
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 78. 이름 없는 혼돈 (반복: 5초마다 랜덤 10~30%)
+            {
+                name: "이름 없는 혼돈",
+                type: "방어구",
+                grade: "신화",
+                keyword: "반복",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 25,  // 평균값 (10~30% 중간 = 20%, +15 시 평균 25%)
+                        calcType: "B",
+                        trigger: "상시",
+                        cooldown: 5,
+                        duration: 5,
+                        specialType: "cyclic"
+                    }
+                ]
+            },
+            
+            // 79. 흰 까마귀 (상시 복합: +10/+15 조건부)
+            {
+                name: "흰 까마귀",
+                type: "앰블럼",
+                grade: "신화",
+                keyword: "상시",
+                effects: [
+                    {
+                        id: 1,
+                        category: "빠른 공격",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "이동 속도",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 3,
+                        category: "빠른 스킬",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 4,
+                        category: "캐스팅 속도",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 5,
+                        category: "차지 속도",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 6,
+                        category: "쿨타임",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 7,
+                        category: "주는 피해",
+                        baseValue: 7,  // +10 강화
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 8,
+                        category: "공격력",
+                        baseValue: 7,  // +15 강화
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 80. 메아리치는 진노 (조건부: 연타/강타 DOT)
+            {
+                name: "메아리치는 진노",
+                type: "앰블럼",
+                grade: "신화",
+                keyword: "조건부+DOT",
+                effects: [
+                    {
+                        id: 1,
+                        category: "룬 피해",
+                        baseValue: 110,  // 연타 적중 시
+                        calcType: "A",
+                        trigger: "연타 적중",
+                        cooldown: 8
+                    },
+                    {
+                        id: 2,
+                        category: "지속 피해",
+                        baseValue: 35,  // 연타 DOT (빙결)
+                        calcType: "A",
+                        trigger: "연타 적중",
+                        cooldown: 8,
+                        duration: 8,  // 8초 DOT
+                        element: "빙결"
+                    },
+                    {
+                        id: 3,
+                        category: "룬 피해",
+                        baseValue: 110,  // 강타 적중 시
+                        calcType: "A",
+                        trigger: "강타 적중",
+                        cooldown: 8
+                    },
+                    {
+                        id: 4,
+                        category: "지속 피해",
+                        baseValue: 35,  // 강타 DOT (화상)
+                        calcType: "A",
+                        trigger: "강타 적중",
+                        cooldown: 8,
+                        duration: 8,
+                        element: "화상"
+                    },
+                    {
+                        id: 5,
+                        category: "공격력",
+                        baseValue: 5,  // 상시
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 6,
+                        category: "공격력",
+                        baseValue: 3,  // +10 강화
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 7,
+                        category: "공격력",
+                        baseValue: 3,  // +15 강화
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // ========================================
+            // Phase 9.7: 나머지 특수 룬 (23개) - 룬 설명 기반
+            // ========================================
+            
+            // 81. 옛 마법사 (결함: 쿨타임 + 주는 피해 감소)
+            {
+                name: "옛 마법사",
+                type: "무기",
+                grade: "전설",
+                keyword: "결함",
+                effects: [
+                    {
+                        id: 1,
+                        category: "쿨타임",
+                        baseValue: 29,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "주는 피해",
+                        baseValue: -10,  // 결함
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 82. 파괴자+ (상시 + 무방비)
+            {
+                name: "파괴자+",
+                type: "무기",
+                grade: "전설",
+                keyword: "",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 18,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "무방비 피해",
+                        baseValue: 48,
+                        calcType: "A",
+                        trigger: "브레이크",  // 60초마다 1회
+                        cooldown: 60
+                    }
+                ]
+            },
+            
+            // 83. 신전 기사 (결함: 공격력 + 치명타 감소)
+            {
+                name: "신전 기사",
+                type: "방어구",
+                grade: "전설",
+                keyword: "결함",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 23,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "치명타 확률",
+                        baseValue: -8,  // 결함
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 84. 근위병+ (결함: 공격력 + 쿨타임 감소)
+            {
+                name: "근위병+",
+                type: "방어구",
+                grade: "전설",
+                keyword: "결함",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 23,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "쿨타임",
+                        baseValue: -7,  // 결함
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 85. 침묵하는 산 (조건부: 5초 정지 시, 10초마다 반복)
+            // 설명: "5초 동안 이동하지 않을 경우, 공격력이 22% 증가"
+            // 게임 패턴상 10초마다 움직임 → 10초마다 5초 예열 필요
+            // 타임라인: [5초 예열 + 5초 발동] 반복
+            {
+                name: "침묵하는 산",
+                type: "방어구",
+                grade: "전설",
+                keyword: "조건부",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 22,
+                        calcType: "B",
+                        trigger: "상시",
+                        cooldown: 10,  // 10초 사이클
+                        duration: 5,  // 5초 발동
+                        warmup: 5  // 첫 5초 예열
+                    }
+                ]
+            },
+            
+            // 86. 황폐+ (조건부: 자원 50% 미만)
+            // 설명: "보유한 자원이 50% 미만일 경우, 적에게 주는 피해가 12%, 추가타 확률이 7% 증가"
+            // 가동률: 135/150 = 90%
+            {
+                name: "황폐+",
+                type: "방어구",
+                grade: "전설",
+                keyword: "조건부",
+                effects: [
+                    {
+                        id: 1,
+                        category: "주는 피해",
+                        baseValue: 12,
+                        calcType: "B",
+                        trigger: "상시",
+                        duration: 135,
+                        cooldown: 150
+                    },
+                    {
+                        id: 2,
+                        category: "추가타 확률",
+                        baseValue: 7,
+                        calcType: "B",
+                        trigger: "상시",
+                        duration: 135,
+                        cooldown: 150
+                    }
+                ]
+            },
+            
+            // 87. 마지막 자비 (조건부: 체력 50% 이하 적, 75초 예열)
+            // 설명: "공격력이 20% 증가. 남은 체력이 50% 이하인 적을 공격했을 경우, 10초 동안 공격력이 추가로 20% 증가"
+            // 보스 단일 전투: 150초 중 적 체력 50% 이하 = 75초~150초 구간
+            // 75초 예열 + 75초 발동
+            {
+                name: "마지막 자비",
+                type: "무기",
+                grade: "전설",
+                keyword: "조건부",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "공격력",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "상시",
+                        warmup: 75,  // 75초 예열 (적 체력 50% 도달 시간)
+                        duration: 75,  // 75초 발동
+                        cooldown: 150
+                    }
+                ]
+            },
+            
+            // 88. 필사+ (조건부: 체력 50% 이하, 암흑술사 가정 상시 유지)
+            // 설명: "공격력이 10% 증가. 체력이 50% 이하로 감소하면 20초 동안 공격력이 20% 추가로 증가(재사용 대기 시간: 15초)"
+            // 암흑술사 클래스: 체력 50% 이하 상시 가능
+            // 15초 쿨타임이지만 20초 발동 = 사실상 상시
+            // 10초 예열 (첫 발동까지 시간)
+            {
+                name: "필사+",
+                type: "방어구",
+                grade: "전설",
+                keyword: "조건부",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "공격력",
+                        baseValue: 20,
+                        calcType: "B",  // B타입으로 변경
+                        trigger: "상시",
+                        warmup: 10,  // 10초 예열
+                        duration: 140,  // 나머지 시간 유지 (거의 상시)
+                        cooldown: 150
+                    }
+                ]
+            },
+            
+            // 89. 쇄도+ (조건부: 25% 확률, 첫 4초 예열 후 연속 발동)
+            // 설명: "스킬 사용 시, 25% 확률로 5초 동안 캐스팅 및 차지 속도와 스킬 사용 속도가 20% 증가"
+            // 스킬 4회 사용 시 1회 발동 → 첫 4초 예열
+            // 5초 발동 이후 조건들 5초 안에 다 가능 → 연속 발동
+            {
+                name: "쇄도+",
+                type: "방어구",
+                grade: "전설",
+                keyword: "조건부",
+                effects: [
+                    {
+                        id: 1,
+                        category: "캐스팅 속도",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "스킬 사용",
+                        warmup: 4,  // 첫 4초 예열 (스킬 4회)
+                        duration: 5,  // 5초 발동
+                        cooldown: 5  // 5초 사이클 (5초 안에 조건 충족 가능 → 연속 발동)
+                    },
+                    {
+                        id: 2,
+                        category: "차지 속도",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "스킬 사용",
+                        warmup: 4,
+                        duration: 5,
+                        cooldown: 5
+                    },
+                    {
+                        id: 3,
+                        category: "빠른 스킬",
+                        baseValue: 20,
+                        calcType: "B",
+                        trigger: "스킬 사용",
+                        warmup: 4,
+                        duration: 5,
+                        cooldown: 5
+                    }
+                ]
+            },
+            
+            // 90. 모래 폭풍 (상시 + 무방비 조건부, 60초마다 10초 발동)
+            // 설명: "스킬 사용 속도 및 공격 속도가 10% 증가. 무방비 공격 적중 시, 10초 동안 24% 추가로 증가"
+            // 브레이크: 60초마다 10초 발동
+            // 타임라인: [60초] [10초 발동] [50초] [10초 발동] [50초] (150초 초과)
+            // 총 20초 발동 / 150초 = 13.3%
+            {
+                name: "모래 폭풍",
+                type: "앰블럼",
+                grade: "전설",
+                keyword: "조건부",
+                effects: [
+                    {
+                        id: 1,
+                        category: "빠른 스킬",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "빠른 공격",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 3,
+                        category: "빠른 스킬",
+                        baseValue: 24,
+                        calcType: "B",  // B타입 (duration 유지)
+                        trigger: "브레이크",
+                        warmup: 60,  // 60초 예열
+                        cooldown: 60,  // 60초 사이클
+                        duration: 10  // 10초 발동
+                    },
+                    {
+                        id: 4,
+                        category: "빠른 공격",
+                        baseValue: 24,
+                        calcType: "B",
+                        trigger: "브레이크",
+                        warmup: 60,
+                        cooldown: 60,
+                        duration: 10
+                    }
+                ]
+            },
+            
+            // 91. 여명+ (누적: 스킬 사용 시 공격력 3.5%, 최대 6회)
+            // 설명: "누적: 스킬을 사용할 때마다 10초 동안 공격력이 3.5% 증가. 최대 6회까지 중첩"
+            {
+                name: "여명+",
+                type: "무기",
+                grade: "전설",
+                keyword: "누적",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 3.5,
+                        maxValue: 21,  // 3.5 × 6
+                        maxStacks: 6,
+                        calcType: "B",
+                        trigger: "스킬 사용",
+                        stackDuration: 10,
+                        specialType: "progressive"
+                    }
+                ]
+            },
+            
+            // 92. 종언+ (누적: 적 처치 시 공격력 2%, 최대 10회 + 상시 24%)
+            // 설명: "누적: 자신과 전투 중인 적이 처치되었을 경우, 공격력이 20초 동안 2% 증가. 최대 10회까지 중첩. 공격력이 24% 증가"
+            // counts: [0, 150] → 누적 효과는 0%, 상시 효과만 24%
+            {
+                name: "종언+",
+                type: "방어구",
+                grade: "전설",
+                keyword: "누적",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 2,
+                        maxValue: 20,  // 2 × 10
+                        maxStacks: 10,
+                        calcType: "B",
+                        trigger: "상시",  // 적 처치 = 예측 불가, 0으로 처리
+                        duration: 0,
+                        cooldown: 150,
+                        specialType: "progressive"
+                    },
+                    {
+                        id: 2,
+                        category: "공격력",
+                        baseValue: 24,
+                        calcType: "B",
+                        trigger: "상시"
+                    }
+                ]
+            },
+            
+            // 93. 저무는 달 (누적: 30초마다 공격력/방어력 2%, 0/30/60/90/120초)
+            // 설명: "누적: 공격력과 방어력이 6% 증가. 전투 시작 시, 전투 종료까지 30초마다 2%씩 증가, 최대 10회까지 중첩"
+            // 0초: 6% + 2% = 8%
+            // 30초: 8% + 2% = 10%
+            // 60초: 10% + 2% = 12%
+            // 90초: 12% + 2% = 14%
+            // 120초: 14% + 2% = 16% (150초는 제외)
+            // 실제: 0~30초 8%, 30~60초 10%, 60~90초 12%, 90~120초 14%, 120~150초 16%
+            // 평균: (30×8 + 30×10 + 30×12 + 30×14 + 30×16) / 150 = (240+300+360+420+480)/150 = 1800/150 = 12%
+            {
+                name: "저무는 달",
+                type: "방어구",
+                grade: "전설",
+                keyword: "누적",
+                effects: [
+                    {
+                        id: 1,
+                        category: "공격력",
+                        baseValue: 6,  // 초기 6%
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 2,
+                        category: "공격력",
+                        baseValue: 2,  // 30초마다 2% 증가
+                        maxValue: 10,  // 2% × 5회
+                        maxStacks: 5,  // 0/30/60/90/120초 (5회 증가)
+                        calcType: "B",
+                        trigger: "상시",
+                        stackDuration: 999,  // 영구 유지
+                        specialType: "progressive"  // 30초마다 스택 증가 (특수 처리 필요)
+                    },
+                    {
+                        id: 3,
+                        category: "방어력",
+                        baseValue: 6,  // 초기 6%
+                        calcType: "B",
+                        trigger: "상시"
+                    },
+                    {
+                        id: 4,
+                        category: "방어력",
+                        baseValue: 2,
+                        maxValue: 10,
+                        maxStacks: 5,
+                        calcType: "B",
+                        trigger: "상시",
+                        stackDuration: 999,
+                        specialType: "progressive"
+                    }
+                ]
+            },
+            
+            // 94. 물결치는 날 (조건부: 스킬 사용 후 다음 기본 공격)
+            // 설명: "스킬 사용 시, 다음 기본 공격 적중 시 대상에게 (공격력×152%)의 피해를 추가로 입히고, 다음 1회의 기본 공격 속도가 10% 증가"
+            // counts: [100, 100] → 100회 발동 (스킬 100회 → 기본 공격 100회)
+            {
+                name: "물결치는 날",
+                type: "무기",
+                grade: "전설",
+                keyword: "조건부",
+                effects: [
+                    {
+                        id: 1,
+                        category: "룬 피해",
+                        baseValue: 152,
+                        calcType: "A",
+                        trigger: "스킬 사용",  // 스킬 사용 시 → 다음 기본 공격
+                        cooldown: 1.5  // 스킬 1초 + 기본 공격 0.5초 = 1.5초 쿨
+                    },
+                    {
+                        id: 2,
+                        category: "빠른 공격",
+                        baseValue: 10,
+                        calcType: "A",
+                        trigger: "스킬 사용",
+                        cooldown: 1.5
+                    }
+                ]
+            },
+            
+            // 95. 끝없는 순환 (축적: 20회, 타임라인형, 초당 2회)
+            // 설명: "축적: 아군을 20회 회복시킨 이후, 다음 공격 적중 시 0.5초마다 (공격력×21%)의 암흑 피해를 4.5초 동안 입힌다"
+            // "축적: 적을 20회 공격한 이후, 다음 아군 회복 시 0.5초마다 (공격력×0.5%)씩 4.5초 동안 회복한다"
+            // 회복 1회당 0.5초 가정 → 20회 = 10초
+            // 4.5초동안 0.5초마다 → 초당 2회
+            // 타임라인: [10초 예열] [4.5초 발동] {5.5초 준비 + 4.5초 발동} 반복
+            // 계산: 21% × 가동률 × 2회(초당)
+            {
+                name: "끝없는 순환",
+                type: "무기",
+                grade: "전설",
+                keyword: "축적+타임라인",
+                effects: [
+                    {
+                        id: 1,
+                        category: "룬 피해",
+                        baseValue: 21,
+                        calcType: "B",
+                        trigger: "공격 적중",
+                        warmup: 10,
+                        duration: 4.5,
+                        cooldown: 10,
+                        hitCount: 2  // 초당 2회 (0.5초마다 1회)
+                    },
+                    {
+                        id: 2,
+                        category: "룬 회복",
+                        baseValue: 0.5,
+                        calcType: "B",
+                        trigger: "공격 적중",
+                        warmup: 10,
+                        duration: 4.5,
+                        cooldown: 10,
+                        hitCount: 2
+                    }
+                ]
+            },
+            
+            // 96. 태양 (반복: 3.5초마다 룬 피해, 43회 발동)
+            // 설명: "3.5초마다 자신 주위 3m 범위 내의 적에게 (공격력×89%)의 피해를 준다"
+            // 발동 횟수: 150/3.5 = 42.857 → 올림 43회
+            // 가동률: 43/150 = 28.67%
+            {
+                name: "태양",
+                type: "방어구",
+                grade: "신화",
+                keyword: "반복",
+                effects: [
+                    {
+                        id: 1,
+                        category: "룬 피해",
+                        baseValue: 89,
+                        calcType: "A",
+                        trigger: "상시",
+                        cooldown: 3.5  // 150/3.5 = 42.857 → 올림 43회
+                    }
+                ]
+            },
+            
+            // 97. 싹쓸바람 (조건부: 공격 적중 시, 10초 쿨, 타임라인형, 초당 2회)
+            // 설명: "공격 적중 시, 대상 주위 5m 범위 내의 적들을 중앙으로 3초간 끌어당기며 매 0.5초마다 (공격력×38%)의 피해를 준다(재사용 대기 시간: 10초)"
+            // 3초동안 0.5초마다 → 초당 2회
+            // 타임라인: [3초 발동] {7초 준비 + 3초 발동} 반복 (예열 없음)
+            // 계산: 38% × 가동률 × 2회(초당)
+            {
+                name: "싹쓸바람",
+                type: "방어구",
+                grade: "신화",
+                keyword: "조건부+타임라인",
+                effects: [
+                    {
+                        id: 1,
+                        category: "룬 피해",
+                        baseValue: 38,
+                        calcType: "B",
+                        trigger: "공격 적중",
+                        duration: 3,
+                        cooldown: 10,
+                        hitCount: 2  // 초당 2회 (0.5초마다 1회)
+                    }
+                ]
+            },
+            
+            // 98. 혼돈 (축적: DOT 3회 시 발동, 4초 쿨, 가동률 25%)
+            // 설명: "지속 피해 효과를 받을 때마다 중첩을 쌓는다. 중첩이 3회 쌓일 경우, 중첩을 전부 소모하여 (공격력×102%)의 피해를 준다. 이 효과는 각 대상마다 4초에 한 번만 발동"
+            // 가동률: 150/4/150 = 25%
+            {
+                name: "혼돈",
+                type: "방어구",
+                grade: "신화",
+                keyword: "축적",
+                effects: [
+                    {
+                        id: 1,
+                        category: "룬 피해",
+                        baseValue: 102,
+                        calcType: "A",
+                        trigger: "상시",  // DOT 3회 축적
+                        cooldown: 4  // 4초 쿨타임, 150/4 = 37.5회 → 37.5/150 = 25%
+                    }
+                ]
+            },
+            
+            // 99. 붕괴하는 별 (축적: 공격 3회 시 발동, 3초 쿨)
+            // 설명: "자신의 공격이 적에게 적중 할 때마다 중첩을 쌓는다. 중첩이 3회 쌓일 경우, 중첩을 전부 소모하여 (공격력×30%)의 피해를 주고, 자신의 공격력을 10초 동안 10% 증가시킨다. 이 효과는 각 대상마다 3초에 한 번만 발동"
+            // counts: [50, 150] → 룬 피해 50회 (150 / 3 = 50), 공격력 버프 150초 (항상 유지)
+            {
+                name: "붕괴하는 별",
+                type: "방어구",
+                grade: "신화",
+                keyword: "축적",
+                effects: [
+                    {
+                        id: 1,
+                        category: "룬 피해",
+                        baseValue: 30,
+                        calcType: "A",
+                        trigger: "공격 적중",
+                        requiredCount: 3,  // 공격 3회 (0.5초 × 3 = 1.5초)
+                        cooldown: 3  // 쿨타임 3초 (1.5초 + 3초 = 4.5초 사이클, 실제 3초로 제한)
+                    },
+                    {
+                        id: 2,
+                        category: "공격력",
+                        baseValue: 10,
+                        calcType: "B",
+                        trigger: "상시",  // 10초 유지, 3초마다 갱신 = 거의 상시
+                        duration: 150,
+                        cooldown: 150
+                    }
+                ]
+            },
+            
+            // 100. 원소 조화 (조건부: 공격 적중 시, 5초 쿨, 3개 투사체)
+            // 설명: "공격 적중 시, 전방 10m 범위 내의 적에게 3가지 속성의 투사체를 발사하여 각각 (공격력×42%)의 화염, 냉기, 번개 속성 피해를 입힌다(재사용 대기 시간: 5초)"
+            // 1회 발동 시 3번 나감
+            // 가동률: 150/5/150 × 3회 = 20% × 3 = 60% (투사체 개수만큼 곱함)
+            {
+                name: "원소 조화",
+                type: "앰블럼",
+                grade: "신화",
+                keyword: "조건부",
+                effects: [
+                    {
+                        id: 1,
+                        category: "룬 피해",
+                        baseValue: 42,
+                        calcType: "A",
+                        trigger: "공격 적중",
+                        cooldown: 5,  // 150 / 5 = 30회 발동
+                        procCount: 3  // 1회 발동 시 3번 발사
+                    }
+                ]
+            },
+            
+            // 101. 다가오는 죽음 (조건부: 10초 쿨, 거리 비례)
+            // 설명: "적을 향해 느리게 날아가는 암흑 구체를 발사한다. 최소 (공격력×117.5%) ~ 최대 18m 거리에서 (공격력×254%)(재사용 대기 시간: 10초)"
+            // counts: [15] → 150 / 10 = 15회
+            // 평균 피해: (117.5 + 254) / 2 = 185.75%
+            {
+                name: "다가오는 죽음",
+                type: "앰블럼",
+                grade: "신화",
+                keyword: "조건부",
+                effects: [
+                    {
+                        id: 1,
+                        category: "룬 피해",
+                        baseValue: 185.75,  // 평균 피해 (117.5~254)
+                        calcType: "A",
+                        trigger: "상시",
+                        cooldown: 10  // 150 / 10 = 15회
+                    }
+                ]
+            },
+            
+            // 102. 잊힌 성소 (축적: 60회 사용 시, 5초 지속, 타임라인형, 초당 10회)
+            // 설명: "축적: 스킬 혹은 기본 공격을 60회 사용 시, 5초 동안 0.1초마다 (공격력×15%)의 피해로 공격하는 원소 화살을 난사한다"
+            // 공격 1회당 0.5초 가정 → 60회 = 30초
+            // 5초동안 0.1초마다 → 초당 10회
+            // 타임라인: [30초 예열] [5초 발동] {25초 준비 + 5초 발동} 반복
+            // 계산: 15% × 가동률 × 10회(초당)
+            {
+                name: "잊힌 성소",
+                type: "앰블럼",
+                grade: "신화",
+                keyword: "축적+타임라인",
+                effects: [
+                    {
+                        id: 1,
+                        category: "룬 피해",
+                        baseValue: 15,
+                        calcType: "B",
+                        trigger: "공격 적중",
+                        warmup: 30,
+                        duration: 5,
+                        cooldown: 30,
+                        hitCount: 10  // 초당 10회 (0.1초마다 1회)
+                    }
+                ]
+            },
+            
+            // 103. 쏟아지는 별 (반복: 15초 쿨 + 궁극기 조건부, 20초마다 5%)
+            // 설명: "전투 중 15초마다 자신 주위 15m 범위 내의 무작위 적을 섬광으로 타격하여 대상에게 (공격력×315%)의 피해를 입히고 대상 주위 2m 범위 내에 (공격력×45%)의 피해. 궁극기를 사용했을 경우, 모든 적들을 타격"
+            // counts: [10, 10, 8] → 15초 쿨: 10회, 45% AOE: 10회, 궁극기: 8회
+            // 궁극기는 20초마다이므로 가동률 150/20/150 = 5%
+            {
+                name: "쏟아지는 별",
+                type: "앰블럼",
+                grade: "신화",
+                keyword: "반복+궁극기",
+                effects: [
+                    {
+                        id: 1,
+                        category: "룬 피해",
+                        baseValue: 315,
+                        calcType: "A",
+                        trigger: "상시",
+                        cooldown: 15  // 150 / 15 = 10회, 10/150 = 6.67%
+                    },
+                    {
+                        id: 2,
+                        category: "룬 피해",
+                        baseValue: 45,  // AOE 피해
+                        calcType: "A",
+                        trigger: "상시",
+                        cooldown: 15  // 150 / 15 = 10회, 10/150 = 6.67%
+                    },
+                    {
+                        id: 3,
+                        category: "룬 피해",
+                        baseValue: 315,  // 궁극기 사용 시
+                        calcType: "A",
+                        trigger: "궁극기",
+                        cooldown: 20  // 150 / 20 = 7.5회, 7.5/150 = 5%
+                    }
+                ]
+            }
+        ];
+        
+        // ========================================
+        // Phase 2: 계산 엔진
+        // ========================================
+        
+        // ========================================
+        // Phase 7: 특수 룬 처리 시스템
+        // ========================================
+        
+        class SpecialRuneHandler {
+            constructor(selectedRunes) {
+                this.selectedRunes = selectedRunes;
+            }
+            
+            // 시너지 룬 체크
+            has(runeName) {
+                return Object.values(this.selectedRunes).flat().includes(runeName);
+            }
+            
+            // 각성 앰블럼 체크
+            hasAwakeningEmblem() {
+                const awakeningEmblems = ['무자비한 포식자', '부서진 하늘', '대마법사', '흩날리는 검', '산맥 군주', '아득한 빛', '갈라진 땅'];
+                return Object.values(this.selectedRunes).flat().some(name => awakeningEmblems.includes(name));
+            }
+            
+            // 각성 룬 + 눈먼 예언자 시너지
+            applyAwakeningModifiers(effect) {
+                if (effect.trigger === "각성" && this.has("눈 먼 예언자")) {
+                    effect = { ...effect };
+                    effect.cooldown = Math.max(1, effect.cooldown - 38);
+                }
+                return effect;
+            }
+            
+            // 축적 룬 + 에메랄드 숲 시너지
+            applyAccumulationModifiers(effect) {
+                if (effect.requiredCount && this.has("에메랄드 숲")) {
+                    effect = { ...effect };
+                    // "1회 추가로 누적" = 1회당 2회로 카운트 = 필요 횟수 절반
+                    effect.requiredCount = Math.max(1, Math.ceil(effect.requiredCount / 2));
+                }
+                return effect;
+            }
+            
+            // 누적 룬 + 쌍둥이 별 시너지
+            applyStackingModifiers(effect) {
+                if (effect.maxStacks && this.has("쌍둥이 별")) {
+                    effect = { ...effect };
+                    effect.stackIncrement = 2; // 스택이 2개씩 쌓임
+                }
+                return effect;
+            }
+            
+            // 결함 룬 + 영원 시너지 (결함 제거)
+            shouldIgnoreDefect(rune) {
+                return rune.keyword === "결함" && this.has("영원");
+            }
+            
+            // 파멸의 낙인 + 공명하는 수정 시너지
+            applyParakNackinModifiers(rune, effect) {
+                if (rune.name === "파멸의 낙인" && this.has("공명하는 수정")) {
+                    effect = { ...effect };
+                    effect.initialStacks = 5;
+                }
+                return effect;
+            }
+            
+            // 모든 시너지 적용
+            applyAllModifiers(rune, effect) {
+                effect = this.applyAwakeningModifiers(effect);
+                effect = this.applyAccumulationModifiers(effect);
+                effect = this.applyStackingModifiers(effect);
+                effect = this.applyParakNackinModifiers(rune, effect);
+                return effect;
+            }
+            
+            // 땅울림 감소형 계산 (특수)
+            calculateDecayingEffect(effect, battleTime) {
+                // 시작: 30%, 3초마다 2% 감소, 최소 0%
+                let totalValue = 0;
+                const startValue = effect.baseValue;
+                const decayInterval = 3;
+                const decayAmount = 2;
+                
+                for (let time = 0; time < battleTime; time++) {
+                    const elapsed = time;
+                    const decayTimes = Math.floor(elapsed / decayInterval);
+                    const currentValue = Math.max(0, startValue - (decayAmount * decayTimes));
+                    totalValue += currentValue;
+                }
+                
+                return totalValue / battleTime;  // 평균값
+            }
+            
+            // 각성 전용 룬피해 계산 (부서진 하늘, 산맥 군주)
+            calculateAwakeningOnlyDamage(effect, battleTime, awakeningCooldown, awakeningDuration) {
+                if (effect.specialType !== "awakening_only") {
+                    return null;
+                }
+                
+                // 각성 가동 시간 계산
+                const has눈먼 = this.has("눈 먼 예언자");
+                const actualCooldown = has눈먼 ? Math.max(1, awakeningCooldown - 38) : awakeningCooldown;
+                
+                const cycles = Math.floor(battleTime / actualCooldown) + 1;
+                let totalActiveTime = 0;
+                
+                for (let i = 0; i < cycles; i++) {
+                    const startTime = i * actualCooldown;
+                    if (startTime >= battleTime) break;
+                    totalActiveTime += Math.min(awakeningDuration, battleTime - startTime);
+                }
+                
+                // 각성 중에만 발동하는 룬피해
+                const procsPerCycle = Math.floor(awakeningDuration / effect.cooldown);
+                const totalProcs = procsPerCycle * cycles;
+                const uptime = totalProcs / battleTime;
+                
+                return {
+                    baseValue: effect.baseValue,
+                    uptime: uptime,
+                    totalProcs: totalProcs,
+                    effectiveValue: effect.baseValue * uptime,
+                    dps: (effect.baseValue * totalProcs) / battleTime
+                };
+            }
+        }
+        
+        // A타입 계산기 (가동률형)
+        class TypeACalculator {
+            calculate(effect, battleTime = 150) {
+                const triggerInterval = TRIGGER_INTERVALS[effect.trigger] || 1;
+                const cooldown = effect.cooldown || 0;
+                
+                // 축적형 처리 (n회 필요)
+                if (effect.requiredCount) {
+                    const buildTime = triggerInterval * effect.requiredCount;
+                    
+                    // 첫 발동: buildTime 소요
+                    // 이후 발동: 쿨타임 중에도 축적 진행 → 쿨타임마다 발동
+                    // (단, buildTime > cooldown인 경우는 buildTime마다 발동)
+                    const firstProcTime = buildTime;
+                    const subsequentCooldown = Math.max(buildTime, cooldown);
+                    
+                    if (firstProcTime >= battleTime) {
+                        // 전투 중 1회도 발동 못함
+                        return {
+                            baseValue: effect.baseValue,
+                            uptime: 0,
+                            totalProcs: 0,
+                            effectiveValue: 0,
+                            dps: 0
+                        };
+                    }
+                    
+                    // 첫 발동 + 이후 발동들
+                    const remainingTime = battleTime - firstProcTime;
+                    const subsequentProcs = Math.floor(remainingTime / subsequentCooldown);
+                    const totalProcs = 1 + subsequentProcs;
+                    const uptime = totalProcs / battleTime;
+                    
+                    return {
+                        baseValue: effect.baseValue,
+                        uptime: uptime,
+                        totalProcs: totalProcs,
+                        effectiveValue: effect.baseValue * uptime,
+                        dps: (effect.baseValue * totalProcs) / battleTime
+                    };
+                }
+                
+                // 일반 쿨타임형
+                const effectiveCooldown = Math.max(triggerInterval, cooldown);
+                const totalProcs = Math.ceil(battleTime / effectiveCooldown);  // 올림 처리
+                const uptime = totalProcs / battleTime;
+                
+                // procCount 처리 (1회 발동 시 여러 번 나가는 경우, 예: 원소 조화 3개 투사체)
+                const procMultiplier = effect.procCount || 1;
+                
+                return {
+                    baseValue: effect.baseValue,
+                    uptime: uptime,
+                    totalProcs: totalProcs,
+                    procCount: procMultiplier,  // procCount 정보 전달
+                    effectiveValue: effect.baseValue * uptime * procMultiplier,  // 최종 계산 시 곱함
+                    dps: (effect.baseValue * totalProcs * procMultiplier) / battleTime,
+                    timeline: procMultiplier > 1 ? `[${totalProcs}회 발동]` : `[${totalProcs}회 발동]`
+                };
+            }
+        }
+        
+        // B타입 계산기 (타임라인형)
+        class TypeBCalculator {
+            calculate(effect, battleTime = 150) {
+                // 상시형
+                if (effect.trigger === "상시") {
+                    return this.calculateConstant(effect, battleTime);
+                }
+                
+                // 누적형
+                if (effect.maxStacks) {
+                    return this.calculateProgressive(effect, battleTime);
+                }
+                
+                // 반복형 (각성, 조건부 버프)
+                if (effect.duration) {
+                    return this.calculateCyclic(effect, battleTime);
+                }
+                
+                return this.calculateConstant(effect, battleTime);
+            }
+            
+            calculateConstant(effect, battleTime) {
+                return {
+                    baseValue: effect.baseValue,
+                    uptime: 1.0,
+                    effectiveValue: effect.baseValue,
+                    timeline: `[상시 적용]`
+                };
+            }
+            
+            calculateProgressive(effect, battleTime) {
+                const triggerInterval = TRIGGER_INTERVALS[effect.trigger] || 1;
+                const stackDuration = effect.stackDuration || 10;
+                const stackIncrement = effect.stackIncrement || 1; // 쌍둥이 별: 2, 기본: 1
+                const requiredCount = effect.requiredCount || 1; // 축적 필요 횟수
+                
+                // 간단한 시뮬레이션 (매 초마다)
+                let totalStackSeconds = 0;
+                const stacks = [];
+                
+                // 스택 발동 간격 = triggerInterval × requiredCount
+                const stackInterval = triggerInterval * requiredCount;
+                
+                // 스택 생성 (쌍둥이 별 효과 반영)
+                for (let time = 0; time < battleTime; time += stackInterval) {
+                    // stackIncrement만큼 스택 추가
+                    for (let i = 0; i < stackIncrement; i++) {
+                        stacks.push({ addTime: time, expireTime: time + stackDuration });
+                    }
+                }
+                
+                // 매 초마다 활성 스택 계산
+                const stackHistory = [];
+                for (let time = 0; time < battleTime; time++) {
+                    const activeStacks = stacks.filter(s => 
+                        s.addTime <= time && s.expireTime > time
+                    ).length;
+                    const clampedStacks = Math.min(activeStacks, effect.maxStacks);
+                    totalStackSeconds += clampedStacks;
+                    stackHistory.push({ time, stacks: clampedStacks });
+                }
+                
+                const averageStacks = totalStackSeconds / battleTime;
+                const uptime = averageStacks / effect.maxStacks;
+                
+                // 타임라인 세그먼트 생성 (누적형)
+                const segments = this.generateProgressiveSegments(stackHistory, effect, battleTime);
+                
+                const synergyNote = stackIncrement > 1 ? ` (쌍둥이 별: ${stackIncrement}배)` : '';
+                
+                return {
+                    baseValue: effect.maxValue,
+                    maxValue: effect.maxValue,
+                    averageStacks: averageStacks,
+                    uptime: uptime,
+                    effectiveValue: effect.maxValue * uptime,
+                    timeline: `[평균 ${averageStacks.toFixed(1)}/${effect.maxStacks} 스택${synergyNote}]`,
+                    segments: segments
+                };
+            }
+            
+            generateProgressiveSegments(stackHistory, effect, battleTime) {
+                const segments = [];
+                const sampleRate = 5; // 5초마다 샘플링
+                
+                for (let time = 0; time < battleTime; time += sampleRate) {
+                    const stackData = stackHistory[time] || { stacks: 0 };
+                    const stackRatio = stackData.stacks / effect.maxStacks;
+                    
+                    // 스택 비율에 따라 색상 변경 (빨강 → 노랑 → 초록)
+                    let color;
+                    if (stackRatio < 0.40) {
+                        color = "#F44336"; // 빨강 (낮은 스택 0~40%)
+                    } else if (stackRatio < 1.0) {
+                        color = "#FFC107"; // 노랑 (중간 스택 40~99%)
+                    } else {
+                        color = "#4CAF50"; // 초록 (풀스택 100%)
+                    }
+                    
+                    segments.push({
+                        start: time,
+                        end: Math.min(time + sampleRate, battleTime),
+                        type: "progressive",
+                        color: color,
+                        value: stackData.stacks,
+                        label: `${stackData.stacks}/${effect.maxStacks} 스택`
+                    });
+                }
+                
+                return segments;
+            }
+            
+            calculateCyclic(effect, battleTime) {
+                const triggerInterval = TRIGGER_INTERVALS[effect.trigger] || 1;
+                const duration = effect.duration;
+                const cooldown = effect.cooldown || triggerInterval;
+                
+                // 축적형 처리 or 명시적 warmup
+                let warmup = effect.warmup || 0;  // 명시적 warmup 우선
+                if (!warmup && effect.requiredCount) {
+                    warmup = triggerInterval * effect.requiredCount;
+                }
+                
+                const cycleTime = cooldown;
+                // +1: 0초에 첫 발동 포함
+                const cyclesInBattle = Math.floor((battleTime - warmup) / cycleTime) + 1;
+                const activeTime = Math.min(cyclesInBattle * duration, battleTime - warmup);
+                const uptime = activeTime / battleTime;
+                
+                // 타임라인 세그먼트 생성
+                const segments = this.generateTimelineSegments(effect, battleTime, warmup, cooldown, duration);
+                
+                // hitCount 처리 (초당 발동 횟수, 예: 0.5초마다 = 초당 2회)
+                const hitMultiplier = effect.hitCount || 1;
+                
+                return {
+                    baseValue: effect.baseValue,  // 원본 유지
+                    uptime: uptime,
+                    effectiveValue: effect.baseValue * uptime * hitMultiplier,  // 최종 계산 시 곱함
+                    hitCount: hitMultiplier,  // hitCount 정보 전달
+                    timeline: hitMultiplier > 1 ? 
+                        `[${(uptime * 100).toFixed(0)}% 가동, 초당 ${hitMultiplier}회]` :
+                        `[${(uptime * 100).toFixed(0)}% 가동, ${duration}초 유지/${cooldown}초 쿨]`,
+                    segments: segments
+                };
+            }
+            
+            generateTimelineSegments(effect, battleTime, warmup, cooldown, duration) {
+                const segments = [];
+                
+                // 예열 구간 (회색)
+                if (warmup > 0) {
+                    segments.push({
+                        start: 0,
+                        end: warmup,
+                        type: "warmup",
+                        color: "#9E9E9E",
+                        value: 0,
+                        label: "예열"
+                    });
+                }
+                
+                // 반복 사이클
+                let time = warmup || 0;
+                let cycleCount = 0;
+                const maxCycles = 100; // 안전장치
+                
+                while (time < battleTime && cycleCount < maxCycles) {
+                    cycleCount++;
+                    
+                    // 발동 구간 (초록)
+                    const activeEnd = Math.min(time + duration, battleTime);
+                    segments.push({
+                        start: time,
+                        end: activeEnd,
+                        type: "active",
+                        color: "#4CAF50",
+                        value: effect.baseValue,
+                        label: "발동"
+                    });
+                    
+                    // 다음 발동 시간 = 현재 시작 + 쿨타임
+                    const nextTime = time + cooldown;
+                    
+                    // 순수 준비 구간 (빨강): 발동 종료 ~ 다음 발동 시작
+                    if (activeEnd < nextTime && activeEnd < battleTime) {
+                        const prepEnd = Math.min(nextTime, battleTime);
+                        segments.push({
+                            start: activeEnd,
+                            end: prepEnd,
+                            type: "prep",
+                            color: "#F44336",
+                            value: 0,
+                            label: "준비"
+                        });
+                    }
+                    
+                    // 다음 사이클로 (쿨타임만큼 전진)
+                    time = nextTime;
+                }
+                
+                return segments;
+            }
+        }
+        
+        // 통합 계산 매니저
+        class RuneCalculationManager {
+            constructor(selectedRunes) {
+                this.typeA = new TypeACalculator();
+                this.typeB = new TypeBCalculator();
+                this.specialHandler = new SpecialRuneHandler(selectedRunes || {});
+                this.selectedRunes = selectedRunes || {};
+            }
+            
+            calculateRune(rune, battleTime = 150) {
+                const result = {
+                    name: rune.name,
+                    effects: []
+                };
+                
+                // 결함 룬 + 영원 시너지: 패널티 무시
+                const shouldIgnoreDefects = this.specialHandler.shouldIgnoreDefect(rune);
+                
+                // 각성 방어구 룬 체크
+                const isAwakeningArmor = rune.keyword === "각성" && rune.type === "방어구";
+                const hasAwakeningEmblem = this.specialHandler.hasAwakeningEmblem();
+                
+                rune.effects.forEach(effect => {
+                    // 패널티 효과 무시
+                    if (shouldIgnoreDefects && effect.baseValue < 0) {
+                        return;
+                    }
+                    
+                    // 각성 방어구 룬: 각성 앰블럼 없으면 각성 효과 무시
+                    if (isAwakeningArmor && effect.trigger === "각성" && !hasAwakeningEmblem) {
+                        return;
+                    }
+                    
+                    // 시너지 적용
+                    effect = this.specialHandler.applyAllModifiers(rune, effect);
+                    
+                    let calc;
+                    
+                    // 특수 타입 처리
+                    if (effect.specialType === "decaying") {
+                        const avgValue = this.specialHandler.calculateDecayingEffect(effect, battleTime);
+                        calc = {
+                            baseValue: effect.baseValue,
+                            uptime: 1.0,
+                            effectiveValue: avgValue,
+                            timeline: `[감소형: 평균 ${avgValue.toFixed(1)}%]`
+                        };
+                    } else if (effect.specialType === "awakening_only") {
+                        // 해당 룬의 각성 효과 찾기
+                        const awakeningEffect = rune.effects.find(e => e.trigger === "각성" && !e.specialType);
+                        if (awakeningEffect) {
+                            calc = this.specialHandler.calculateAwakeningOnlyDamage(
+                                effect, 
+                                battleTime, 
+                                awakeningEffect.cooldown, 
+                                awakeningEffect.duration
+                            );
+                        } else {
+                            calc = this.typeA.calculate(effect, battleTime);
+                        }
+                    } else if (effect.calcType === "A") {
+                        calc = this.typeA.calculate(effect, battleTime);
+                    } else {
+                        calc = this.typeB.calculate(effect, battleTime);
+                    }
+                    
+                    result.effects.push({
+                        id: effect.id,
+                        category: effect.category,
+                        element: effect.element,
+                        unit: effect.unit,  // unit 전달 (절대값 vs 퍼센트)
+                        ...calc
+                    });
+                });
+                
+                return result;
+            }
+            
+            calculateAll(selectedRunes) {
+                // 파라미터가 전달되면 업데이트, 없으면 생성자에서 받은 것 사용
+                if (selectedRunes) {
+                    this.specialHandler = new SpecialRuneHandler(selectedRunes);
+                    this.selectedRunes = selectedRunes;
+                }
+                
+                const results = {};
+                const runesObj = this.selectedRunes || {};
+                
+                // selectedRunes가 비어있거나 undefined일 수 있으므로 체크
+                if (!runesObj || Object.keys(runesObj).length === 0) {
+                    return results;
+                }
+                
+                Object.values(runesObj).flat().forEach(runeName => {
+                    const rune = runeDataV2.find(r => r.name === runeName);
+                    if (rune) {
+                        results[runeName] = this.calculateRune(rune);
+                    }
+                });
+                return results;
+            }
+            
+            aggregate(calculationResults) {
+                const aggregated = {};
+                
+                Object.values(calculationResults).forEach(runeResult => {
+                    runeResult.effects.forEach(effect => {
+                        const category = effect.category;
+                        if (!aggregated[category]) {
+                            aggregated[category] = {
+                                total: 0,
+                                sources: []
+                            };
+                        }
+                        aggregated[category].total += effect.effectiveValue;
+                        aggregated[category].sources.push({
+                            rune: runeResult.name,
+                            baseValue: effect.baseValue || effect.maxValue,
+                            uptime: effect.uptime,
+                            effectiveValue: effect.effectiveValue,
+                            timeline: effect.timeline,
+                            unit: effect.unit,  // unit 전달 (절대값 vs 퍼센트)
+                            hitCount: effect.hitCount,  // 초당 발동 횟수
+                            procCount: effect.procCount,  // 1회 발동당 횟수
+                            effectId: effect.id,  // effect ID 추가 (타임라인 매칭용)
+                            segments: effect.segments  // segments 직접 전달
+                        });
+                    });
+                });
+                
+                return aggregated;
+            }
+            
+            // 기존 runeEfficiencyData 형식으로 변환
+            toEfficiencyDataFormat(calculationResults) {
+                const efficiencyData = {};
+                
+                Object.entries(calculationResults).forEach(([runeName, runeResult]) => {
+                    const keywords = [];
+                    const values = [];
+                    const counts = [];
+                    const efficiencies = [];
+                    
+                    // effects 배열이 있을 때만 처리 (필터링된 효과만 포함)
+                    if (runeResult.effects && runeResult.effects.length > 0) {
+                        runeResult.effects.forEach(effect => {
+                            keywords.push(effect.category);
+                            values.push(effect.baseValue || effect.maxValue || 0);
+                            counts.push(effect.totalProcs || 150);
+                            efficiencies.push(effect.effectiveValue);
+                        });
+                    }
+                    
+                    efficiencyData[runeName] = {
+                        keywords,
+                        values,
+                        counts,
+                        efficiencies
+                    };
+                });
+                
+                return efficiencyData;
+            }
+        }
+        
+        // 타임라인 그래프 렌더링 함수
+        function renderTimelineGraph(runeName, effect, effectData) {
+            if (!effectData.segments || effectData.segments.length === 0) {
+                return null;
+            }
+            
+            const container = document.createElement('div');
+            container.className = 'timeline-container';
+            
+            const header = document.createElement('div');
+            header.className = 'timeline-header';
+            header.innerHTML = `<strong>${runeName}</strong> - ${effect.category} (${(effectData.uptime * 100).toFixed(0)}% 가동)`;
+            container.appendChild(header);
+            
+            // 시간 눈금 추가 (10초 간격)
+            const timeMarkers = document.createElement('div');
+            timeMarkers.className = 'timeline-markers';
+            for (let t = 0; t <= 150; t += 10) {
+                const marker = document.createElement('div');
+                marker.className = 'timeline-marker';
+                marker.style.left = `${(t / 150) * 100}%`;
+                marker.innerHTML = `<div class="marker-tick"></div><div class="marker-label">${t}s</div>`;
+                timeMarkers.appendChild(marker);
+            }
+            container.appendChild(timeMarkers);
+            
+            const graph = document.createElement('div');
+            graph.className = 'timeline-graph';
+            
+            effectData.segments.forEach(seg => {
+                const width = ((seg.end - seg.start) / 150) * 100;
+                const bar = document.createElement('div');
+                bar.className = 'timeline-segment';
+                bar.style.width = width + '%';
+                bar.style.backgroundColor = seg.color;
+                bar.title = `${seg.label}: ${seg.start.toFixed(1)}~${seg.end.toFixed(1)}초 (${seg.value || 0})`;
+                graph.appendChild(bar);
+            });
+            
+            container.appendChild(graph);
+            
+            const legend = document.createElement('div');
+            legend.className = 'timeline-legend';
+            
+            // 타임라인 타입에 따라 다른 범례 표시
+            const isProgressive = effectData.segments && effectData.segments[0]?.type === "progressive";
+            
+            if (isProgressive) {
+                legend.innerHTML = `
+                    <span style="color: #F44336;">■ 낮은 스택 (0~40%)</span>
+                    <span style="color: #FFC107;">■ 중간 스택 (40~99%)</span>
+                    <span style="color: #4CAF50;">■ 풀스택 (100%)</span>
+                `;
+            } else {
+                legend.innerHTML = `
+                    <span style="color: #9E9E9E;">■ 예열</span>
+                    <span style="color: #4CAF50;">■ 발동</span>
+                    <span style="color: #F44336;">■ 준비</span>
+                `;
+            }
+            
+            container.appendChild(legend);
+            
+            return container;
+        }
+        // UI 렌더링 함수
+        function renderEffectSummary(aggregated, detailedResults) {
+            const resultDiv = document.getElementById('effect-sums');
+            if (!resultDiv) return;
+            
+            resultDiv.innerHTML = '';
+            
+            // 룬별로 그룹화
+            const runeGroups = {};
+            Object.entries(aggregated).forEach(([category, data]) => {
+                data.sources.forEach(source => {
+                    if (!runeGroups[source.rune]) {
+                        runeGroups[source.rune] = [];
+                    }
+                    runeGroups[source.rune].push({ category, source });
+                });
+            });
+            
+            // 각 룬별로 렌더링
+            Object.entries(runeGroups).forEach(([runeName, effects]) => {
+                const runeSection = document.createElement('div');
+                runeSection.className = 'rune-section';
+                runeSection.style.marginBottom = '20px';
+                runeSection.style.padding = '15px';
+                runeSection.style.backgroundColor = '#f9f9f9';
+                runeSection.style.borderRadius = '8px';
+                
+                const runeTitle = document.createElement('h3');
+                runeTitle.textContent = runeName;
+                runeTitle.style.marginTop = '0';
+                runeTitle.style.color = '#333';
+                runeSection.appendChild(runeTitle);
+                
+                // 효과 목록
+                effects.forEach(({ category, source }) => {
+                    const effectDiv = document.createElement('div');
+                    effectDiv.className = 'effect-sum';
+                    effectDiv.style.borderLeft = '4px solid #2196F3';
+                    effectDiv.style.padding = '8px';
+                    effectDiv.style.marginBottom = '8px';
+                    effectDiv.style.backgroundColor = 'white';
+                    
+                    // unit 결정 (절대값 vs 퍼센트)
+                    const unit = source.unit || '%';
+                    const uptimeStr = source.uptime !== undefined ? `${(source.uptime * 100).toFixed(1)}%` : '100%';
+                    const timeline = source.timeline ? ` ${source.timeline}` : '';
+                    
+                    // hitCount 또는 procCount가 있으면 3단계로 표시
+                    const multiplier = source.hitCount || source.procCount;
+                    let formulaHtml = '';
+                    if (multiplier && multiplier > 1) {
+                        formulaHtml = `
+                            <span style="color: #4CAF50;">기존효과: ${source.baseValue}${unit}</span> × 
+                            <span style="color: #FF9800;">가동률: ${uptimeStr}</span> × 
+                            <span style="color: #FF5722;">${multiplier}회</span> = 
+                            <span style="color: #1976D2;">최종: ${source.effectiveValue.toFixed(1)}${unit}</span>${timeline}
+                        `;
+                    } else {
+                        formulaHtml = `
+                            <span style="color: #4CAF50;">기존효과: ${source.baseValue}${unit}</span> × 
+                            <span style="color: #FF9800;">가동률: ${uptimeStr}</span> = 
+                            <span style="color: #1976D2;">최종: ${source.effectiveValue.toFixed(1)}${unit}</span>${timeline}
+                        `;
+                    }
+                    
+                    effectDiv.innerHTML = `
+                        <div><strong>${category}:</strong> <span style="font-size: 1.2em; color: #1976D2;">${source.effectiveValue.toFixed(1)}${unit}</span></div>
+                        <div class="rune-list" style="color: #666; font-size: 0.9em; margin-top: 4px;">
+                            ${formulaHtml}
+                        </div>
+                    `;
+                    
+                    runeSection.appendChild(effectDiv);
+                    
+                    // 타임라인 그래프 추가 (segments가 있고 uptime < 100%인 경우만)
+                    if (source.segments && source.segments.length > 0 && source.uptime < 1.0) {
+                        // source에서 직접 segments 사용
+                        const effectData = {
+                            category: category,
+                            segments: source.segments,
+                            uptime: source.uptime
+                        };
+                        const timelineGraph = renderTimelineGraph(runeName, { category }, effectData);
+                        if (timelineGraph) {
+                            runeSection.appendChild(timelineGraph);
+                        }
+                    }
+                });
+                
+                resultDiv.appendChild(runeSection);
+            });
+            
+            // 총합 표시
+            const summarySection = document.createElement('div');
+            summarySection.className = 'summary-section';
+            summarySection.style.marginTop = '20px';
+            summarySection.style.padding = '15px';
+            summarySection.style.backgroundColor = '#e3f2fd';
+            summarySection.style.borderRadius = '8px';
+            
+            const summaryTitle = document.createElement('h3');
+            summaryTitle.textContent = '총 효과 합계';
+            summaryTitle.style.marginTop = '0';
+            summarySection.appendChild(summaryTitle);
+            
+            Object.entries(aggregated).forEach(([category, data]) => {
+                const summaryItem = document.createElement('div');
+                summaryItem.style.padding = '5px 0';
+                summaryItem.innerHTML = `<strong>${category}:</strong> ${data.total.toFixed(1)}%`;
+                summarySection.appendChild(summaryItem);
+            });
+            
+            resultDiv.appendChild(summarySection);
+            
+            document.getElementById('calculation-result').style.display = 'block';
+        }
+        
+        // ========================================
+        // 기존 코드 시작
+        // ========================================
+        
         const runeData = [
             // 무기 전설
             { type: '무기', grade: '전설', name: '불길', keyword: '', effects: [{ effect: '치명타 확률 증가', value: '18%' }, { effect: '지속피해', value: '공격력×n%', condition: '화상 (쿨타임: 10초)' }] },
@@ -3000,6 +6868,45 @@
         }
 
         function calculateEffects() {
+            // ========================================
+            // 새로운 계산 시스템 사용
+            // ========================================
+            
+            console.log('[새 시스템] calculateEffects 시작');
+            
+            // 선택된 룬 확인
+            const hasNewSystemRunes = Object.values(selectedRunes).flat().some(runeName => 
+                runeDataV2.find(r => r.name === runeName)
+            );
+            
+            if (hasNewSystemRunes) {
+                // 새 시스템으로 계산
+                const manager = new RuneCalculationManager(selectedRunes);
+                const results = manager.calculateAll(selectedRunes);
+                const aggregated = manager.aggregate(results);
+                
+                console.log('[새 시스템] 계산 결과:', results);
+                console.log('[새 시스템] 집계 결과:', aggregated);
+                
+                // 기존 형식으로 변환하여 runeEfficiencyData 업데이트
+                const newEfficiencyData = manager.toEfficiencyDataFormat(results);
+                Object.assign(runeEfficiencyData, newEfficiencyData);
+                
+                console.log('[새 시스템] efficiencyData 업데이트:', newEfficiencyData);
+                
+                // UI 업데이트
+                renderEffectSummary(aggregated, results);
+                
+                // 대미지 계산 호출
+                calculateDamageMultiplier();
+                
+                return;
+            }
+            
+            // ========================================
+            // 기존 시스템 (하위 호환)
+            // ========================================
+            
             const effectSums = {};
             const effectSources = {};
             const specialEffectSums = {}; // 특수 계산된 효과들
@@ -3583,6 +7490,7 @@
                 광역피해: parseFloat(document.getElementById('skill-광역피해')?.value || 0) / 100,
                 콤보피해: parseFloat(document.getElementById('skill-콤보피해')?.value || 0) / 100,
                 추가피해: parseFloat(document.getElementById('skill-추가피해')?.value || 0) / 100,
+                지속피해: parseFloat(document.getElementById('skill-지속피해')?.value || 0) / 100,
                 치명타피해: parseFloat(document.getElementById('skill-치명타피해')?.value || 0) / 100,
                 치명타확률: parseFloat(document.getElementById('skill-치명타확률')?.value || 0) / 100,
                 추가타확률: parseFloat(document.getElementById('skill-추가타확률')?.value || 0) / 100
@@ -3909,7 +7817,7 @@
             });
             
             const runeDamage = 1 + (runeDamageTotal / 100);
-            const runeDOT = 1 + (runeDOTTotal / 100);
+            const runeDOT = 1 + (runeDOTTotal / 100) + skillDmg.지속피해;
             
             // 7. 최종 대미지 배율
             const directDamage = attack * enhancement * damageIncrease * critical * additional * runeDamage;
@@ -4249,7 +8157,7 @@
                 'stat-강타강화', 'stat-연타강화', 'stat-콤보강화', 'stat-광역강화',
                 'stat-스킬위력', 'stat-치명타', 'stat-추가타',
                 'skill-공격력', 'skill-연타피해', 'skill-강타피해', 'skill-광역피해',
-                'skill-콤보피해', 'skill-추가피해', 'skill-치명타피해', 
+                'skill-콤보피해', 'skill-추가피해', 'skill-지속피해', 'skill-치명타피해', 
                 'skill-치명타확률', 'skill-추가타확률',
                 'synergy-주는피해', 'synergy-받는피해'
             ];
@@ -4361,6 +8269,7 @@
                 광역피해: parseFloat(document.getElementById('skill-광역피해')?.value) || 0,
                 콤보피해: parseFloat(document.getElementById('skill-콤보피해')?.value) || 0,
                 추가피해: parseFloat(document.getElementById('skill-추가피해')?.value) || 0,
+                지속피해: parseFloat(document.getElementById('skill-지속피해')?.value) || 0,
                 치명타피해: parseFloat(document.getElementById('skill-치명타피해')?.value) || 0,
                 치명타확률: parseFloat(document.getElementById('skill-치명타확률')?.value) || 0,
                 추가타확률: parseFloat(document.getElementById('skill-추가타확률')?.value) || 0
@@ -4461,6 +8370,8 @@
                     document.getElementById('skill-콤보피해').value = setData.skills.콤보피해 || 0;
                 if (document.getElementById('skill-추가피해'))
                     document.getElementById('skill-추가피해').value = setData.skills.추가피해 || 0;
+                if (document.getElementById('skill-지속피해'))
+                    document.getElementById('skill-지속피해').value = setData.skills.지속피해 || 0;
                 if (document.getElementById('skill-치명타피해'))
                     document.getElementById('skill-치명타피해').value = setData.skills.치명타피해 || 0;
                 if (document.getElementById('skill-치명타확률'))
