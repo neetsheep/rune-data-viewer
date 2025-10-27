@@ -6669,8 +6669,8 @@
                 // UI 업데이트
                 renderEffectSummary(aggregated, results);
                 
-                // 대미지 계산 호출
-                calculateDamageMultiplier();
+                // 대미지 계산 호출 (새 시스템 데이터 전달)
+                calculateDamageMultiplier(aggregated);
                 
                 return;
             }
@@ -7178,17 +7178,17 @@
             calculateDamageMultiplier(effectSums);
         }
         
-        function calculateDamageMultiplier(runeEffects) {
-            // 세트 효과 체크
-            const has눈먼예언자 = selectedRunes['방어구'].includes('눈 먼 예언자');
-            const has쌍둥이별 = selectedRunes['방어구'].includes('쌍둥이 별');
-            const has에메랄드숲 = selectedRunes['방어구'].includes('에메랄드 숲');
-            const has파멸의낙인 = selectedRunes['방어구'].includes('파멸의 낙인');
-            const has공명하는수정 = selectedRunes['방어구'].includes('공명하는 수정');
-            const has영원 = selectedRunes['방어구'].includes('영원');
+        function calculateDamageMultiplier(aggregatedEffects) {
+            // aggregatedEffects가 없으면 (기존 시스템 호출) 기존 방식 사용
+            const useNewSystem = aggregatedEffects && Object.keys(aggregatedEffects).length > 0;
             
-            // 세트 효과 반영하여 특수 평균값 계산
-            const runeSpecialAverages = calculate150sAverage(has쌍둥이별, has에메랄드숲, has파멸의낙인, has공명하는수정);
+            // 세트 효과 체크
+            const has눈먼예언자 = selectedRunes['앰블럼'] && selectedRunes['앰블럼'].includes('눈 먼 예언자');
+            const has쌍둥이별 = selectedRunes['앰블럼'] && selectedRunes['앰블럼'].includes('쌍둥이 별');
+            const has에메랄드숲 = selectedRunes['앰블럼'] && selectedRunes['앰블럼'].includes('에메랄드 숲');
+            const has파멸의낙인 = selectedRunes['방어구'] && selectedRunes['방어구'].includes('파멸의 낙인');
+            const has공명하는수정 = selectedRunes['앰블럼'] && selectedRunes['앰블럼'].includes('공명하는 수정');
+            const has영원 = selectedRunes['앰블럼'] && selectedRunes['앰블럼'].includes('영원');
             
             // 각성 앰블럼 룬이 선택되었는지 확인
             const 각성앰블럼룬들 = ['무자비한 포식자', '부서진 하늘', '대마법사', '흩날리는 검', '산맥 군주', '아득한 빛', '갈라진 땅'];
@@ -7293,8 +7293,35 @@
             let rune추가타확률 = 0;
             let rune방어구파괴 = 0;
             
-            // 선택된 룬들의 효율 데이터에서 가동률이 적용된 값 사용
-            Object.keys(selectedRunes).forEach(type => {
+            // 새 시스템 사용 시 aggregatedEffects에서 값 추출
+            if (useNewSystem) {
+                runeAtk = (aggregatedEffects['공격력']?.total || 0) / 100;
+                rune강타 = (aggregatedEffects['강타 피해']?.total || 0) / 100;
+                rune연타 = (aggregatedEffects['연타 피해']?.total || 0) / 100;
+                rune광역 = (aggregatedEffects['광역 피해']?.total || 0) / 100;
+                rune콤보 = (aggregatedEffects['콤보 피해']?.total || 0) / 100;
+                rune스킬피해 = (aggregatedEffects['스킬 피해']?.total || 0) / 100;
+                rune주는피해 = (aggregatedEffects['주는 피해']?.total || 0) / 100;
+                rune치명타확률 = (aggregatedEffects['치명타 확률']?.total || 0) / 100;
+                rune치명타피해 = (aggregatedEffects['치명타 피해']?.total || 0) / 100;
+                rune추가타확률 = (aggregatedEffects['추가타 확률']?.total || 0) / 100;
+                rune방어구파괴 = (aggregatedEffects['방어구 파괴']?.total || 0) / 100;
+                
+                console.log('[대미지 계산] 새 시스템 룬 효과:', {
+                    공격력: runeAtk,
+                    강타: rune강타,
+                    연타: rune연타,
+                    스킬피해: rune스킬피해,
+                    주는피해: rune주는피해,
+                    치명타확률: rune치명타확률,
+                    치명타피해: rune치명타피해,
+                    추가타확률: rune추가타확률
+                });
+            }
+            // 기존 시스템 사용
+            else {
+                // 선택된 룬들의 효율 데이터에서 가동률이 적용된 값 사용
+                Object.keys(selectedRunes).forEach(type => {
                 selectedRunes[type].forEach(runeName => {
                     const effData = runeEfficiencyData[runeName];
                     const rune = runeData.find(r => r.name === runeName);
@@ -7509,6 +7536,7 @@
                     }
                 });
             });
+            } // 기존 시스템 블록 끝
             
             // 1. 공격력
             const attack = runeAtk + skillDmg.공격력 + 1;
@@ -7536,20 +7564,24 @@
             let runeDamageTotal = 0;
             let runeDOTTotal = 0;
             
-            // 선택된 룬들의 효율 데이터에서 룬 피해 추출
-            Object.keys(selectedRunes).forEach(type => {
-                selectedRunes[type].forEach(runeName => {
-                    // 파멸의 낙인 특수 처리 - 6-1 룬 피해 계수에 포함
-                    if (runeName === '파멸의 낙인') {
-                        runeDamageTotal += runeSpecialAverages['파멸의 낙인'];
-                        return;
-                    }
-                    
-                    // 축적 룬 피해들
-                    if (runeName === '수정 꽃잎') {
-                        runeDamageTotal += runeSpecialAverages['수정꽃잎_룬피해'];
-                        return;
-                    }
+            // 새 시스템 사용 시
+            if (useNewSystem) {
+                runeDamageTotal = (aggregatedEffects['룬 피해']?.total || 0) / 100;
+                runeDOTTotal = (aggregatedEffects['지속 피해']?.total || 0) / 100;
+                
+                console.log('[대미지 계산] 룬 피해:', {
+                    룬피해: runeDamageTotal,
+                    DOT: runeDOTTotal
+                });
+            }
+            // 기존 시스템 사용
+            else {
+                // 선택된 룬들의 효율 데이터에서 룬 피해 추출
+                Object.keys(selectedRunes).forEach(type => {
+                    selectedRunes[type].forEach(runeName => {
+                        // [기존 코드는 더 이상 사용되지 않음 - 새 시스템으로 전환 필요]
+                        let effData = runeEfficiencyData[runeName];
+                        if (!effData) return;
                     if (runeName === '나무 사슴') {
                         runeDamageTotal += runeSpecialAverages['나무사슴_룬피해'];
                         return;
@@ -7563,7 +7595,8 @@
                         return;
                     }
                     
-                    const effData = runeEfficiencyData[runeName];
+                    // effData는 7583번 줄에서 이미 선언됨 (재할당)
+                    effData = runeEfficiencyData[runeName];
                     if (effData && effData.keywords) {
                         effData.keywords.forEach((keyword, index) => {
                             if (keyword === '룬 피해') {
@@ -7587,6 +7620,7 @@
                     }
                 });
             });
+            } // 기존 시스템 블록 끝
             
             const runeDamage = 1 + (runeDamageTotal / 100);
             const runeDOT = 1 + (runeDOTTotal / 100) + skillDmg.지속피해;
