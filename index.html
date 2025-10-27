@@ -5109,6 +5109,98 @@
                 return effect;
             }
             
+            // 공명하는 수정 순환 메커니즘 계산
+            calculateResonanceCrystal(effect, battleTime) {
+                // 메커니즘:
+                // - 1초마다 스택 +1 (0→12)
+                // - 12 도달 시 1초마다 스택 -1 (12→0)
+                // - 순환 반복
+                // - 파멸의 낙인 있으면 중첩당 0.6% 추가
+                
+                const baseValuePerStack = 2;  // 기본 2% per 스택
+                const bonusPerStack = this.has("파멸의 낙인") ? 0.6 : 0;  // 파멸의 낙인 시너지
+                const totalPerStack = baseValuePerStack + bonusPerStack;
+                const maxStacks = 12;
+                
+                let totalStackSeconds = 0;
+                let currentStack = 0;
+                let increasing = true;  // true: 증가, false: 감소
+                
+                for (let time = 0; time < battleTime; time++) {
+                    // 현재 시각의 스택 수 누적
+                    totalStackSeconds += currentStack;
+                    
+                    // 다음 초에 스택 변화
+                    if (increasing) {
+                        currentStack++;
+                        if (currentStack >= maxStacks) {
+                            currentStack = maxStacks;
+                            increasing = false;  // 최대 도달, 감소 시작
+                        }
+                    } else {
+                        currentStack--;
+                        if (currentStack <= 0) {
+                            currentStack = 0;
+                            increasing = true;  // 0 도달, 증가 시작
+                        }
+                    }
+                }
+                
+                const averageStacks = totalStackSeconds / battleTime;
+                const effectiveValue = averageStacks * totalPerStack;
+                
+                return {
+                    baseValue: effect.baseValue,
+                    maxValue: maxStacks * totalPerStack,
+                    averageStacks: averageStacks,
+                    effectiveValue: effectiveValue,
+                    timeline: `[평균 ${averageStacks.toFixed(1)}/${maxStacks} 스택${this.has("파멸의 낙인") ? " + 파멸의 낙인" : ""}]`
+                };
+            }
+            
+            // 파멸의 낙인 중첩 메커니즘 계산
+            calculateDoomMark(effect, battleTime) {
+                // 메커니즘:
+                // - 1초마다 9%의 암흑 피해를 8초 동안 줌
+                // - 만료될 때마다 다음 피해량이 10% 증가 (최대 10회 중첩)
+                // - 공명하는 수정이 있으면 초기 5스택부터 시작
+                
+                const baseValue = 9;  // 기본 9%
+                const stackBonus = 0.1;  // 10% 증가
+                const maxStacks = 10;
+                const duration = 8;  // 8초 지속
+                
+                const initialStacks = this.has("공명하는 수정") ? 5 : 0;
+                
+                let totalDamage = 0;
+                let currentStack = initialStacks;
+                
+                for (let time = 0; time < battleTime; time++) {
+                    // 현재 스택에 따른 피해량 (9% × (1 + 0.1×스택))
+                    const currentDamage = baseValue * (1 + stackBonus * currentStack);
+                    totalDamage += currentDamage;
+                    
+                    // 8초마다 스택 증가 (만료 시)
+                    if ((time + 1) % duration === 0 && currentStack < maxStacks) {
+                        currentStack++;
+                    }
+                }
+                
+                const averageDamagePerSecond = totalDamage / battleTime;
+                
+                // 최종 스택 계산 (150초 / 8초 = 18.75회 만료, 최대 10스택)
+                const totalExpires = Math.floor(battleTime / duration);
+                const finalStack = Math.min(initialStacks + totalExpires, maxStacks);
+                
+                return {
+                    baseValue: effect.baseValue,
+                    maxValue: baseValue * (1 + stackBonus * maxStacks),
+                    averageStacks: (initialStacks + finalStack) / 2,  // 근사값
+                    effectiveValue: averageDamagePerSecond,
+                    timeline: `[평균 ${averageDamagePerSecond.toFixed(1)}% (최대 ${finalStack}스택)${this.has("공명하는 수정") ? " + 공명하는 수정" : ""}]`
+                };
+            }
+            
             // 모든 시너지 적용
             applyAllModifiers(rune, effect) {
                 effect = this.applyAwakeningModifiers(effect);
@@ -5475,8 +5567,16 @@
                     
                     let calc;
                     
+                    // 공명하는 수정 특수 처리
+                    if (rune.name === "공명하는 수정") {
+                        calc = this.specialHandler.calculateResonanceCrystal(effect, battleTime);
+                    }
+                    // 파멸의 낙인 특수 처리
+                    else if (rune.name === "파멸의 낙인") {
+                        calc = this.specialHandler.calculateDoomMark(effect, battleTime);
+                    }
                     // 특수 타입 처리
-                    if (effect.specialType === "decaying") {
+                    else if (effect.specialType === "decaying") {
                         const avgValue = this.specialHandler.calculateDecayingEffect(effect, battleTime);
                         calc = {
                             baseValue: effect.baseValue,
