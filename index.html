@@ -2146,15 +2146,15 @@
                 effects: [
                     {
                         id: 1,
-                        category: "지속 피해",
+                        category: "룬 피해",  // DOT이지만 게임에서는 "룬 피해"로 분류
                         element: "파멸의 낙인",
                         baseValue: 9,
-                        calcType: "A",
+                        calcType: "B",  // 상시 발동 (constant)
                         trigger: "상시",
-                        cooldown: 1,  // 1초마다
-                        duration: 8
+                        cooldown: 0,
+                        duration: 999  // 상시 유지
                     }
-                    // 중첩 효과는 나중에 특수 처리
+                    // 중첩 효과 (10% 증가, 최대 10회)는 SpecialRuneHandler에서 처리
                 ]
             },
             
@@ -2927,29 +2927,20 @@
             // 31. 공명하는 수정 (파멸의 낙인 시너지)
             {
                 name: "공명하는 수정",
-                type: "방어구",
+                type: "앰블럼",
                 grade: "6성 전설",
                 keyword: "시너지",
                 effects: [
                     {
                         id: 1,
-                        category: "룬 피해",
-                        baseValue: 49,
-                        calcType: "A",
-                        trigger: "치명타 적중",
-                        cooldown: 3,
-                        requiredCount: 5
-                    },
-                    {
-                        id: 2,
-                        category: "공격력",
-                        baseValue: 10,
-                        calcType: "B",
-                        trigger: "치명타 적중",
-                        cooldown: 3,
-                        requiredCount: 5,
-                        duration: 10
+                        category: "주는 피해",
+                        baseValue: 2,  // 1초마다 2% 증가, 최대 12회 중첩
+                        calcType: "B",  // 상시 발동
+                        trigger: "상시",
+                        cooldown: 0,
+                        duration: 999  // 상시 유지
                     }
+                    // 중첩 메커니즘 (0→12→0 순환)과 파멸의 낙인 시너지는 SpecialRuneHandler에서 처리
                 ]
             },
             
@@ -7182,6 +7173,9 @@
             // aggregatedEffects가 없으면 (기존 시스템 호출) 기존 방식 사용
             const useNewSystem = aggregatedEffects && Object.keys(aggregatedEffects).length > 0;
             
+            console.log('[대미지 계산] aggregatedEffects:', aggregatedEffects);
+            console.log('[대미지 계산] useNewSystem:', useNewSystem);
+            
             // 세트 효과 체크
             const has눈먼예언자 = selectedRunes['앰블럼'] && selectedRunes['앰블럼'].includes('눈 먼 예언자');
             const has쌍둥이별 = selectedRunes['앰블럼'] && selectedRunes['앰블럼'].includes('쌍둥이 별');
@@ -7192,7 +7186,7 @@
             
             // 각성 앰블럼 룬이 선택되었는지 확인
             const 각성앰블럼룬들 = ['무자비한 포식자', '부서진 하늘', '대마법사', '흩날리는 검', '산맥 군주', '아득한 빛', '갈라진 땅'];
-            const selected각성앰블럼 = selectedRunes['앰블럼'].find(name => 각성앰블럼룬들.includes(name));
+            const selected각성앰블럼 = selectedRunes['앰블럼']?.find(name => 각성앰블럼룬들.includes(name));
             
             // 각성 룬별 지속시간 (초)
             const 각성지속시간 = {
