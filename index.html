@@ -5117,10 +5117,13 @@
                 // - 순환 반복
                 // - 파멸의 낙인 있으면 중첩당 0.6% 추가
                 
+                const has파멸 = this.has("파멸의 낙인");
                 const baseValuePerStack = 2;  // 기본 2% per 스택
-                const bonusPerStack = this.has("파멸의 낙인") ? 0.6 : 0;  // 파멸의 낙인 시너지
+                const bonusPerStack = has파멸 ? 0.6 : 0;  // 파멸의 낙인 시너지
                 const totalPerStack = baseValuePerStack + bonusPerStack;
                 const maxStacks = 12;
+                
+                console.log('[공명하는 수정] 파멸의 낙인:', has파멸, '스택당:', totalPerStack + '%');
                 
                 let totalStackSeconds = 0;
                 let currentStack = 0;
@@ -5149,12 +5152,18 @@
                 const averageStacks = totalStackSeconds / battleTime;
                 const effectiveValue = averageStacks * totalPerStack;
                 
+                console.log('[공명하는 수정] 결과:', {
+                    평균스택: averageStacks.toFixed(1),
+                    스택당피해: totalPerStack + '%',
+                    최종피해: effectiveValue.toFixed(1) + '%'
+                });
+                
                 return {
                     baseValue: effect.baseValue,
                     maxValue: maxStacks * totalPerStack,
                     averageStacks: averageStacks,
                     effectiveValue: effectiveValue,
-                    timeline: `[평균 ${averageStacks.toFixed(1)}/${maxStacks} 스택${this.has("파멸의 낙인") ? " + 파멸의 낙인" : ""}]`
+                    timeline: `[평균 ${averageStacks.toFixed(1)}/${maxStacks} 스택${has파멸 ? " + 파멸의 낙인" : ""}]`
                 };
             }
             
@@ -5170,7 +5179,10 @@
                 const maxStacks = 10;
                 const duration = 8;  // 8초 지속
                 
-                const initialStacks = this.has("공명하는 수정") ? 5 : 0;
+                const has공명 = this.has("공명하는 수정");
+                const initialStacks = has공명 ? 5 : 0;
+                
+                console.log('[파멸의 낙인] 공명하는 수정:', has공명, '초기 스택:', initialStacks);
                 
                 let totalDamage = 0;
                 let currentStack = initialStacks;
@@ -5192,12 +5204,19 @@
                 const totalExpires = Math.floor(battleTime / duration);
                 const finalStack = Math.min(initialStacks + totalExpires, maxStacks);
                 
+                console.log('[파멸의 낙인] 결과:', {
+                    초기스택: initialStacks,
+                    만료횟수: totalExpires,
+                    최종스택: finalStack,
+                    평균피해: averageDamagePerSecond.toFixed(1) + '%'
+                });
+                
                 return {
                     baseValue: effect.baseValue,
                     maxValue: baseValue * (1 + stackBonus * maxStacks),
                     averageStacks: (initialStacks + finalStack) / 2,  // 근사값
                     effectiveValue: averageDamagePerSecond,
-                    timeline: `[평균 ${averageDamagePerSecond.toFixed(1)}% (최대 ${finalStack}스택)${this.has("공명하는 수정") ? " + 공명하는 수정" : ""}]`
+                    timeline: `[평균 ${averageDamagePerSecond.toFixed(1)}% (최대 ${finalStack}스택)${has공명 ? " + 공명하는 수정" : ""}]`
                 };
             }
             
