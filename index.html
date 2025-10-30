@@ -5,14 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>룬 정보</title>
     <style>
+        /* 다크 테마 색상 변수 */
+        :root {
+            --bg-primary: #0f1419;
+            --bg-secondary: #1a1f2e;
+            --bg-card: #242b3d;
+            --accent-primary: #00f5a0;
+            --accent-secondary: #00d9ff;
+            --text-primary: #e8eaed;
+            --text-secondary: #9aa0a6;
+            --border-color: #3a4458;
+            --hover-bg: rgba(0, 245, 160, 0.1);
+        }
+        
         /* 네비게이션 바 스타일 */
         .main-nav {
             position: sticky;
             top: 0;
-            background: #2c3e50;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #1a1f2e 0%, #242b3d 100%);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
             z-index: 1000;
             margin: 0;
+            border-bottom: 2px solid var(--accent-primary);
         }
         
         .nav-container {
@@ -27,20 +41,23 @@
         }
         
         .nav-item {
-            color: white;
+            color: var(--text-primary);
             text-decoration: none;
             padding: 10px 20px;
-            border-radius: 6px;
-            font-weight: 500;
+            border-radius: 8px;
+            font-weight: 600;
             font-size: 14px;
             transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 245, 160, 0.1);
+            border: 1px solid transparent;
             white-space: nowrap;
         }
         
         .nav-item:hover {
-            background: #4CAF50;
+            background: var(--accent-primary);
+            color: #0f1419;
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 245, 160, 0.4);
         }
         
         .nav-item:active {
@@ -56,8 +73,8 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             line-height: 1.6;
-            background-color: #f4f4f4;
-            color: #333;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+            color: var(--text-primary);
             margin: 0;
             padding: 0 20px 20px 20px;
         }
@@ -69,23 +86,26 @@
         
         h1 {
             text-align: center;
-            color: #2c3e50;
+            color: var(--accent-primary);
             margin: 0;
             padding: 20px 0;
-            font-size: 24px;
+            font-size: 28px;
+            font-weight: 700;
+            text-shadow: 0 0 20px rgba(0, 245, 160, 0.5);
         }
         h1 small {
             font-size: 16px;
-            color: #666;
+            color: var(--accent-secondary);
             margin-left: 10px;
         }
 
         .controls {
-            background: #fff;
+            background: var(--bg-card);
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
             margin-bottom: 20px;
+            border: 1px solid var(--border-color);
         }
 
         .filter-section {
@@ -94,7 +114,7 @@
             gap: 10px;
             margin-bottom: 15px;
             padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-color);
         }
         .filter-section:last-child {
             border-bottom: none;
@@ -104,6 +124,7 @@
             font-size: 15px;
             min-width: 80px;
             font-weight: 600;
+            color: var(--accent-secondary);
         }
         .filter-group {
             display: flex;
@@ -113,9 +134,9 @@
         .filter-btn {
             padding: 8px 16px;
             font-size: 14px;
-            background-color: #f8f9fa;
-            color: #333;
-            border: 1px solid #e0e0e0;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
             border-radius: 20px;
             cursor: pointer;
             transition: all 0.2s;
@@ -124,15 +145,17 @@
             font-weight: 500;
         }
         .filter-btn:hover {
-            background-color: #e9ecef;
+            background-color: var(--hover-bg);
+            border-color: var(--accent-primary);
             transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 245, 160, 0.3);
         }
         .filter-btn.active {
-            background-color: #4CAF50;
-            color: white;
+            background-color: var(--accent-primary);
+            color: #0f1419;
             font-weight: bold;
-            border-color: #4CAF50;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 15px rgba(0, 245, 160, 0.5);
         }
         .filter-btn:active {
             transform: scale(0.98);
@@ -148,47 +171,49 @@
             min-width: 120px;
             padding: 12px 20px;
             font-size: 15px;
-            color: white !important;
-            border: none;
+            color: var(--text-primary) !important;
+            border: 1px solid var(--accent-secondary);
             border-radius: 8px;
             cursor: pointer;
             font-family: inherit;
             font-weight: 600;
             transition: all 0.2s;
             text-align: center;
-            background-color: #f44336;
+            background-color: rgba(0, 217, 255, 0.1);
         }
         #clearFilterBtn:hover {
-            background-color: #d32f2f;
+            background-color: var(--accent-secondary);
+            color: #0f1419 !important;
             transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(244,67,54,0.3);
+            box-shadow: 0 4px 12px rgba(0, 217, 255, 0.4);
         }
 
         /* 유저 스테이터스 섹션 */
         .user-stats-section {
-            background: #fff;
+            background: var(--bg-card);
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
             margin-top: 20px;
             margin-bottom: 20px;
+            border: 1px solid var(--border-color);
         }
         
         .user-stats-section h2 {
             margin: 0 0 15px 0;
             font-size: 18px;
-            color: #2c3e50;
+            color: var(--accent-primary);
             font-weight: 600;
-            border-bottom: 2px solid #4CAF50;
+            border-bottom: 2px solid var(--accent-primary);
             padding-bottom: 10px;
         }
         
         .user-stats-section h3 {
             margin: 25px 0 15px 0;
             font-size: 16px;
-            color: #2c3e50;
+            color: var(--accent-secondary);
             font-weight: 600;
-            border-bottom: 2px solid #2196F3;
+            border-bottom: 2px solid var(--accent-secondary);
             padding-bottom: 8px;
         }
         
@@ -214,35 +239,37 @@
         .stat-row label {
             font-size: 14px;
             font-weight: 500;
-            color: #333;
+            color: var(--text-primary);
             min-width: 100px;
         }
         
         .stat-row input[type="number"] {
             padding: 8px 12px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 14px;
             text-align: right;
             transition: all 0.2s;
             width: 120px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
         }
         
         .percent-symbol {
             font-size: 14px;
             font-weight: 500;
-            color: #666;
+            color: var(--text-secondary);
             margin-left: 3px;
         }
         
         .stat-row input[type="number"]:focus {
             outline: none;
-            border-color: #4CAF50;
-            box-shadow: 0 0 0 3px rgba(76,175,80,0.1);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 245, 160, 0.2);
         }
         
         .stat-row input[type="number"]:hover {
-            border-color: #4CAF50;
+            border-color: var(--accent-primary);
         }
         
         /* 숫자 입력 화살표 스타일 */
@@ -265,44 +292,233 @@
             gap: 8px;
             cursor: pointer;
             padding: 10px 15px;
-            background: #f8f9fa;
+            background: var(--bg-secondary);
             border-radius: 8px;
             transition: all 0.2s;
             border: 2px solid transparent;
         }
         
         .toggle-item:hover {
-            background: #e9ecef;
+            background: var(--hover-bg);
+            border-color: var(--accent-primary);
         }
         
         .toggle-item input[type="checkbox"] {
             width: 18px;
             height: 18px;
             cursor: pointer;
-            accent-color: #4CAF50;
+            accent-color: var(--accent-primary);
         }
         
         .toggle-item span {
             font-size: 14px;
             font-weight: 500;
-            color: #333;
+            color: var(--text-primary);
         }
         
         .toggle-item:has(input:checked) {
-            background: #e8f5e9;
-            border-color: #4CAF50;
+            background: rgba(0, 245, 160, 0.15);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 10px rgba(0, 245, 160, 0.3);
+        }
+        
+        /* 헬리오도르 보석 스타일 */
+        .gem-heliodor-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .gem-heliodor-group {
+            margin-bottom: 20px;
+        }
+        
+        .gem-heliodor-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .gem-heliodor-label {
+            display: block;
+            font-weight: 600;
+            color: var(--accent-secondary);
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+        
+        .gem-heliodor-options {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        /* 보석 시스템 스타일 */
+        .gem-tag-input-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .gem-tag-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .gem-tag-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .tag-name {
+            font-weight: 600;
+            color: var(--accent-primary);
+            min-width: 50px;
+            font-size: 15px;
+        }
+        
+        .gem-inputs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .gem-label {
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .gem-inputs input[type="number"] {
+            width: 60px;
+            padding: 6px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        
+        .gem-unit {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+        
+        .gem-separator {
+            color: var(--accent-secondary);
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .tag-result {
+            font-weight: bold;
+            color: var(--accent-secondary);
+            min-width: 80px;
+            text-align: right;
+            font-size: 15px;
+        }
+        
+        /* 스킬 피해 계수 스타일 */
+        .skill-damage-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 2px solid var(--accent-secondary);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+        
+        .skill-damage-section h3 {
+            margin: 0 0 20px 0;
+            color: var(--accent-secondary);
+            font-size: 20px;
+            font-weight: 600;
+            border-bottom: 3px solid var(--accent-secondary);
+            padding-bottom: 10px;
+        }
+        
+        .skill-damage-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .skill-damage-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .skill-label {
+            font-weight: bold;
+            font-size: 16px;
+            color: var(--accent-primary);
+            min-width: 60px;
+        }
+        
+        .skill-tags-compact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .skill-tags-compact label {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+        
+        .skill-tags-compact label:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-primary);
+        }
+        
+        .skill-tags-compact input[type="checkbox"]:checked + span {
+            font-weight: bold;
+            color: var(--accent-primary);
+        }
+        
+        .skill-damage-value {
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--accent-secondary);
+            min-width: 200px;
+            text-align: right;
         }
 
         .selected-count {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-secondary) 100%);
             padding: clamp(25px, 5vw, 40px) var(--padding-xlarge);
             border-radius: clamp(8px, 2vw, 12px);
             margin: var(--padding-xlarge) 0;
             display: flex;
             justify-content: space-evenly;
-            align-items: stretch; /* center에서 stretch로 변경 */
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border: 1px solid #e0e0e0;
+            align-items: stretch;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
             width: 100%;
             box-sizing: border-box;
         }
@@ -311,41 +527,43 @@
             text-align: center;
             padding: var(--padding-large);
             border-radius: clamp(6px, 1.5vw, 8px);
-            background: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            background: var(--bg-secondary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
             min-width: clamp(100px, 25vw, 140px);
             flex: 0 0 auto;
             max-width: clamp(120px, 30vw, 180px);
             transition: all 0.2s;
-            margin: clamp(15px, 3vw, 25px) 0; /* 위아래 마진 추가 */
+            margin: clamp(15px, 3vw, 25px) 0;
+            border: 1px solid var(--border-color);
         }
         
         .count-label {
             font-size: clamp(14px, 3vw, 16px);
-            color: #666;
-            margin-bottom: clamp(12px, 3vw, 18px); /* 라벨과 값 사이의 간격도 더 크게 */
+            color: var(--text-secondary);
+            margin-bottom: clamp(12px, 3vw, 18px);
             font-weight: 500;
         }
         
         .count-value {
-            font-size: clamp(18px, 4vw, 22px); /* 값 텍스트를 더 크게 */
+            font-size: clamp(18px, 4vw, 22px);
             font-weight: bold;
-            color: #4CAF50;
+            color: var(--accent-secondary);
         }
         
         .count-value span {
-            font-size: clamp(22px, 5vw, 28px); /* 숫자 텍스트를 더 크게 */
-            color: #f44336;
+            font-size: clamp(22px, 5vw, 28px);
+            color: #ff6b6b;
             transition: color 0.3s;
         }
         
         .count-value span.completed {
-            color: #2e7d32 !important; /* 완료 시 초록색 */
+            color: var(--accent-primary) !important;
             font-weight: bold;
+            text-shadow: 0 0 10px rgba(0, 245, 160, 0.5);
         }
         
         .count-value span.zero-count {
-            color: #f44336 !important;
+            color: #ff6b6b !important;
             font-weight: bold;
         }
         
@@ -410,8 +628,8 @@
             font-size: 14px;
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            background: white;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            background: var(--bg-card);
             table-layout: fixed;
         }
         
@@ -451,43 +669,56 @@
         }
 
         th, td {
-            padding: clamp(6px, 1.5vw, 10px) clamp(8px, 2vw, 12px); /* 패딩을 더 작게 조정 */
-            border: 1px solid #ddd;
-            text-align: left; /* 원래대로 왼쪽 정렬 복원 */
+            padding: clamp(6px, 1.5vw, 10px) clamp(8px, 2vw, 12px);
+            border: 1px solid var(--border-color);
+            text-align: left;
             vertical-align: middle;
             transition: background-color 0.2s;
-            font-size: clamp(10px, 2vw, 14px); /* 셀 텍스트 크기도 조정 */
+            font-size: clamp(10px, 2vw, 14px);
             word-wrap: break-word;
             word-break: break-word;
             overflow-wrap: break-word;
+            color: var(--text-primary);
         }
         
         th {
-            background-color: #3a7e3d;
-            color: white;
+            background: linear-gradient(135deg, #1a3a1c 0%, #2d5a2f 100%);
+            color: var(--accent-primary);
             cursor: pointer;
             user-select: none;
             white-space: nowrap;
             font-weight: 600;
-            font-size: clamp(9px, 1.8vw, 12px); /* 헤더 텍스트를 더 작게 */
+            font-size: clamp(9px, 1.8vw, 12px);
         }
         
         th:hover {
-            background-color: #2e6b31;
+            background: linear-gradient(135deg, #2d5a2f 0%, #3a7e3d 100%);
+            box-shadow: 0 0 10px rgba(0, 245, 160, 0.3);
         }
         
         .sort-indicator {
             display: inline-block;
             margin-left: 5px;
             opacity: 0.8;
+            color: var(--accent-secondary);
         }
         
         tr:nth-child(even) {
-            background-color: #f8f9fa;
+            background-color: rgba(255, 255, 255, 0.03);
         }
         
-        tr:hover {
-            background-color: #e3f2fd;
+        tbody tr {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        tbody tr:hover {
+            background-color: rgba(0, 245, 160, 0.15);
+            box-shadow: 0 0 10px rgba(0, 245, 160, 0.2);
+        }
+        
+        tbody tr:active {
+            background-color: rgba(0, 245, 160, 0.25);
         }
         
         /* 모바일 반응형 설정 */
@@ -517,6 +748,24 @@
             }
             th {
                 font-size: clamp(7px, 1.5vw, 10px);
+            }
+            
+            /* 보석 태그 입력 태블릿 */
+            .gem-tag-row {
+                gap: 10px;
+            }
+            
+            .gem-inputs {
+                flex-wrap: wrap;
+            }
+            
+            /* 스킬 피해 계수 태블릿 */
+            .skill-damage-row {
+                gap: 10px;
+            }
+            
+            .skill-tags-compact {
+                gap: 6px;
             }
         }
         
@@ -797,6 +1046,126 @@
                 font-weight: 600;
             }
             
+            /* 헬리오도르 보석 모바일 */
+            .gem-heliodor-container {
+                padding: 15px;
+            }
+            
+            .gem-heliodor-group {
+                margin-bottom: 15px;
+            }
+            
+            .gem-heliodor-label {
+                font-size: 13px;
+            }
+            
+            .gem-heliodor-options {
+                gap: 10px;
+            }
+            
+            /* 보석 태그 입력 모바일 */
+            .gem-tag-input-container {
+                padding: 10px;
+            }
+            
+            .gem-tag-row {
+                flex-direction: column;
+                gap: 8px;
+                padding: 8px;
+            }
+            
+            .tag-name {
+                font-size: 12px;
+                min-width: 100%;
+            }
+            
+            .gem-inputs {
+                flex-wrap: wrap;
+                gap: 4px;
+                width: 100%;
+            }
+            
+            .gem-label {
+                font-size: 10px;
+            }
+            
+            .gem-inputs input[type="number"] {
+                width: 50px;
+                padding: 4px;
+                font-size: 12px;
+            }
+            
+            .gem-unit {
+                font-size: 10px;
+            }
+            
+            .gem-separator {
+                font-size: 12px;
+            }
+            
+            .tag-result {
+                font-size: 12px;
+                min-width: 100%;
+                text-align: left;
+            }
+            
+            /* 스킬 피해 계수 모바일 */
+            .skill-damage-section {
+                padding: 10px;
+            }
+            
+            .skill-damage-section h3 {
+                font-size: 13px;
+            }
+            
+            .skill-damage-row {
+                flex-direction: column;
+                gap: 8px;
+                padding: 10px;
+            }
+            
+            .skill-label {
+                font-size: 13px;
+                min-width: 100%;
+            }
+            
+            .skill-tags-compact {
+                gap: 4px;
+            }
+            
+            .skill-tags-compact label {
+                padding: 3px 6px;
+                font-size: 10px;
+            }
+            
+            .skill-damage-value {
+                font-size: 12px;
+                min-width: 100%;
+                text-align: left;
+            }
+            
+            /* 페이지네이션 모바일 */
+            .pagination-container {
+                padding: 10px;
+                gap: 8px;
+            }
+            
+            .pagination-info {
+                font-size: 11px;
+                width: 100%;
+                text-align: center;
+            }
+            
+            .pagination-buttons {
+                gap: 3px;
+            }
+            
+            .pagination-btn {
+                padding: 6px 10px;
+                min-width: 35px;
+                font-size: 12px;
+            }
+            
             /* 세팅 섹션 */
             .settings-section {
                 padding: 10px;
@@ -907,7 +1276,7 @@
         }
         .autocomplete-items {
             position: absolute;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             border-top: none;
             z-index: 99;
             top: 100%;
@@ -916,19 +1285,20 @@
             border-radius: 0 0 8px 8px;
             max-height: 150px;
             overflow-y: auto;
-            background: white;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background: var(--bg-card);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
         .autocomplete-items div {
             padding: 10px 15px;
             cursor: pointer;
             transition: background-color 0.2s;
+            color: var(--text-primary);
         }
         .autocomplete-items div:hover {
-            background-color: #e3f2fd;
+            background-color: var(--hover-bg);
         }
         .autocomplete-active {
-            background-color: #e3f2fd !important;
+            background-color: var(--hover-bg) !important;
         }
         
         /* 룬 선택 관련 스타일 */
@@ -936,46 +1306,48 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
-            accent-color: #4CAF50;
+            accent-color: var(--accent-primary);
         }
         .rune-checkbox:disabled {
             cursor: not-allowed;
             opacity: 0.5;
         }
         .calculation-result {
-            background: #fff;
+            background: var(--bg-card);
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
             margin: 20px 0;
+            border: 1px solid var(--border-color);
         }
         .calculation-result h3 {
             margin-top: 0;
-            color: #2c3e50;
+            color: var(--accent-primary);
             font-size: 18px;
         }
         
         /* 대미지 배율 계산 스타일 */
         .damage-calculation {
-            background: #fff;
+            background: var(--bg-card);
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
             margin: 20px 0;
+            border: 1px solid var(--border-color);
         }
         
         .damage-calculation h3 {
             margin: 0 0 20px 0;
-            color: #2c3e50;
+            color: var(--accent-primary);
             font-size: 20px;
             font-weight: 600;
-            border-bottom: 3px solid #FF9800;
+            border-bottom: 3px solid var(--accent-primary);
             padding-bottom: 10px;
         }
         
         .damage-calculation h4 {
             margin: 0 0 15px 0;
-            color: #2c3e50;
+            color: var(--accent-secondary);
             font-size: 16px;
             font-weight: 600;
         }
@@ -989,9 +1361,10 @@
         .damage-section {
             flex: 1;
             min-width: 300px;
-            background: #f8f9fa;
+            background: var(--bg-secondary);
             padding: 20px;
             border-radius: 8px;
+            border: 1px solid var(--border-color);
         }
         
         .calc-row {
@@ -999,45 +1372,66 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 0;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid var(--border-color);
         }
         
         .calc-row:last-child {
             border-bottom: none;
         }
         
+        .calc-row.calc-detail {
+            padding: 5px 0 10px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(0, 245, 160, 0.05);
+        }
+        
+        .calc-row.calc-detail .calc-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+        
+        .calc-row.calc-detail .calc-value {
+            font-size: 13px;
+            color: var(--accent-secondary);
+        }
+        
         .calc-label {
             font-size: 14px;
-            color: #555;
+            color: var(--text-primary);
             font-weight: 500;
         }
         
         .calc-value {
             font-size: 16px;
             font-weight: 600;
-            color: #2196F3;
+            color: var(--accent-secondary);
         }
         
         .damage-final {
             flex: 1;
             min-width: 300px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a3a40 0%, #2d4a5a 100%);
             padding: 20px;
             border-radius: 8px;
             color: white;
+            border: 2px solid var(--accent-primary);
+            box-shadow: 0 0 20px rgba(0, 245, 160, 0.2);
         }
         
         .damage-final h4 {
-            color: white;
+            color: var(--accent-primary);
             margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(0, 245, 160, 0.5);
         }
         
         .final-row {
             padding: 15px;
             margin-bottom: 15px;
             border-radius: 8px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(0, 245, 160, 0.1);
             backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 245, 160, 0.3);
         }
         
         .final-row:last-child {
@@ -1045,11 +1439,11 @@
         }
         
         .final-row.direct {
-            border-left: 4px solid #4CAF50;
+            border-left: 4px solid var(--accent-primary);
         }
         
         .final-row.indirect {
-            border-left: 4px solid #FF5722;
+            border-left: 4px solid #ff6b6b;
         }
         
         .final-label {
@@ -1057,28 +1451,33 @@
             font-size: 14px;
             margin-bottom: 8px;
             opacity: 0.9;
+            color: var(--text-primary);
         }
         
         .final-value {
             display: block;
-            font-size: 28px;
+            font-size: 20px;
             font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            text-shadow: 0 0 10px rgba(0, 245, 160, 0.3);
+            line-height: 1.4;
+            color: var(--accent-primary);
         }
         .effect-sum {
-            background: #f8f9fa;
+            background: var(--bg-secondary);
             padding: 15px;
             border-radius: 8px;
             margin: 10px 0;
-            border-left: 4px solid #4CAF50;
+            border-left: 4px solid var(--accent-primary);
             transition: all 0.2s;
+            border: 1px solid var(--border-color);
         }
         .effect-sum:hover {
             transform: translateX(5px);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 245, 160, 0.2);
+            border-left-color: var(--accent-secondary);
         }
         .rune-list {
-            color: #666;
+            color: var(--text-secondary);
             font-size: 0.9em;
             margin-top: 8px;
         }
@@ -1088,33 +1487,35 @@
             width: 100%;
             max-width: 300px;
             padding: 10px 15px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             border-radius: 25px;
             font-size: 14px;
             transition: all 0.2s;
-            background: white;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
         }
         #name-search:focus {
             outline: none;
-            border-color: #4CAF50;
-            box-shadow: 0 0 0 3px rgba(76,175,80,0.1);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 245, 160, 0.2);
         }
         
         /* 세팅 섹션 스타일 */
         .settings-section {
-            background: #fff;
+            background: var(--bg-card);
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
             margin: 20px 0;
+            border: 1px solid var(--border-color);
         }
         
         .settings-section h3 {
             margin: 0 0 20px 0;
-            color: #2c3e50;
+            color: var(--accent-primary);
             font-size: 20px;
             font-weight: 600;
-            border-bottom: 3px solid #4CAF50;
+            border-bottom: 3px solid var(--accent-primary);
             padding-bottom: 10px;
         }
         
@@ -1129,18 +1530,18 @@
             padding: 12px 24px;
             font-size: 16px;
             font-weight: 600;
-            border: none;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
             white-space: nowrap;
             writing-mode: horizontal-tb;
         }
         
         .settings-buttons button:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 16px rgba(0, 245, 160, 0.4);
         }
         
         .settings-buttons button:active:not(:disabled) {
@@ -1148,54 +1549,59 @@
         }
         
         .settings-buttons button:disabled {
-            opacity: 0.5;
+            opacity: 0.3;
             cursor: not-allowed;
-            background: #ccc !important;
+            background: var(--bg-secondary) !important;
         }
         
         .btn-save {
-            background: #4CAF50;
-            color: white;
+            background: var(--accent-primary);
+            color: #0f1419;
         }
         
         .btn-save:hover:not(:disabled) {
-            background: #45a049;
+            background: #00ffb3;
+            box-shadow: 0 0 20px rgba(0, 245, 160, 0.6);
         }
         
         .btn-load {
-            background: #2196F3;
-            color: white;
+            background: var(--accent-secondary);
+            color: #0f1419;
         }
         
         .btn-load:hover:not(:disabled) {
-            background: #0b7dda;
+            background: #00e5ff;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.6);
         }
         
         .btn-update {
-            background: #FF9800;
-            color: white;
+            background: #ffa726;
+            color: #0f1419;
         }
         
         .btn-update:hover:not(:disabled) {
-            background: #e68900;
+            background: #ffb74d;
+            box-shadow: 0 0 20px rgba(255, 167, 38, 0.6);
         }
         
         .btn-delete {
-            background: #f44336;
+            background: #ff6b6b;
             color: white;
         }
         
         .btn-delete:hover:not(:disabled) {
-            background: #da190b;
+            background: #ff5252;
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.6);
         }
         
         .btn-compare {
-            background: #9C27B0;
+            background: #ab47bc;
             color: white;
         }
         
         .btn-compare:hover:not(:disabled) {
-            background: #7b1fa2;
+            background: #ba68c8;
+            box-shadow: 0 0 20px rgba(171, 71, 188, 0.6);
         }
         
         /* 모달 스타일 */
@@ -1217,14 +1623,15 @@
         }
         
         .modal-content {
-            background-color: #fff;
+            background-color: var(--bg-card);
             margin: 10% auto;
             padding: 30px;
             border-radius: 12px;
             width: 90%;
             max-width: 500px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
             animation: slideDown 0.3s ease;
+            border: 2px solid var(--accent-primary);
         }
         
         @keyframes slideDown {
@@ -1241,12 +1648,12 @@
         .modal-header {
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 2px solid #e0e0e0;
+            border-bottom: 2px solid var(--border-color);
         }
         
         .modal-header h3 {
             margin: 0;
-            color: #2c3e50;
+            color: var(--accent-primary);
             font-size: 22px;
         }
         
@@ -1262,31 +1669,34 @@
         }
         
         .modal-body::-webkit-scrollbar-track {
-            background: #f1f1f1;
+            background: var(--bg-secondary);
             border-radius: 4px;
         }
         
         .modal-body::-webkit-scrollbar-thumb {
-            background: #4CAF50;
+            background: var(--accent-primary);
             border-radius: 4px;
         }
         
         .modal-body::-webkit-scrollbar-thumb:hover {
-            background: #45a049;
+            background: #00ffb3;
         }
         
         .modal-body input {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             font-size: 16px;
             box-sizing: border-box;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
         }
         
         .modal-body input:focus {
             outline: none;
-            border-color: #4CAF50;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 245, 160, 0.2);
         }
         
         .save-list {
@@ -1301,50 +1711,52 @@
         }
         
         .save-list::-webkit-scrollbar-track {
-            background: #f1f1f1;
+            background: var(--bg-secondary);
             border-radius: 4px;
         }
         
         .save-list::-webkit-scrollbar-thumb {
-            background: #4CAF50;
+            background: var(--accent-primary);
             border-radius: 4px;
         }
         
         .save-list::-webkit-scrollbar-thumb:hover {
-            background: #45a049;
+            background: #00ffb3;
         }
         
         .save-item {
             padding: 15px;
             margin: 10px 0;
-            border: 2px solid #e0e0e0;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: #f8f9fa;
+            background: var(--bg-secondary);
         }
         
         .save-item:hover {
-            border-color: #4CAF50;
-            background: #e8f5e9;
+            border-color: var(--accent-primary);
+            background: var(--hover-bg);
             transform: translateX(5px);
+            box-shadow: 0 0 15px rgba(0, 245, 160, 0.2);
         }
         
         .save-item.selected {
-            border-color: #4CAF50;
-            background: #c8e6c9;
+            border-color: var(--accent-primary);
+            background: rgba(0, 245, 160, 0.15);
+            box-shadow: 0 0 20px rgba(0, 245, 160, 0.3);
         }
         
         .save-item-name {
             font-size: 18px;
             font-weight: 600;
-            color: #2c3e50;
+            color: var(--accent-primary);
             margin-bottom: 5px;
         }
         
         .save-item-date {
             font-size: 14px;
-            color: #666;
+            color: var(--text-secondary);
         }
         
         .modal-footer {
@@ -1353,55 +1765,58 @@
             justify-content: flex-end;
             margin-top: 20px;
             padding-top: 15px;
-            border-top: 2px solid #e0e0e0;
+            border-top: 2px solid var(--border-color);
         }
         
         .modal-footer button {
             padding: 10px 20px;
             font-size: 16px;
             font-weight: 600;
-            border: none;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
         
         .modal-btn-confirm {
-            background: #4CAF50;
-            color: white;
+            background: var(--accent-primary);
+            color: #0f1419;
         }
         
         .modal-btn-confirm:hover {
-            background: #45a049;
+            background: #00ffb3;
+            box-shadow: 0 0 15px rgba(0, 245, 160, 0.5);
         }
         
         .modal-btn-cancel {
-            background: #9e9e9e;
-            color: white;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
         }
         
         .modal-btn-cancel:hover {
-            background: #757575;
+            background: var(--border-color);
         }
         
         /* 비교 결과 스타일 */
         .compare-result {
             margin-top: 20px;
             padding: 20px;
-            background: #f8f9fa;
+            background: var(--bg-secondary);
             border-radius: 8px;
+            border: 1px solid var(--border-color);
         }
         
         .compare-item {
             margin: 15px 0;
             padding: 15px;
             border-radius: 8px;
-            background: white;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
         }
         
         .compare-item h4 {
             margin: 0 0 10px 0;
-            color: #2c3e50;
+            color: var(--accent-primary);
             font-size: 18px;
         }
         
@@ -1415,49 +1830,51 @@
             display: flex;
             justify-content: space-between;
             padding: 8px;
-            background: #f0f0f0;
+            background: var(--bg-secondary);
             border-radius: 4px;
+            color: var(--text-primary);
         }
         
         .compare-difference {
             margin-top: 15px;
             padding: 15px;
-            background: #fff3cd;
+            background: rgba(255, 193, 7, 0.1);
             border-left: 4px solid #ffc107;
             border-radius: 4px;
+            color: var(--text-primary);
         }
         
         .compare-difference.positive {
-            background: #d4edda;
-            border-left-color: #28a745;
+            background: rgba(0, 245, 160, 0.1);
+            border-left-color: var(--accent-primary);
         }
         
         .compare-difference.negative {
-            background: #f8d7da;
-            border-left-color: #dc3545;
+            background: rgba(255, 107, 107, 0.1);
+            border-left-color: #ff6b6b;
         }
         
         /* 내보내기 버튼 */
         .btn-export {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ab47bc 0%, #7b1fa2 100%);
             color: white;
-            border: none;
+            border: 1px solid var(--border-color);
             padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
             transition: all 0.3s;
-            box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
         
         .btn-export:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 0 20px rgba(171, 71, 188, 0.6);
         }
         
         .btn-export:disabled {
-            background: #95a5a6;
+            background: var(--bg-secondary);
             cursor: not-allowed;
             box-shadow: none;
         }
@@ -1466,24 +1883,24 @@
         .drop-zone {
             margin-top: 20px;
             padding: 30px;
-            border: 2px dashed #cbd5e0;
+            border: 2px dashed var(--border-color);
             border-radius: 12px;
-            background: #f7fafc;
+            background: var(--bg-secondary);
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
         }
         
         .drop-zone:hover {
-            border-color: #667eea;
-            background: #edf2f7;
+            border-color: var(--accent-primary);
+            background: var(--hover-bg);
         }
         
         .drop-zone.drag-over {
-            border-color: #667eea;
-            background: #e6f0ff;
+            border-color: var(--accent-primary);
+            background: rgba(0, 245, 160, 0.15);
             border-style: solid;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 0 4px rgba(0, 245, 160, 0.2);
         }
         
         .drop-zone-content {
@@ -1491,24 +1908,24 @@
         }
         
         .drop-icon {
-            color: #a0aec0;
+            color: var(--text-secondary);
             margin-bottom: 10px;
         }
         
         .drop-zone:hover .drop-icon {
-            color: #667eea;
+            color: var(--accent-primary);
         }
         
         .drop-text {
             margin: 10px 0 5px 0;
-            color: #2d3748;
+            color: var(--text-primary);
             font-size: 16px;
             font-weight: 600;
         }
         
         .drop-subtext {
             margin: 0;
-            color: #718096;
+            color: var(--text-secondary);
             font-size: 14px;
         }
         
@@ -1539,23 +1956,24 @@
         .timeline-container {
             margin: 10px 0;
             padding: 10px;
-            background: #f5f5f5;
+            background: var(--bg-secondary);
             border-radius: 4px;
+            border: 1px solid var(--border-color);
         }
         
         .timeline-header {
             margin-bottom: 8px;
             font-size: 14px;
-            color: #555;
+            color: var(--text-primary);
         }
         
         .timeline-graph {
             display: flex;
             height: 30px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             border-radius: 3px;
             overflow: hidden;
-            background: white;
+            background: var(--bg-primary);
         }
         
         .timeline-segment {
@@ -1571,7 +1989,7 @@
         .timeline-legend {
             margin-top: 5px;
             font-size: 12px;
-            color: #666;
+            color: var(--text-secondary);
         }
         
         .timeline-legend span {
@@ -1582,7 +2000,7 @@
             position: relative;
             height: 20px;
             margin-bottom: 3px;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid var(--border-color);
         }
         
         .timeline-marker {
@@ -1594,13 +2012,13 @@
         .marker-tick {
             width: 1px;
             height: 6px;
-            background: #999;
+            background: var(--text-secondary);
             margin: 0 auto;
         }
         
         .marker-label {
             font-size: 9px;
-            color: #666;
+            color: var(--text-secondary);
             margin-top: 2px;
             white-space: nowrap;
         }
@@ -1623,6 +2041,69 @@
                 transform: translateY(0);
             }
         }
+        
+        /* 페이지네이션 스타일 */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 20px;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+        
+        .pagination-info {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .pagination-buttons {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        
+        .pagination-btn {
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            min-width: 40px;
+            font-size: 14px;
+        }
+        
+        .pagination-btn:hover:not(:disabled) {
+            background: var(--hover-bg);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 10px rgba(0, 245, 160, 0.3);
+        }
+        
+        .pagination-btn.active {
+            background: var(--accent-primary);
+            color: #0f1419;
+            border-color: var(--accent-primary);
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(0, 245, 160, 0.5);
+        }
+        
+        .pagination-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        #page-numbers {
+            display: flex;
+            gap: 5px;
+        }
     </style>
 </head>
 <body>
@@ -1632,14 +2113,13 @@
             <a href="#top" class="nav-item">검색</a>
             <a href="#rune-table" class="nav-item">룬 테이블</a>
             <a href="#stats-section" class="nav-item">스테이터스</a>
-            <a href="#skill-section" class="nav-item">스킬</a>
             <a href="#damage-section" class="nav-item">대미지 계산</a>
             <a href="#settings-section" class="nav-item">세팅</a>
         </div>
     </nav>
     
     <div id="top" class="container">
-        <h1>룬 정보 데이터 <small>(Var.0.2.1)</small></h1>
+        <h1>룬 정보 데이터 <small>(Var.0.3.0)</small></h1>
         <div class="controls">
             <div class="filter-section">
                 <strong>종류 :</strong>
@@ -1702,6 +2182,16 @@
             </tbody>
         </table>
         
+        <!-- 페이지네이션 -->
+        <div class="pagination-container">
+            <span class="pagination-info" id="pagination-info">1-6 / 103개</span>
+            <div class="pagination-buttons">
+                <button class="pagination-btn" id="prev-page">◀</button>
+                <div id="page-numbers"></div>
+                <button class="pagination-btn" id="next-page">▶</button>
+            </div>
+        </div>
+        
         <!-- 유저 스테이터스 입력 섹션 -->
         <div id="stats-section" class="user-stats-section">
             <h2>스테이터스</h2>
@@ -1741,7 +2231,7 @@
             </div>
             
             <!-- 캐릭터 스킬 관련 대미지율 -->
-            <h3 id="skill-section">캐릭터 스킬 관련</h3>
+            <h3 id="skill-section">스킬 효과로 증가하는 강화 관련(패시브, 엑티브)</h3>
             <div class="stats-container">
                 <div class="stats-column">
                     <div class="stat-row">
@@ -1800,7 +2290,7 @@
             </div>
             
             <!-- 강화류 사용 유무 -->
-            <h3 id="enhancement-section">강화류 사용 유무</h3>
+            <h3 id="enhancement-section">강화류 사용 유무(대미지에 뜨는 강화 텍스트, 보통 강타와 연타가 뜸)</h3>
             <div class="enhancement-toggles">
                 <label class="toggle-item">
                     <input type="checkbox" id="use-강타" checked>
@@ -1838,6 +2328,176 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- 인챈트 -->
+            <h3 id="etc-section">인챈트(공격력%가 붙은 모든 인챈트)</h3>
+            <div class="stats-container">
+                <div class="stats-column">
+                    <div class="stat-row">
+                        <label>인챈트 공격력</label>
+                        <input type="number" id="enchant-공격력" placeholder="0.0" min="0" step="0.1">
+                        <span class="percent-symbol">%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 헬리오도르 보석 -->
+            <h3 id="heliodor-section">헬리오도르 보석</h3>
+            <div class="gem-heliodor-container">
+                <div class="gem-heliodor-group">
+                    <label class="gem-heliodor-label">피해 증가 효과</label>
+                    <div class="gem-heliodor-options">
+                        <label class="toggle-item">
+                            <input type="checkbox" id="gem-헬리오도르">
+                            <span>헬리오도르 (+5.0%)</span>
+                        </label>
+                        <label class="toggle-item">
+                            <input type="checkbox" id="gem-정제된헬리오도르">
+                            <span>정제된 헬리오도르 (+5.2%)</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="gem-heliodor-group">
+                    <label class="gem-heliodor-label">모든 태그 대미지 효과</label>
+                    <div class="gem-heliodor-options">
+                        <label class="toggle-item">
+                            <input type="checkbox" id="gem-그린헬리오도르">
+                            <span>그린헬리오도르 (+1.5%)</span>
+                        </label>
+                        <label class="toggle-item">
+                            <input type="checkbox" id="gem-정제된그린헬리오도르">
+                            <span>정제된 그린헬리오도르 (+2.1%)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 스타프리즘 보석 -->
+            <h3 id="gem-section">스타프리즘 태그별 개수</h3>
+            
+            <div class="gem-tag-input-container">
+                <div class="gem-tag-grid">
+                    <!-- 생존 -->
+                    <div class="gem-tag-row">
+                        <span class="tag-name">생존</span>
+                        <div class="gem-inputs">
+                            <span class="gem-label">스타프리즘</span>
+                            <input type="number" id="starprism-생존" min="0" value="0" placeholder="0">
+                            <span class="gem-unit">개</span>
+                            <span class="gem-separator">+</span>
+                            <span class="gem-label">스타프리즘S</span>
+                            <input type="number" id="starprismS-생존" min="0" value="0" placeholder="0">
+                            <span class="gem-unit">개</span>
+                        </div>
+                        <span class="tag-result" id="tag-생존-result">= 0.0%</span>
+                    </div>
+                    
+                    <!-- 방해 -->
+                    <div class="gem-tag-row">
+                        <span class="tag-name">방해</span>
+                        <div class="gem-inputs">
+                            <span class="gem-label">스타프리즘</span>
+                            <input type="number" id="starprism-방해" min="0" value="0" placeholder="0">
+                            <span class="gem-unit">개</span>
+                            <span class="gem-separator">+</span>
+                            <span class="gem-label">스타프리즘S</span>
+                            <input type="number" id="starprismS-방해" min="0" value="0" placeholder="0">
+                            <span class="gem-unit">개</span>
+                        </div>
+                        <span class="tag-result" id="tag-방해-result">= 0.0%</span>
+                    </div>
+                    
+                    <!-- 강타 -->
+                    <div class="gem-tag-row">
+                        <span class="tag-name">강타</span>
+                        <div class="gem-inputs">
+                            <span class="gem-label">스타프리즘</span>
+                            <input type="number" id="starprism-강타" min="0" value="0" placeholder="0">
+                            <span class="gem-unit">개</span>
+                            <span class="gem-separator">+</span>
+                            <span class="gem-label">스타프리즘S</span>
+                            <input type="number" id="starprismS-강타" min="0" value="0" placeholder="0">
+                            <span class="gem-unit">개</span>
+                        </div>
+                        <span class="tag-result" id="tag-강타-result">= 0.0%</span>
+                    </div>
+                    
+                    <!-- 보조 -->
+                    <div class="gem-tag-row">
+                        <span class="tag-name">보조</span>
+                        <div class="gem-inputs">
+                            <span class="gem-label">스타프리즘</span>
+                            <input type="number" id="starprism-보조" min="0" value="0" placeholder="0">
+                            <span class="gem-unit">개</span>
+                            <span class="gem-separator">+</span>
+                            <span class="gem-label">스타프리즘S</span>
+                            <input type="number" id="starprismS-보조" min="0" value="0" placeholder="0">
+                            <span class="gem-unit">개</span>
+                        </div>
+                        <span class="tag-result" id="tag-보조-result">= 0.0%</span>
+                    </div>
+                    
+                    <!-- 이동 -->
+                    <div class="gem-tag-row">
+                        <span class="tag-name">이동</span>
+                        <div class="gem-inputs">
+                            <span class="gem-label">스타프리즘</span>
+                            <input type="number" id="starprism-이동" min="0" value="0" placeholder="0">
+                            <span class="gem-unit">개</span>
+                            <span class="gem-separator">+</span>
+                            <span class="gem-label">스타프리즘S</span>
+                            <input type="number" id="starprismS-이동" min="0" value="0" placeholder="0">
+                            <span class="gem-unit">개</span>
+                        </div>
+                        <span class="tag-result" id="tag-이동-result">= 0.0%</span>
+                    </div>
+                    
+                    <!-- 연타 -->
+                    <div class="gem-tag-row">
+                        <span class="tag-name">연타</span>
+                        <div class="gem-inputs">
+                            <span class="gem-label">스타프리즘</span>
+                            <input type="number" id="starprism-연타" min="0" value="0" placeholder="0">
+                            <span class="gem-unit">개</span>
+                            <span class="gem-separator">+</span>
+                            <span class="gem-label">스타프리즘S</span>
+                            <input type="number" id="starprismS-연타" min="0" value="0" placeholder="0">
+                            <span class="gem-unit">개</span>
+                        </div>
+                        <span class="tag-result" id="tag-연타-result">= 0.0%</span>
+                    </div>
+                    
+                    <!-- 소환 -->
+                    <div class="gem-tag-row">
+                        <span class="tag-name">소환</span>
+                        <div class="gem-inputs">
+                            <span class="gem-label">스타프리즘</span>
+                            <input type="number" id="starprism-소환" min="0" value="0" placeholder="0">
+                            <span class="gem-unit">개</span>
+                            <span class="gem-separator">+</span>
+                            <span class="gem-label">스타프리즘S</span>
+                            <input type="number" id="starprismS-소환" min="0" value="0" placeholder="0">
+                            <span class="gem-unit">개</span>
+                        </div>
+                        <span class="tag-result" id="tag-소환-result">= 0.0%</span>
+                    </div>
+                    
+                    <!-- 원소 -->
+                    <div class="gem-tag-row">
+                        <span class="tag-name">원소</span>
+                        <div class="gem-inputs">
+                            <span class="gem-label">스타프리즘</span>
+                            <input type="number" id="starprism-원소" min="0" value="0" placeholder="0">
+                            <span class="gem-unit">개</span>
+                            <span class="gem-separator">+</span>
+                            <span class="gem-label">스타프리즘S</span>
+                            <input type="number" id="starprismS-원소" min="0" value="0" placeholder="0">
+                            <span class="gem-unit">개</span>
+                        </div>
+                        <span class="tag-result" id="tag-원소-result">= 0.0%</span>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- 계산 결과 표시 영역 -->
         <div id="calculation-result" class="calculation-result" style="display: none;">
@@ -1854,7 +2514,7 @@
                 <div class="damage-section">
                     <h4>세부 계산</h4>
                     <div class="calc-row">
-                        <span class="calc-label">1. 공격력</span>
+                        <span class="calc-label">1. 공증 (공격력 증가)</span>
                         <span class="calc-value" id="calc-attack">1.00</span>
                     </div>
                     <div class="calc-row">
@@ -1866,8 +2526,12 @@
                         <span class="calc-value" id="calc-damage-increase">1.00</span>
                     </div>
                     <div class="calc-row">
-                        <span class="calc-label">4. 치명타</span>
+                        <span class="calc-label">4. 치명타 (실제 적용)</span>
                         <span class="calc-value" id="calc-critical">1.00</span>
+                    </div>
+                    <div class="calc-row calc-detail">
+                        <span class="calc-label">└ [치명타 피해 × 치명타 확률]</span>
+                        <span class="calc-value" id="calc-critical-detail">0.0%</span>
                     </div>
                     <div class="calc-row">
                         <span class="calc-label">5. 추가타</span>
@@ -1883,15 +2547,121 @@
                     </div>
                 </div>
                 <div class="damage-final">
-                    <h4>최종 대미지 배율</h4>
+                    <h4>대미지 계수</h4>
+                    <div class="final-row skill">
+                        <span class="final-label">기본 스킬 적용 계수(스킬 계수가 아님.)</span>
+                        <span class="final-value" id="final-skill">1.00배</span>
+                    </div>
                     <div class="final-row direct">
-                        <span class="final-label">직접 피해</span>
+                        <span class="final-label">직접 피해 계수 (룬 피해해)</span>
                         <span class="final-value" id="final-direct">1.00배</span>
                     </div>
                     <div class="final-row indirect">
-                        <span class="final-label">간접 피해 (지속 피해)</span>
+                        <span class="final-label">간접 피해 계수 (지속 피해)</span>
                         <span class="final-value" id="final-indirect">1.00배</span>
                     </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 스킬 피해 계수 -->
+        <div id="skill-damage-section" class="skill-damage-section">
+            <h3>스킬 적용 계수(보석 태그 적용시 계수, 여기에 스킬 계수를 곱한 게 최종 스킬 계수임. "스킬계수는 미구현")</h3>
+            <div class="skill-damage-container">
+                <!-- 스킬 1 -->
+                <div class="skill-damage-row">
+                    <span class="skill-label">스킬1</span>
+                    <div class="skill-tags-compact">
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="1" value="생존"><span>생존</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="1" value="방해"><span>방해</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="1" value="강타"><span>강타</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="1" value="보조"><span>보조</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="1" value="이동"><span>이동</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="1" value="연타"><span>연타</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="1" value="소환"><span>소환</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="1" value="원소"><span>원소</span></label>
+                    </div>
+                    <span class="skill-damage-value" id="skill1-damage">0.00배</span>
+                </div>
+                
+                <!-- 스킬 2 -->
+                <div class="skill-damage-row">
+                    <span class="skill-label">스킬2</span>
+                    <div class="skill-tags-compact">
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="2" value="생존"><span>생존</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="2" value="방해"><span>방해</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="2" value="강타"><span>강타</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="2" value="보조"><span>보조</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="2" value="이동"><span>이동</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="2" value="연타"><span>연타</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="2" value="소환"><span>소환</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="2" value="원소"><span>원소</span></label>
+                    </div>
+                    <span class="skill-damage-value" id="skill2-damage">0.00배</span>
+                </div>
+                
+                <!-- 스킬 3 -->
+                <div class="skill-damage-row">
+                    <span class="skill-label">스킬3</span>
+                    <div class="skill-tags-compact">
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="3" value="생존"><span>생존</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="3" value="방해"><span>방해</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="3" value="강타"><span>강타</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="3" value="보조"><span>보조</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="3" value="이동"><span>이동</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="3" value="연타"><span>연타</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="3" value="소환"><span>소환</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="3" value="원소"><span>원소</span></label>
+                    </div>
+                    <span class="skill-damage-value" id="skill3-damage">0.00배</span>
+                </div>
+                
+                <!-- 스킬 4 -->
+                <div class="skill-damage-row">
+                    <span class="skill-label">스킬4</span>
+                    <div class="skill-tags-compact">
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="4" value="생존"><span>생존</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="4" value="방해"><span>방해</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="4" value="강타"><span>강타</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="4" value="보조"><span>보조</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="4" value="이동"><span>이동</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="4" value="연타"><span>연타</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="4" value="소환"><span>소환</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="4" value="원소"><span>원소</span></label>
+                    </div>
+                    <span class="skill-damage-value" id="skill4-damage">0.00배</span>
+                </div>
+                
+                <!-- 스킬 5 -->
+                <div class="skill-damage-row">
+                    <span class="skill-label">스킬5</span>
+                    <div class="skill-tags-compact">
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="5" value="생존"><span>생존</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="5" value="방해"><span>방해</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="5" value="강타"><span>강타</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="5" value="보조"><span>보조</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="5" value="이동"><span>이동</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="5" value="연타"><span>연타</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="5" value="소환"><span>소환</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="5" value="원소"><span>원소</span></label>
+                    </div>
+                    <span class="skill-damage-value" id="skill5-damage">0.00배</span>
+                </div>
+                
+                <!-- 스킬 6 -->
+                <div class="skill-damage-row">
+                    <span class="skill-label">스킬6</span>
+                    <div class="skill-tags-compact">
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="6" value="생존"><span>생존</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="6" value="방해"><span>방해</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="6" value="강타"><span>강타</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="6" value="보조"><span>보조</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="6" value="이동"><span>이동</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="6" value="연타"><span>연타</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="6" value="소환"><span>소환</span></label>
+                        <label><input type="checkbox" class="skill-tag-checkbox" data-skill="6" value="원소"><span>원소</span></label>
+                    </div>
+                    <span class="skill-damage-value" id="skill6-damage">0.00배</span>
                 </div>
             </div>
         </div>
@@ -2025,6 +2795,13 @@
     </div>
 
     <script>
+        // ========================================
+        // 페이지네이션 변수
+        // ========================================
+        let currentPage = 1;
+        const itemsPerPage = 6;
+        let filteredRuneData = [];
+        
         // ========================================
         // Phase 1: 새로운 계산 시스템
         // ========================================
@@ -6624,6 +7401,189 @@
             });
         }
 
+        // ========================================
+        // 페이지네이션 함수
+        // ========================================
+        
+        // 페이지 변경
+        function changePage(delta) {
+            const totalPages = Math.ceil(filteredRuneData.length / itemsPerPage);
+            currentPage += delta;
+            currentPage = Math.max(1, Math.min(currentPage, totalPages));
+            renderCurrentPage();
+            updatePagination();
+        }
+        
+        // 페이지로 직접 이동
+        function goToPage(page) {
+            currentPage = page;
+            renderCurrentPage();
+            updatePagination();
+        }
+        
+        // 페이지네이션 UI 업데이트
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredRuneData.length / itemsPerPage);
+            const start = Math.min((currentPage - 1) * itemsPerPage + 1, filteredRuneData.length);
+            const end = Math.min(currentPage * itemsPerPage, filteredRuneData.length);
+            
+            // 정보 업데이트
+            const infoText = filteredRuneData.length > 0 ? 
+                `${start}-${end} / ${filteredRuneData.length}개` : '0개';
+            document.getElementById('pagination-info').textContent = infoText;
+            
+            // 이전/다음 버튼
+            document.getElementById('prev-page').disabled = currentPage === 1 || totalPages === 0;
+            document.getElementById('next-page').disabled = currentPage === totalPages || totalPages === 0;
+            
+            // 페이지 번호 버튼 생성
+            const pageNumbers = document.getElementById('page-numbers');
+            pageNumbers.innerHTML = '';
+            
+            if (totalPages === 0) return;
+            
+            // 최대 5개 버튼 표시 (현재 페이지 중심)
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+            
+            // 끝에 도달하면 시작 조정
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'pagination-btn';
+                if (i === currentPage) btn.classList.add('active');
+                btn.textContent = i;
+                btn.onclick = () => goToPage(i);
+                pageNumbers.appendChild(btn);
+            }
+        }
+        
+        // 현재 페이지 렌더링
+        function renderCurrentPage() {
+            const tbody = document.querySelector('tbody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, filteredRuneData.length);
+            const pageRunes = filteredRuneData.slice(startIndex, endIndex);
+            
+            pageRunes.forEach(rune => {
+                createRuneRow(rune, tbody);
+            });
+        }
+        
+        // 룬 행 생성 (기존 generateTable의 로직 분리)
+        function createRuneRow(rune, tbody) {
+            var mainRow = document.createElement('tr');
+            mainRow.setAttribute('data-rune-name', rune.name);
+            var description = allDescriptions[rune.name] || '설명 없음';
+
+            // 체크박스 셀 추가
+            var checkboxCell = document.createElement('td');
+            var checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'rune-checkbox';
+            checkbox.setAttribute('data-rune-type', rune.type);
+            checkbox.setAttribute('data-rune-name', rune.name);
+            checkbox.onclick = handleRuneSelection;
+            
+            // 이미 선택된 룬인지 확인
+            if (selectedRunes[rune.type].includes(rune.name)) {
+                checkbox.checked = true;
+            }
+            
+            checkboxCell.appendChild(checkbox);
+            mainRow.appendChild(checkboxCell);
+
+            // 이름 셀
+            var nameCell = document.createElement('td');
+            nameCell.textContent = rune.name;
+
+            // 룬 등급에 따라 배경색과 글씨색 적용
+            if (rune.grade === '신화') {
+                nameCell.style.backgroundColor = 'rgba(213, 166, 0, 0.7)';
+                nameCell.style.color = 'black';
+                nameCell.style.fontWeight = 'bold';
+            } else if (rune.grade === '전설') {
+                nameCell.style.backgroundColor = 'rgba(181, 73, 15, 0.7)';
+                nameCell.style.color = 'white';
+                nameCell.style.fontWeight = 'bold';
+            } else if (rune.grade === '6성 전설') {
+                nameCell.style.backgroundColor = 'rgba(138, 43, 226, 0.7)';
+                nameCell.style.color = 'white';
+                nameCell.style.fontWeight = 'bold';
+            }
+            mainRow.appendChild(nameCell);
+
+            // 키워드 셀
+            var keywordCell = document.createElement('td');
+            keywordCell.textContent = rune.keyword;
+            mainRow.appendChild(keywordCell);
+
+            // 설명 셀
+            var descCell = document.createElement('td');
+            var formattedDescription = description
+                .replace(/\)\./g, ').\n')
+                .replace(/다\./g, '다.\n')
+                .replace(/\n\n+/g, '\n');
+            
+            formattedDescription = formattedDescription.replace(/\n/g, '<br>');
+            
+            // 결함이 있는 룬들의 설명 하드코딩
+            if (rune.name === '투사+') {
+                formattedDescription = '적에게 주는 피해가 <span style="color: #22c55e; font-weight: bold;">33%</span> 증가한다.<br>결함: 멀티히트 피해가 <span style="color: #ef4444; font-weight: bold;">10%</span> 감소한다.';
+            } else if (rune.name === '은둔자+') {
+                formattedDescription = '공격력이 <span style="color: #22c55e; font-weight: bold;">33%</span> 증가한다.<br>결함: 재사용 대기 시간 회복 속도가 <span style="color: #ef4444; font-weight: bold;">9%</span> 감소한다.';
+            } else if (rune.name === '옛 마법사') {
+                formattedDescription = '재사용 대기 시간 회복 속도가 <span style="color: #22c55e; font-weight: bold;">29%</span> 증가한다.<br>결함: 적에게 주는 피해가 <span style="color: #ef4444; font-weight: bold;">10%</span> 감소한다.';
+            } else if (rune.name === '신전 기사') {
+                formattedDescription = '공격력이 <span style="color: #22c55e; font-weight: bold;">23%</span> 증가한다.<br>결함: 치명타 확률이 <span style="color: #ef4444; font-weight: bold;">8%</span> 감소한다.';
+            } else if (rune.name === '근위병+') {
+                formattedDescription = '공격력이 <span style="color: #22c55e; font-weight: bold;">23%</span> 증가한다.<br>결함: 재사용 대기 시간 회복 속도가 <span style="color: #ef4444; font-weight: bold;">7%</span> 감소한다.';
+            } else if (rune.name === '집정관') {
+                formattedDescription = '공격력이 <span style="color: #22c55e; font-weight: bold;">23%</span> 증가한다.<br>결함: 스킬 사용 속도와 캐스팅 및 차지 속도가 <span style="color: #ef4444; font-weight: bold;">8%</span> 감소한다.';
+            } else if (rune.name === '고대 수호자') {
+                formattedDescription = '공격력이 <span style="color: #22c55e; font-weight: bold;">23%</span> 증가한다.<br>결함: 이동 속도가 <span style="color: #ef4444; font-weight: bold;">8%</span> 감소한다.';
+            } else {
+                formattedDescription = formattedDescription
+                    .replace(/(\(공격력×\d+(?:\.\d+)?%\))/g, '<span style="color: #22c55e; font-weight: bold;">$1</span>');
+                
+                formattedDescription = formattedDescription
+                    .replace(/(\([^)<]+\))/g, function(match) {
+                        if (match.includes('span')) return match;
+                        return '<span style="color: #22c55e; font-weight: bold;">' + match + '</span>';
+                    });
+                
+                formattedDescription = formattedDescription
+                    .replace(/(\d+(?:\.\d+)?%)/g, function(match) {
+                        return '<span style="color: #22c55e; font-weight: bold;">' + match + '</span>';
+                    });
+            }
+            
+            descCell.innerHTML = formattedDescription;
+            mainRow.appendChild(descCell);
+            
+            // 행 클릭 시 체크박스 토글
+            mainRow.style.cursor = 'pointer';
+            mainRow.onclick = function(event) {
+                if (event.target.type === 'checkbox') {
+                    return;
+                }
+                const checkbox = this.querySelector('.rune-checkbox');
+                if (checkbox && !checkbox.disabled) {
+                    checkbox.checked = !checkbox.checked;
+                    handleRuneSelection.call(checkbox, { target: checkbox });
+                }
+            };
+            
+            tbody.appendChild(mainRow);
+        }
+        
         // 더 안전한 초기화
         function initializePage() {
             try {
@@ -6660,10 +7620,28 @@
             }
         }
 
+        // h3 태그 괄호 스타일 처리
+        function formatH3Descriptions() {
+            document.querySelectorAll('h3, h4').forEach(header => {
+                const text = header.textContent;
+                // 괄호가 있는 경우에만 처리
+                if (text.includes('(') && text.includes(')')) {
+                    const match = text.match(/^([^(]+)(\(.+\))$/);
+                    if (match) {
+                        const mainText = match[1];
+                        const description = match[2];
+                        header.innerHTML = `${mainText}<span style="font-size: 0.75em; color: var(--text-secondary); font-weight: 400; margin-left: 8px;">${description}</span>`;
+                    }
+                }
+            });
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             if (!isInitialized) {
                 initializePage();
             }
+            // h3 태그 스타일 적용
+            formatH3Descriptions();
         });
 
         window.addEventListener('load', function() {
@@ -6677,109 +7655,16 @@
             try {
                 console.log('테이블 생성 시작');
                 
-                const tbody = document.querySelector('tbody');
-                if (!tbody) {
-                    console.error('tbody를 찾을 수 없습니다');
-                    return;
-                }
+                // 초기 filteredRuneData 설정 (모든 룬)
+                filteredRuneData = runeData.slice();
                 
-                tbody.innerHTML = '';
+                // 현재 페이지 렌더링
+                renderCurrentPage();
                 
-                for (var runeIndex = 0; runeIndex < runeData.length; runeIndex++) {
-                    var rune = runeData[runeIndex];
-                    var mainRow = document.createElement('tr');
-                    mainRow.setAttribute('data-rune-name', rune.name);
-                    var description = allDescriptions[rune.name] || '설명 없음';
-
-                    // 체크박스 셀 추가
-                    var checkboxCell = document.createElement('td');
-                    var checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.className = 'rune-checkbox';
-                    checkbox.setAttribute('data-rune-type', rune.type);
-                    checkbox.setAttribute('data-rune-name', rune.name);
-                    checkbox.onclick = handleRuneSelection;
-                    checkboxCell.appendChild(checkbox);
-                    mainRow.appendChild(checkboxCell);
-
-                    // 이름 셀
-                    var nameCell = document.createElement('td');
-                    nameCell.textContent = rune.name;
-
-                    // 룬 등급에 따라 배경색과 글씨색 적용
-                    if (rune.grade === '신화') {
-                        nameCell.style.backgroundColor = 'rgba(213, 166, 0, 0.7)';
-                        nameCell.style.color = 'black';
-                        nameCell.style.fontWeight = 'bold';
-                    } else if (rune.grade === '전설') {
-                        nameCell.style.backgroundColor = 'rgba(181, 73, 15, 0.7)';
-                        nameCell.style.color = 'white';
-                        nameCell.style.fontWeight = 'bold';
-                    } else if (rune.grade === '6성 전설') {
-                        nameCell.style.backgroundColor = 'rgba(138, 43, 226, 0.7)';
-                        nameCell.style.color = 'white';
-                        nameCell.style.fontWeight = 'bold';
-                    }
-                    mainRow.appendChild(nameCell);
-
-                    // 키워드 셀
-                    var keywordCell = document.createElement('td');
-                    keywordCell.textContent = rune.keyword;
-                    mainRow.appendChild(keywordCell);
-
-                    // 설명 셀
-                    var descCell = document.createElement('td');
-                    // 마침표마다 줄바꿈 추가
-                    var formattedDescription = description
-                        .replace(/\)\./g, ').\n')
-                        .replace(/다\./g, '다.\n')
-                        .replace(/\n\n+/g, '\n');
-                    
-                    // 줄바꿈을 <br>로 먼저 변환
-                    formattedDescription = formattedDescription.replace(/\n/g, '<br>');
-                    
-                    // 결함이 있는 룬들의 설명을 하드코딩으로 처리
-                    if (rune.name === '투사+') {
-                        formattedDescription = '적에게 주는 피해가 <span style="color: #22c55e; font-weight: bold;">33%</span> 증가한다.<br>결함: 멀티히트 피해가 <span style="color: #ef4444; font-weight: bold;">10%</span> 감소한다.';
-                    } else if (rune.name === '은둔자+') {
-                        formattedDescription = '공격력이 <span style="color: #22c55e; font-weight: bold;">33%</span> 증가한다.<br>결함: 재사용 대기 시간 회복 속도가 <span style="color: #ef4444; font-weight: bold;">9%</span> 감소한다.';
-                    } else if (rune.name === '옛 마법사') {
-                        formattedDescription = '재사용 대기 시간 회복 속도가 <span style="color: #22c55e; font-weight: bold;">29%</span> 증가한다.<br>결함: 적에게 주는 피해가 <span style="color: #ef4444; font-weight: bold;">10%</span> 감소한다.';
-                    } else if (rune.name === '신전 기사') {
-                        formattedDescription = '공격력이 <span style="color: #22c55e; font-weight: bold;">23%</span> 증가한다.<br>결함: 치명타 확률이 <span style="color: #ef4444; font-weight: bold;">8%</span> 감소한다.';
-                    } else if (rune.name === '근위병+') {
-                        formattedDescription = '공격력이 <span style="color: #22c55e; font-weight: bold;">23%</span> 증가한다.<br>결함: 재사용 대기 시간 회복 속도가 <span style="color: #ef4444; font-weight: bold;">7%</span> 감소한다.';
-                    } else if (rune.name === '집정관') {
-                        formattedDescription = '공격력이 <span style="color: #22c55e; font-weight: bold;">23%</span> 증가한다.<br>결함: 스킬 사용 속도와 캐스팅 및 차지 속도가 <span style="color: #ef4444; font-weight: bold;">8%</span> 감소한다.';
-                    } else if (rune.name === '고대 수호자') {
-                        formattedDescription = '공격력이 <span style="color: #22c55e; font-weight: bold;">23%</span> 증가한다.<br>결함: 이동 속도가 <span style="color: #ef4444; font-weight: bold;">8%</span> 감소한다.';
-                    } else {
-                        // 결함이 없는 룬들은 일반 처리
-                        // (공격력×숫자%) 형태를 초록색으로 표시
-                        formattedDescription = formattedDescription
-                            .replace(/(\(공격력×\d+(?:\.\d+)?%\))/g, '<span style="color: #22c55e; font-weight: bold;">$1</span>');
-                        
-                        // 괄호 안의 내용을 초록색으로 표시 (이미 처리된 것 제외)
-                        formattedDescription = formattedDescription
-                            .replace(/(\([^)<]+\))/g, function(match) {
-                                if (match.includes('span')) return match;
-                                return '<span style="color: #22c55e; font-weight: bold;">' + match + '</span>';
-                            });
-                        
-                        // 나머지 숫자%를 초록색으로 표시 (이미 처리된 것 제외)
-                        formattedDescription = formattedDescription
-                            .replace(/(\d+(?:\.\d+)?%)/g, function(match) {
-                                return '<span style="color: #22c55e; font-weight: bold;">' + match + '</span>';
-                            });
-                    }
-                    
-                    descCell.innerHTML = formattedDescription;
-                    mainRow.appendChild(descCell);
-                    
-                    tbody.appendChild(mainRow);
-                }
+                // 페이지네이션 업데이트
+                updatePagination();
                 
-                console.log('테이블 생성 완료. 총 룬 개수:', runeData.length);
+                console.log('테이블 생성 완료. 총 룬 개수:', filteredRuneData.length);
                 
             } catch (error) {
                 console.error('테이블 생성 오류:', error);
@@ -7738,8 +8623,20 @@
                 });
             });
             
-            // 1. 공격력
-            const attack = runeAtk + skillDmg.공격력 + 1;
+            // 인챈트 공격력 가져오기
+            const enchant공격력 = parseFloat(document.getElementById('enchant-공격력')?.value || 0) / 100;
+            
+            // 헬리오도르 보석 (체크박스)
+            let 헬리오도르효과 = 0;
+            if (document.getElementById('gem-헬리오도르')?.checked) {
+                헬리오도르효과 = 0.05;
+            }
+            if (document.getElementById('gem-정제된헬리오도르')?.checked) {
+                헬리오도르효과 = 0.052;
+            }
+            
+            // 1. 공증 (B항) - 공격력 증가율
+            const attack = 1 + runeAtk + skillDmg.공격력 + enchant공격력;
             
             // 2. 강화류 (체크박스에 따라 사용 유무 결정)
             const 강타 = ((1 + stats.강타강화 / 8500) * (1 + rune강타 + skillDmg.강타피해) - 1) * use강타;
@@ -7749,13 +8646,15 @@
             const enhancement = 강타 + 연타 + 광역 + 콤보 + 1;
             
             // 3. 피해증가 (주는 피해와 받는 피해를 곱연산)
-            const 주는피해 = (1 + stats.스킬위력 / 8500) * (1 + rune스킬피해) + rune주는피해 + skillDmg.추가피해 + synergy.주는피해;
+            const 주는피해 = (1 + stats.스킬위력 / 8500) * (1 + rune스킬피해) + rune주는피해 + skillDmg.추가피해 + synergy.주는피해 + 헬리오도르효과;
             const 받는피해 = rune방어구파괴 + synergy.받는피해 + 1;
             const damageIncrease = 주는피해 * 받는피해;
             
             // 4. 치명타
-            const 치명확률 = (0.5 - 1 / (2 + stats.치명타 / 1000)) + rune치명타확률 + skillDmg.치명타확률;
-            const critical = 치명확률 * (1.4 + stats.치명타 / 5000) * (1 + rune치명타피해 + skillDmg.치명타피해);
+            const 치명확률_raw = (0.5 - 1 / (2 + stats.치명타 / 1000)) + rune치명타확률 + skillDmg.치명타확률;
+            const 치명확률 = Math.min(치명확률_raw, 1.0); // 100% 상한선
+            const 치명타배율 = (1.4 + stats.치명타 / 5000) * (1 + rune치명타피해 + skillDmg.치명타피해);
+            const critical = 치명확률 * 치명타배율;
             
             // 5. 추가타
             const additional = stats.추가타 / 13000 + rune추가타확률 + skillDmg.추가타확률 + 1;
@@ -7819,8 +8718,35 @@
             const runeDamage = 1 + (runeDamageTotal / 100);
             const runeDOT = 1 + (runeDOTTotal / 100) + skillDmg.지속피해;
             
-            // 7. 최종 대미지 배율
-            const directDamage = attack * enhancement * damageIncrease * critical * additional * runeDamage;
+            // 6-3. 그린헬리오도르 보석 효과 (체크박스)
+            let 그린헬리오도르효과 = 0;
+            if (document.getElementById('gem-그린헬리오도르')?.checked) {
+                그린헬리오도르효과 = 1.5;
+            }
+            if (document.getElementById('gem-정제된그린헬리오도르')?.checked) {
+                그린헬리오도르효과 = 2.1;
+            }
+            
+            // 7. 최종 대미지 계수
+            // 기본 계수 (치명타 포함) = B × C × D × F × K
+            const baseCoefWithCrit = attack * damageIncrease * enhancement * critical * additional;
+            
+            // 기본 계수 (치명타 미포함) = B × C × D × 1.0 × K
+            const baseCoefNoCrit = attack * damageIncrease * enhancement * 1.0 * additional;
+            
+            // 둘 중 큰 값 선택
+            const baseCoef = Math.max(baseCoefWithCrit, baseCoefNoCrit);
+            const baseCoefType = baseCoefWithCrit >= baseCoefNoCrit ? '치명타' : '비치명타';
+            
+            // 직접 피해 계수 = 기본 계수 × 룬 피해
+            const directDamageWithCrit = baseCoefWithCrit * runeDamage;
+            const directDamageNoCrit = baseCoefNoCrit * runeDamage;
+            
+            // 둘 중 큰 값 선택
+            const directDamage = Math.max(directDamageWithCrit, directDamageNoCrit);
+            const directDamageType = directDamageWithCrit >= directDamageNoCrit ? '치명타' : '비치명타';
+            
+            // 간접 피해 계수 = B × C × DOT
             const indirectDamage = attack * damageIncrease * runeDOT;
             
             // UI 업데이트
@@ -7828,11 +8754,59 @@
             document.getElementById('calc-enhancement').textContent = enhancement.toFixed(2);
             document.getElementById('calc-damage-increase').textContent = damageIncrease.toFixed(2);
             document.getElementById('calc-critical').textContent = critical.toFixed(2);
+            document.getElementById('calc-critical-detail').textContent = 
+                `${치명타배율.toFixed(2)}배 × ${(치명확률 * 100).toFixed(1)}%` + 
+                (치명확률_raw > 1.0 ? ` (상한 100%)` : ``);
             document.getElementById('calc-additional').textContent = additional.toFixed(2);
             document.getElementById('calc-rune-damage').textContent = runeDamage.toFixed(2);
             document.getElementById('calc-rune-dot').textContent = runeDOT.toFixed(2);
-            document.getElementById('final-direct').textContent = directDamage.toFixed(2) + '배';
+            document.getElementById('final-skill').textContent = 
+                `${baseCoef.toFixed(2)}배 (${baseCoefType})`;
+            document.getElementById('final-direct').textContent = 
+                `${directDamage.toFixed(2)}배 (${directDamageType})`;
             document.getElementById('final-indirect').textContent = indirectDamage.toFixed(2) + '배';
+            
+            // 태그별 대미지 계산 및 스킬 피해 계수 업데이트
+            updateTagDamages(그린헬리오도르효과, baseCoefWithCrit, baseCoefNoCrit);
+        }
+        
+        // 태그별 대미지 계산 및 스킬 피해 계수 업데이트
+        function updateTagDamages(그린헬리오도르효과, baseCoefWithCrit, baseCoefNoCrit) {
+            const tags = ['생존', '방해', '강타', '보조', '이동', '연타', '소환', '원소'];
+            const tagDamages = {};
+            
+            // 각 태그별 대미지 계산
+            tags.forEach(tag => {
+                const 스타프리즘개수 = parseInt(document.getElementById(`starprism-${tag}`)?.value || 0);
+                const 스타프리즘S개수 = parseInt(document.getElementById(`starprismS-${tag}`)?.value || 0);
+                
+                // 태그 대미지 = 그린헬리오도르 + (스타프리즘개수 × 2.0%) + (스타프리즘S개수 × 2.1%)
+                const 태그대미지 = 그린헬리오도르효과 + (스타프리즘개수 * 2.0) + (스타프리즘S개수 * 2.1);
+                tagDamages[tag] = 태그대미지;
+                
+                // UI 업데이트
+                document.getElementById(`tag-${tag}-result`).textContent = `= ${태그대미지.toFixed(1)}%`;
+            });
+            
+            // 스킬별 피해 계수 계산
+            for (let i = 1; i <= 6; i++) {
+                const checkboxes = document.querySelectorAll(`.skill-tag-checkbox[data-skill="${i}"]:checked`);
+                
+                let tagBonus = 0;
+                checkboxes.forEach(cb => {
+                    tagBonus += tagDamages[cb.value] || 0;
+                });
+                
+                const skillDamageWithCrit = baseCoefWithCrit * (1 + tagBonus / 100);
+                const skillDamageNoCrit = baseCoefNoCrit * (1 + tagBonus / 100);
+                
+                // 둘 중 큰 값 선택
+                const skillDamage = Math.max(skillDamageWithCrit, skillDamageNoCrit);
+                const skillDamageType = skillDamageWithCrit >= skillDamageNoCrit ? '치명타' : '비치명타';
+                
+                document.getElementById(`skill${i}-damage`).textContent = 
+                    `${skillDamage.toFixed(2)}배 (${skillDamageType})`;
+            }
         }
 
         function generateFilterButtons() {
@@ -7943,18 +8917,12 @@
         function applyFilters() {
             console.log('Active filters:', activeFilters);
             
-            const runeGroups = getRuneGroups();
-            runeGroups.forEach(group => {
-                const runeNameFromRow = group.mainRow.getAttribute('data-rune-name');
-                const rune = runeData.find(r => r.name === runeNameFromRow);
-                if (!rune) return;
-
-                console.log('\nChecking rune:', rune.name);
-
+            // 필터링된 룬 데이터 생성
+            filteredRuneData = runeData.filter(rune => {
                 const typeMatch = activeFilters.type.size === 0 || activeFilters.type.has(rune.type);
                 const gradeMatch = activeFilters.grade.size === 0 || activeFilters.grade.has(rune.grade);
                 
-                // 키워드 필터 체크 (runeEfficiencyData 기반)
+                // 키워드 필터 체크
                 const keywordMatch = activeFilters.keyword.size === 0 || Array.from(activeFilters.keyword).every(category => {
                     const effData = runeEfficiencyData[rune.name];
                     if (!effData || !effData.keywords) return false;
@@ -7966,10 +8934,8 @@
                 // 특징 필터 체크
                 const featureMatch = activeFilters.feature.size === 0 || Array.from(activeFilters.feature).every(selectedFeature => {
                     if (selectedFeature === '기타') {
-                        // 특징이 비어있거나 특수 특징이 아닌 경우
                         return !rune.keyword || rune.keyword === '';
                     }
-                    // 특징이 정확히 일치하는지 확인 (누적+, 각성+, 축적+, 결함+ 포함)
                     if (rune.keyword.includes('+')) {
                         return rune.keyword.startsWith(selectedFeature);
                     }
@@ -7983,13 +8949,15 @@
                     rune.name.toLowerCase().includes(nameSearch) || 
                     getInitialConsonant(rune.name.toLowerCase()).includes(initialValue);
 
-                const shouldShow = typeMatch && gradeMatch && keywordMatch && featureMatch && nameMatch;
-                console.log('Final visibility:', shouldShow);
-
-                group.rows.forEach(row => {
-                    row.style.display = shouldShow ? '' : 'none';
-                });
+                return typeMatch && gradeMatch && keywordMatch && featureMatch && nameMatch;
             });
+            
+            // 필터 변경 시 1페이지로 리셋
+            currentPage = 1;
+            
+            // 페이지 렌더링
+            renderCurrentPage();
+            updatePagination();
         }
 
         function getRuneGroups() {
@@ -8059,6 +9027,9 @@
                 // 계산 결과 숨기기
                 document.getElementById('calculation-result').style.display = 'none';
                 
+                // 페이지 리셋
+                currentPage = 1;
+                
                 applyFilters();
                 sortTable(0, 'str', true);
                 
@@ -8112,28 +9083,37 @@
             sortState.dataType = dataType;
             const direction = sortState.direction === 'asc' ? 1 : -1;
 
-            const runeGroups = getRuneGroups();
-            runeGroups.sort((groupA, groupB) => {
-                const valA = getGroupSortValue(groupA, sortState.columnIndex);
-                const valB = getGroupSortValue(groupB, sortState.columnIndex);
+            // filteredRuneData 정렬
+            filteredRuneData.sort((runeA, runeB) => {
+                let valA, valB;
+                
+                // 컬럼별 값 추출
+                if (columnIndex === 1) {
+                    valA = runeA.name;
+                    valB = runeB.name;
+                } else if (columnIndex === 2) {
+                    valA = runeA.keyword || '';
+                    valB = runeB.keyword || '';
+                } else if (columnIndex === 3) {
+                    valA = allDescriptions[runeA.name] || '';
+                    valB = allDescriptions[runeB.name] || '';
+                } else {
+                    valA = runeA.name;
+                    valB = runeB.name;
+                }
 
                 if (sortState.dataType === 'num') {
-                    if (valA === -Infinity && valB !== -Infinity) return 1 * direction;
-                    if (valB === -Infinity && valA !== -Infinity) return -1 * direction;
-                    return (valB - valA) * direction;  // 내림차순으로 변경
+                    const numA = parseNumericValue(valA);
+                    const numB = parseNumericValue(valB);
+                    if (numA === -Infinity && numB !== -Infinity) return 1 * direction;
+                    if (numB === -Infinity && numA !== -Infinity) return -1 * direction;
+                    return (numB - numA) * direction;
                 }
                 return (valA || '').localeCompare(valB || '', 'ko') * direction;
             });
             
-            const tbody = document.querySelector('tbody');
-            tbody.innerHTML = '';
-            runeGroups.forEach(group => {
-                group.rows.forEach(row => {
-                    row.style.display = group.mainRow.style.display; 
-                    tbody.appendChild(row);
-                });
-            });
-            
+            // 페이지 렌더링
+            renderCurrentPage();
             updateSortIndicators();
         }
         
@@ -8145,6 +9125,10 @@
 
         // 이름 검색 이벤트 리스너 추가
         document.addEventListener('DOMContentLoaded', function() {
+            // 페이지네이션 버튼 이벤트
+            document.getElementById('prev-page')?.addEventListener('click', () => changePage(-1));
+            document.getElementById('next-page')?.addEventListener('click', () => changePage(1));
+            
             const nameSearch = document.getElementById('name-search');
             if (nameSearch) {
                 nameSearch.addEventListener('input', function() {
@@ -8198,6 +9182,55 @@
                 if (checkbox) {
                     checkbox.addEventListener('change', recalculateDamage);
                 }
+            });
+            
+            // 인챈트 공격력 입력 시 재계산
+            const enchantInput = document.getElementById('enchant-공격력');
+            if (enchantInput) {
+                enchantInput.addEventListener('input', recalculateDamage);
+            }
+            
+            // 보석 시스템 이벤트 리스너
+            // 헬리오도르 체크박스
+            document.getElementById('gem-헬리오도르')?.addEventListener('change', function() {
+                if (this.checked) {
+                    document.getElementById('gem-정제된헬리오도르').checked = false;
+                }
+                recalculateDamage();
+            });
+            
+            document.getElementById('gem-정제된헬리오도르')?.addEventListener('change', function() {
+                if (this.checked) {
+                    document.getElementById('gem-헬리오도르').checked = false;
+                }
+                recalculateDamage();
+            });
+            
+            // 그린헬리오도르 체크박스
+            document.getElementById('gem-그린헬리오도르')?.addEventListener('change', function() {
+                if (this.checked) {
+                    document.getElementById('gem-정제된그린헬리오도르').checked = false;
+                }
+                recalculateDamage();
+            });
+            
+            document.getElementById('gem-정제된그린헬리오도르')?.addEventListener('change', function() {
+                if (this.checked) {
+                    document.getElementById('gem-그린헬리오도르').checked = false;
+                }
+                recalculateDamage();
+            });
+            
+            // 스타프리즘 태그별 개수 입력
+            const tags = ['생존', '방해', '강타', '보조', '이동', '연타', '소환', '원소'];
+            tags.forEach(tag => {
+                document.getElementById(`starprism-${tag}`)?.addEventListener('input', recalculateDamage);
+                document.getElementById(`starprismS-${tag}`)?.addEventListener('input', recalculateDamage);
+            });
+            
+            // 스킬 태그 체크박스
+            document.querySelectorAll('.skill-tag-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', recalculateDamage);
             });
             
             // 초기 계산 실행
@@ -8286,6 +9319,37 @@
             // 시너지 대미지
             const synergy = parseFloat(document.getElementById('synergy-주는피해')?.value) || 0;
             
+            // 기타
+            const etc = {
+                인챈트공격력: parseFloat(document.getElementById('enchant-공격력')?.value) || 0
+            };
+            
+            // 보석 설정
+            const gemSettings = {
+                헬리오도르: document.getElementById('gem-헬리오도르')?.checked || false,
+                정제된헬리오도르: document.getElementById('gem-정제된헬리오도르')?.checked || false,
+                그린헬리오도르: document.getElementById('gem-그린헬리오도르')?.checked || false,
+                정제된그린헬리오도르: document.getElementById('gem-정제된그린헬리오도르')?.checked || false,
+                starprism: {},
+                starprismS: {}
+            };
+            
+            // 태그별 스타프리즘 개수 저장
+            const tags = ['생존', '방해', '강타', '보조', '이동', '연타', '소환', '원소'];
+            tags.forEach(tag => {
+                gemSettings.starprism[tag] = parseInt(document.getElementById(`starprism-${tag}`)?.value) || 0;
+                gemSettings.starprismS[tag] = parseInt(document.getElementById(`starprismS-${tag}`)?.value) || 0;
+            });
+            
+            // 스킬 태그 선택 정보
+            const skillTags = {};
+            for (let i = 1; i <= 6; i++) {
+                const checkedTags = Array.from(
+                    document.querySelectorAll(`.skill-tag-checkbox[data-skill="${i}"]:checked`)
+                ).map(cb => cb.value);
+                skillTags[`skill${i}`] = checkedTags;
+            }
+            
             // 대미지 배율 계산 결과
             const damageCalculation = {
                 attack: document.getElementById('calc-attack')?.textContent || '1.00',
@@ -8295,6 +9359,8 @@
                 additional: document.getElementById('calc-additional')?.textContent || '1.00',
                 runeDamage: document.getElementById('calc-rune-damage')?.textContent || '1.00',
                 runeDot: document.getElementById('calc-rune-dot')?.textContent || '1.00',
+                tagDamage: document.getElementById('calc-tag-damage')?.textContent || '1.00',
+                finalSkill: document.getElementById('final-skill')?.textContent || '1.00배',
                 finalDirect: document.getElementById('final-direct')?.textContent || '1.00배',
                 finalIndirect: document.getElementById('final-indirect')?.textContent || '1.00배'
             };
@@ -8305,6 +9371,9 @@
                 skills: skills,
                 enhancements: enhancements,
                 synergy: synergy,
+                etc: etc,
+                gemSettings: gemSettings,
+                skillTags: skillTags,
                 damageCalculation: damageCalculation,
                 timestamp: new Date().toISOString()
             };
@@ -8395,6 +9464,67 @@
             // 시너지 복원
             if (setData.synergy !== undefined && document.getElementById('synergy-주는피해')) {
                 document.getElementById('synergy-주는피해').value = setData.synergy;
+            }
+            
+            // 기타 복원
+            if (setData.etc) {
+                if (document.getElementById('enchant-공격력'))
+                    document.getElementById('enchant-공격력').value = setData.etc.인챈트공격력 || 0;
+            }
+            
+            // 보석 설정 복원
+            if (setData.gemSettings) {
+                // 헬리오도르 체크박스
+                if (document.getElementById('gem-헬리오도르')) {
+                    document.getElementById('gem-헬리오도르').checked = setData.gemSettings.헬리오도르 || false;
+                }
+                if (document.getElementById('gem-정제된헬리오도르')) {
+                    document.getElementById('gem-정제된헬리오도르').checked = setData.gemSettings.정제된헬리오도르 || false;
+                }
+                
+                // 그린헬리오도르 체크박스
+                if (document.getElementById('gem-그린헬리오도르')) {
+                    document.getElementById('gem-그린헬리오도르').checked = setData.gemSettings.그린헬리오도르 || false;
+                }
+                if (document.getElementById('gem-정제된그린헬리오도르')) {
+                    document.getElementById('gem-정제된그린헬리오도르').checked = setData.gemSettings.정제된그린헬리오도르 || false;
+                }
+                
+                // 태그별 스타프리즘 개수 복원
+                const tags = ['생존', '방해', '강타', '보조', '이동', '연타', '소환', '원소'];
+                if (setData.gemSettings.starprism && setData.gemSettings.starprismS) {
+                    tags.forEach(tag => {
+                        if (document.getElementById(`starprism-${tag}`)) {
+                            document.getElementById(`starprism-${tag}`).value = 
+                                setData.gemSettings.starprism[tag] || 0;
+                        }
+                        if (document.getElementById(`starprismS-${tag}`)) {
+                            document.getElementById(`starprismS-${tag}`).value = 
+                                setData.gemSettings.starprismS[tag] || 0;
+                        }
+                    });
+                }
+            }
+            
+            // 스킬 태그 복원
+            if (setData.skillTags) {
+                // 먼저 모든 체크박스 해제
+                document.querySelectorAll('.skill-tag-checkbox').forEach(cb => {
+                    cb.checked = false;
+                });
+                
+                // 저장된 태그 복원
+                for (let i = 1; i <= 6; i++) {
+                    const tags = setData.skillTags[`skill${i}`] || [];
+                    tags.forEach(tagValue => {
+                        const checkbox = document.querySelector(
+                            `.skill-tag-checkbox[data-skill="${i}"][value="${tagValue}"]`
+                        );
+                        if (checkbox) {
+                            checkbox.checked = true;
+                        }
+                    });
+                }
             }
             
             // UI 업데이트
@@ -8899,11 +10029,16 @@
                 return;
             }
             
-            // 대미지 배율 비교
-            const damage1Direct = parseFloat(set1.damageCalculation.finalDirect.replace('배', '')) || 0;
-            const damage1Indirect = parseFloat(set1.damageCalculation.finalIndirect.replace('배', '')) || 0;
-            const damage2Direct = parseFloat(set2.damageCalculation.finalDirect.replace('배', '')) || 0;
-            const damage2Indirect = parseFloat(set2.damageCalculation.finalIndirect.replace('배', '')) || 0;
+            // 대미지 배율 비교 (숫자만 추출)
+            const extractNumber = (str) => {
+                const match = str.match(/^([\d.]+)배/);
+                return match ? parseFloat(match[1]) : 0;
+            };
+            
+            const damage1Direct = extractNumber(set1.damageCalculation.finalDirect);
+            const damage1Indirect = extractNumber(set1.damageCalculation.finalIndirect);
+            const damage2Direct = extractNumber(set2.damageCalculation.finalDirect);
+            const damage2Indirect = extractNumber(set2.damageCalculation.finalIndirect);
             
             const diffDirect = damage2Direct - damage1Direct;
             const diffIndirect = damage2Indirect - damage1Indirect;
