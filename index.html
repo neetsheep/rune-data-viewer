@@ -1549,9 +1549,12 @@
         }
         
         .settings-buttons button:disabled {
-            opacity: 0.3;
+            opacity: 0.5;
             cursor: not-allowed;
             background: var(--bg-secondary) !important;
+            color: var(--text-secondary) !important;
+            border-color: var(--border-color) !important;
+            box-shadow: none !important;
         }
         
         .btn-save {
@@ -6477,23 +6480,30 @@
                 runeSection.className = 'rune-section';
                 runeSection.style.marginBottom = '20px';
                 runeSection.style.padding = '15px';
-                runeSection.style.backgroundColor = '#f9f9f9';
+                runeSection.style.backgroundColor = 'var(--bg-secondary)';
                 runeSection.style.borderRadius = '8px';
+                runeSection.style.border = '1px solid var(--border-color)';
+                runeSection.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
                 
                 const runeTitle = document.createElement('h3');
                 runeTitle.textContent = runeName;
                 runeTitle.style.marginTop = '0';
-                runeTitle.style.color = '#333';
+                runeTitle.style.color = 'var(--accent-primary)';
+                runeTitle.style.borderBottom = '2px solid var(--accent-primary)';
+                runeTitle.style.paddingBottom = '8px';
+                runeTitle.style.marginBottom = '12px';
                 runeSection.appendChild(runeTitle);
                 
                 // 효과 목록
                 effects.forEach(({ category, source }) => {
                     const effectDiv = document.createElement('div');
                     effectDiv.className = 'effect-sum';
-                    effectDiv.style.borderLeft = '4px solid #2196F3';
+                    effectDiv.style.borderLeft = '4px solid var(--accent-primary)';
                     effectDiv.style.padding = '8px';
                     effectDiv.style.marginBottom = '8px';
-                    effectDiv.style.backgroundColor = 'white';
+                    effectDiv.style.backgroundColor = 'var(--bg-card)';
+                    effectDiv.style.borderRadius = '6px';
+                    effectDiv.style.border = '1px solid var(--border-color)';
                     
                     // unit 결정 (절대값 vs 퍼센트)
                     const unit = source.unit || '%';
@@ -6505,22 +6515,22 @@
                     let formulaHtml = '';
                     if (multiplier && multiplier > 1) {
                         formulaHtml = `
-                            <span style="color: #4CAF50;">기존효과: ${source.baseValue}${unit}</span> × 
-                            <span style="color: #FF9800;">가동률: ${uptimeStr}</span> × 
+                            <span style="color: var(--accent-primary);">기존효과: ${source.baseValue}${unit}</span> × 
+                            <span style="color: #FFC107;">가동률: ${uptimeStr}</span> × 
                             <span style="color: #FF5722;">${multiplier}회</span> = 
-                            <span style="color: #1976D2;">최종: ${source.effectiveValue.toFixed(1)}${unit}</span>${timeline}
+                            <span style="color: var(--accent-secondary);">최종: ${source.effectiveValue.toFixed(1)}${unit}</span>${timeline}
                         `;
                     } else {
                         formulaHtml = `
-                            <span style="color: #4CAF50;">기존효과: ${source.baseValue}${unit}</span> × 
-                            <span style="color: #FF9800;">가동률: ${uptimeStr}</span> = 
-                            <span style="color: #1976D2;">최종: ${source.effectiveValue.toFixed(1)}${unit}</span>${timeline}
+                            <span style="color: var(--accent-primary);">기존효과: ${source.baseValue}${unit}</span> × 
+                            <span style="color: #FFC107;">가동률: ${uptimeStr}</span> = 
+                            <span style="color: var(--accent-secondary);">최종: ${source.effectiveValue.toFixed(1)}${unit}</span>${timeline}
                         `;
                     }
                     
                     effectDiv.innerHTML = `
-                        <div><strong>${category}:</strong> <span style="font-size: 1.2em; color: #1976D2;">${source.effectiveValue.toFixed(1)}${unit}</span></div>
-                        <div class="rune-list" style="color: #666; font-size: 0.9em; margin-top: 4px;">
+                        <div style="color: var(--text-primary);"><strong>${category}:</strong> <span style="font-size: 1.2em; color: var(--accent-secondary); font-weight: bold;">${source.effectiveValue.toFixed(1)}${unit}</span></div>
+                        <div class="rune-list" style="color: var(--text-secondary); font-size: 0.9em; margin-top: 4px;">
                             ${formulaHtml}
                         </div>
                     `;
@@ -6550,18 +6560,26 @@
             summarySection.className = 'summary-section';
             summarySection.style.marginTop = '20px';
             summarySection.style.padding = '15px';
-            summarySection.style.backgroundColor = '#e3f2fd';
+            summarySection.style.backgroundColor = 'var(--bg-secondary)';
             summarySection.style.borderRadius = '8px';
+            summarySection.style.border = '2px solid var(--accent-primary)';
+            summarySection.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.3)';
             
             const summaryTitle = document.createElement('h3');
             summaryTitle.textContent = '총 효과 합계';
             summaryTitle.style.marginTop = '0';
+            summaryTitle.style.color = 'var(--accent-primary)';
             summarySection.appendChild(summaryTitle);
             
             Object.entries(aggregated).forEach(([category, data]) => {
+                // 해당 카테고리의 첫 번째 source에서 unit 추출
+                const firstSource = data.sources && data.sources[0];
+                const unit = firstSource?.unit || '%';
+                
                 const summaryItem = document.createElement('div');
                 summaryItem.style.padding = '5px 0';
-                summaryItem.innerHTML = `<strong>${category}:</strong> ${data.total.toFixed(1)}%`;
+                summaryItem.style.color = 'var(--text-primary)';
+                summaryItem.innerHTML = `<strong>${category}:</strong> <span style="color: var(--accent-secondary); font-size: 1.1em;">${data.total.toFixed(1)}${unit}</span>`;
                 summarySection.appendChild(summaryItem);
             });
             
