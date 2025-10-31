@@ -2122,7 +2122,7 @@
     </nav>
     
     <div id="top" class="container">
-        <h1>룬 정보 데이터 <small>(Var.0.3.0)</small></h1>
+        <h1>룬 정보 데이터 <small>(Var.0.4.0)</small></h1>
         <div class="controls">
             <div class="filter-section">
                 <strong>종류 :</strong>
@@ -2270,8 +2270,18 @@
                         <span class="percent-symbol">%</span>
                     </div>
                     <div class="stat-row">
-                        <label>지속 피해</label>
-                        <input type="number" id="skill-지속피해" placeholder="0.0" min="0" step="0.1">
+                        <label>지속 피해 1</label>
+                        <input type="number" id="skill-지속피해1" placeholder="0.0" min="0" step="0.1">
+                        <span class="percent-symbol">%</span>
+                    </div>
+                    <div class="stat-row">
+                        <label>지속 피해 2</label>
+                        <input type="number" id="skill-지속피해2" placeholder="0.0" min="0" step="0.1">
+                        <span class="percent-symbol">%</span>
+                    </div>
+                    <div class="stat-row">
+                        <label>지속 피해 3</label>
+                        <input type="number" id="skill-지속피해3" placeholder="0.0" min="0" step="0.1">
                         <span class="percent-symbol">%</span>
                     </div>
                     <div class="stat-row">
@@ -2541,27 +2551,29 @@
                         <span class="calc-value" id="calc-additional">1.00</span>
                     </div>
                     <div class="calc-row">
-                        <span class="calc-label">6-1. 룬 피해 계수</span>
-                        <span class="calc-value" id="calc-rune-damage">1.00</span>
+                        <span class="calc-label">6-1. 룬 피해 종류</span>
+                        <span class="calc-value" id="calc-rune-damage">0개</span>
                     </div>
                     <div class="calc-row">
-                        <span class="calc-label">6-2. 룬 지속 피해 계수</span>
-                        <span class="calc-value" id="calc-rune-dot">1.00</span>
+                        <span class="calc-label">6-2. 지속 피해 종류</span>
+                        <span class="calc-value" id="calc-rune-dot">0개</span>
                     </div>
                 </div>
                 <div class="damage-final">
                     <h4>대미지 계수</h4>
                     <div class="final-row skill">
-                        <span class="final-label">기본 스킬 적용 계수(스킬 계수가 아님.)</span>
+                        <span class="final-label">기본 스킬 적용 계수 (보석 태그 미적용)</span>
                         <span class="final-value" id="final-skill">1.00배</span>
                     </div>
                     <div class="final-row direct">
                         <span class="final-label">직접 피해 계수 (룬 피해)</span>
-                        <span class="final-value" id="final-direct">1.00배</span>
+                        <div id="rune-damage-list" style="margin-top: 10px; font-size: 14px; color: var(--text-secondary);"></div>
+                        <span class="final-value" id="final-direct" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.2);">총합: 0.00배</span>
                     </div>
                     <div class="final-row indirect">
                         <span class="final-label">간접 피해 계수 (지속 피해)</span>
-                        <span class="final-value" id="final-indirect">1.00배</span>
+                        <div id="dot-damage-list" style="margin-top: 10px; font-size: 14px; color: var(--text-secondary);"></div>
+                        <span class="final-value" id="final-indirect" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.2);">총합: 0.00배</span>
                     </div>
                 </div>
             </div>
@@ -8393,7 +8405,9 @@
                 광역피해: parseFloat(document.getElementById('skill-광역피해')?.value || 0) / 100,
                 콤보피해: parseFloat(document.getElementById('skill-콤보피해')?.value || 0) / 100,
                 추가피해: parseFloat(document.getElementById('skill-추가피해')?.value || 0) / 100,
-                지속피해: parseFloat(document.getElementById('skill-지속피해')?.value || 0) / 100,
+                지속피해1: parseFloat(document.getElementById('skill-지속피해1')?.value || 0) / 100,
+                지속피해2: parseFloat(document.getElementById('skill-지속피해2')?.value || 0) / 100,
+                지속피해3: parseFloat(document.getElementById('skill-지속피해3')?.value || 0) / 100,
                 치명타피해: parseFloat(document.getElementById('skill-치명타피해')?.value || 0) / 100,
                 치명타확률: parseFloat(document.getElementById('skill-치명타확률')?.value || 0) / 100,
                 추가타확률: parseFloat(document.getElementById('skill-추가타확률')?.value || 0) / 100
@@ -8677,34 +8691,54 @@
             // 5. 추가타
             const additional = stats.추가타 / 13000 + rune추가타확률 + skillDmg.추가타확률 + 1;
             
-            // 6. 룬 피해 계수 계산
-            let runeDamageTotal = 0;
-            let runeDOTTotal = 0;
+            // 6. 룬 피해 계수 계산 (개별 계산 후 합산)
+            const runeDamageList = [];  // 각 룬 피해를 개별 저장
+            const runeDOTList = [];      // 각 지속 피해를 개별 저장
             
             // 선택된 룬들의 효율 데이터에서 룬 피해 추출
             Object.keys(selectedRunes).forEach(type => {
                 selectedRunes[type].forEach(runeName => {
-                    // 파멸의 낙인 특수 처리 - 6-1 룬 피해 계수에 포함
+                    // 파멸의 낙인 특수 처리
                     if (runeName === '파멸의 낙인') {
-                        runeDamageTotal += runeSpecialAverages['파멸의 낙인'];
+                        runeDamageList.push({
+                            name: runeName,
+                            value: runeSpecialAverages['파멸의 낙인'],
+                            coefficient: runeSpecialAverages['파멸의 낙인'] / 100
+                        });
                         return;
                     }
                     
                     // 축적 룬 피해들
                     if (runeName === '수정 꽃잎') {
-                        runeDamageTotal += runeSpecialAverages['수정꽃잎_룬피해'];
+                        runeDamageList.push({
+                            name: runeName,
+                            value: runeSpecialAverages['수정꽃잎_룬피해'],
+                            coefficient: runeSpecialAverages['수정꽃잎_룬피해'] / 100
+                        });
                         return;
                     }
                     if (runeName === '나무 사슴') {
-                        runeDamageTotal += runeSpecialAverages['나무사슴_룬피해'];
+                        runeDamageList.push({
+                            name: runeName,
+                            value: runeSpecialAverages['나무사슴_룬피해'],
+                            coefficient: runeSpecialAverages['나무사슴_룬피해'] / 100
+                        });
                         return;
                     }
                     if (runeName === '잊힌 성소') {
-                        runeDamageTotal += runeSpecialAverages['잊힌 성소'];
+                        runeDamageList.push({
+                            name: runeName,
+                            value: runeSpecialAverages['잊힌 성소'],
+                            coefficient: runeSpecialAverages['잊힌 성소'] / 100
+                        });
                         return;
                     }
                     if (runeName === '끝없는 순환') {
-                        runeDamageTotal += runeSpecialAverages['끝없는순환_공격'];
+                        runeDamageList.push({
+                            name: runeName,
+                            value: runeSpecialAverages['끝없는순환_공격'],
+                            coefficient: runeSpecialAverages['끝없는순환_공격'] / 100
+                        });
                         return;
                     }
                     
@@ -8712,29 +8746,41 @@
                     if (effData && effData.keywords) {
                         effData.keywords.forEach((keyword, index) => {
                             if (keyword === '룬 피해') {
+                                let efficiency = 0;
                                 // 각성 룬 피해 (X초마다 발동) - 산맥 군주, 부서진 하늘
                                 if (runeName === '산맥 군주' || runeName === '부서진 하늘') {
                                     const 지속시간 = 각성지속시간[runeName];
                                     const 가동률 = calculate각성가동률(지속시간, 90, has눈먼예언자);
                                     const X초 = 각성룬피해쿨타임[runeName];
                                     const 원본값 = effData.values[index];
-                                    const DPS = (원본값 / X초) * 가동률;
-                                    runeDamageTotal += DPS;
+                                    efficiency = (원본값 / X초) * 가동률;
                                 } else {
                                     // 일반 룬 피해
-                                    runeDamageTotal += (effData.efficiencies[index] || 0);
+                                    efficiency = effData.efficiencies[index] || 0;
+                                }
+                                
+                                if (efficiency > 0) {
+                                    runeDamageList.push({
+                                        name: runeName,
+                                        value: efficiency,
+                                        coefficient: efficiency / 100
+                                    });
                                 }
                             } else if (keyword === '지속 피해') {
                                 // 지속 피해 계수
-                                runeDOTTotal += (effData.efficiencies[index] || 0);
+                                const efficiency = effData.efficiencies[index] || 0;
+                                if (efficiency > 0) {
+                                    runeDOTList.push({
+                                        name: runeName,
+                                        value: efficiency,
+                                        coefficient: efficiency / 100
+                                    });
+                                }
                             }
                         });
                     }
                 });
             });
-            
-            const runeDamage = 1 + (runeDamageTotal / 100);
-            const runeDOT = 1 + (runeDOTTotal / 100) + skillDmg.지속피해;
             
             // 6-3. 그린헬리오도르 보석 효과 (체크박스)
             let 그린헬리오도르효과 = 0;
@@ -8756,18 +8802,61 @@
             const baseCoef = Math.max(baseCoefWithCrit, baseCoefNoCrit);
             const baseCoefType = baseCoefWithCrit >= baseCoefNoCrit ? '치명타' : '비치명타';
             
-            // 직접 피해 계수 = 기본 계수 × 룬 피해
-            const directDamageWithCrit = baseCoefWithCrit * runeDamage;
-            const directDamageNoCrit = baseCoefNoCrit * runeDamage;
+            // 직접 피해 계수 = 각 룬 피해별 개별 계산 후 합산
+            let totalDirectDamageWithCrit = 0;
+            let totalDirectDamageNoCrit = 0;
+            
+            runeDamageList.forEach(rune => {
+                totalDirectDamageWithCrit += baseCoefWithCrit * rune.coefficient;
+                totalDirectDamageNoCrit += baseCoefNoCrit * rune.coefficient;
+            });
             
             // 둘 중 큰 값 선택
-            const directDamage = Math.max(directDamageWithCrit, directDamageNoCrit);
-            const directDamageType = directDamageWithCrit >= directDamageNoCrit ? '치명타' : '비치명타';
+            const totalDirectDamage = Math.max(totalDirectDamageWithCrit, totalDirectDamageNoCrit);
+            const directDamageType = totalDirectDamageWithCrit >= totalDirectDamageNoCrit ? '치명타' : '비치명타';
             
-            // 간접 피해 계수 = B × C × DOT
-            const indirectDamage = attack * damageIncrease * runeDOT;
+            // 간접 피해 계수 = 각 지속 피해별 개별 계산 후 합산
+            // 스킬 지속피해1~3도 룬 지속피해와 동일하게 독립 발동으로 처리
             
-            // UI 업데이트
+            // 스킬 지속피해를 DOT 리스트에 추가
+            const allDOTList = [...runeDOTList];
+            
+            if (skillDmg.지속피해1 > 0) {
+                allDOTList.push({
+                    name: '스킬 지속피해1',
+                    value: skillDmg.지속피해1 * 100,
+                    coefficient: skillDmg.지속피해1,
+                    isSkillDOT: true
+                });
+            }
+            if (skillDmg.지속피해2 > 0) {
+                allDOTList.push({
+                    name: '스킬 지속피해2',
+                    value: skillDmg.지속피해2 * 100,
+                    coefficient: skillDmg.지속피해2,
+                    isSkillDOT: true
+                });
+            }
+            if (skillDmg.지속피해3 > 0) {
+                allDOTList.push({
+                    name: '스킬 지속피해3',
+                    value: skillDmg.지속피해3 * 100,
+                    coefficient: skillDmg.지속피해3,
+                    isSkillDOT: true
+                });
+            }
+            
+            // 모든 지속 피해 (룬 + 스킬)를 독립 계산 후 합산
+            const baseIndirectCoef = attack * damageIncrease;
+            let totalIndirectDamage = 0;
+            
+            allDOTList.forEach(rune => {
+                const dotCoef = baseIndirectCoef * rune.coefficient;
+                totalIndirectDamage += dotCoef;
+                rune.dotCoef = dotCoef;
+            });
+            
+            // UI 업데이트 - 세부 계산
             document.getElementById('calc-attack').textContent = attack.toFixed(2);
             document.getElementById('calc-enhancement').textContent = enhancement.toFixed(2);
             document.getElementById('calc-damage-increase').textContent = damageIncrease.toFixed(2);
@@ -8776,13 +8865,79 @@
                 `${치명타배율.toFixed(2)}배 × ${(치명확률 * 100).toFixed(1)}%` + 
                 (치명확률_raw > 1.0 ? ` (상한 100%)` : ``);
             document.getElementById('calc-additional').textContent = additional.toFixed(2);
-            document.getElementById('calc-rune-damage').textContent = runeDamage.toFixed(2);
-            document.getElementById('calc-rune-dot').textContent = runeDOT.toFixed(2);
+            
+            // 룬 피해/지속 피해 종류 개수 표시
+            document.getElementById('calc-rune-damage').textContent = `${runeDamageList.length}개`;
+            
+            const 스킬DOT개수 = allDOTList.length - runeDOTList.length;
+            document.getElementById('calc-rune-dot').textContent = 
+                스킬DOT개수 > 0 ? `룬 ${runeDOTList.length}개 + 스킬 ${스킬DOT개수}개` : `${runeDOTList.length}개`;
+            
+            // 기본 스킬 계수
             document.getElementById('final-skill').textContent = 
                 `${baseCoef.toFixed(2)}배 (${baseCoefType})`;
+            
+            // 직접 피해 상세 리스트 생성
+            const runeDamageListDiv = document.getElementById('rune-damage-list');
+            runeDamageListDiv.innerHTML = '';
+            
+            if (runeDamageList.length > 0) {
+                runeDamageList.forEach(rune => {
+                    const runeCoefWithCrit = baseCoefWithCrit * rune.coefficient;
+                    const runeCoefNoCrit = baseCoefNoCrit * rune.coefficient;
+                    const runeCoef = Math.max(runeCoefWithCrit, runeCoefNoCrit);
+                    const runeType = runeCoefWithCrit >= runeCoefNoCrit ? '치명타' : '비치명타';
+                    
+                    const itemDiv = document.createElement('div');
+                    itemDiv.style.padding = '5px 0';
+                    itemDiv.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+                    itemDiv.innerHTML = `
+                        <span style="color: var(--accent-primary);">[${rune.name}]</span>
+                        <span style="color: var(--accent-secondary); margin-left: 10px;">${rune.value.toFixed(1)}%</span>
+                        <span style="color: var(--text-primary); margin-left: 10px;">→ ${runeCoef.toFixed(2)}배 (${runeType})</span>
+                    `;
+                    runeDamageListDiv.appendChild(itemDiv);
+                });
+            } else {
+                runeDamageListDiv.innerHTML = '<span style="color: var(--text-secondary);">룬 피해 없음</span>';
+            }
+            
             document.getElementById('final-direct').textContent = 
-                `${directDamage.toFixed(2)}배 (${directDamageType})`;
-            document.getElementById('final-indirect').textContent = indirectDamage.toFixed(2) + '배';
+                `총합: ${totalDirectDamage.toFixed(2)}배 (${directDamageType})`;
+            
+            // 간접 피해 상세 리스트 생성
+            const dotDamageListDiv = document.getElementById('dot-damage-list');
+            dotDamageListDiv.innerHTML = '';
+            
+            if (allDOTList.length > 0) {
+                allDOTList.forEach(rune => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.style.padding = '5px 0';
+                    itemDiv.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+                    
+                    // 스킬 지속피해인지 룬 지속피해인지 구분하여 표시
+                    if (rune.isSkillDOT) {
+                        itemDiv.innerHTML = `
+                            <span style="color: #FFC107;">[${rune.name}]</span>
+                            <span style="color: var(--accent-secondary); margin-left: 10px;">${rune.value.toFixed(1)}%</span>
+                            <span style="color: var(--text-primary); margin-left: 10px;">→ ${rune.dotCoef.toFixed(2)}배</span>
+                        `;
+                    } else {
+                        itemDiv.innerHTML = `
+                            <span style="color: var(--accent-primary);">[룬: ${rune.name}]</span>
+                            <span style="color: var(--accent-secondary); margin-left: 10px;">${rune.value.toFixed(1)}%</span>
+                            <span style="color: var(--text-primary); margin-left: 10px;">→ ${rune.dotCoef.toFixed(2)}배</span>
+                        `;
+                    }
+                    
+                    dotDamageListDiv.appendChild(itemDiv);
+                });
+            } else {
+                dotDamageListDiv.innerHTML = '<span style="color: var(--text-secondary);">지속 피해 없음</span>';
+            }
+            
+            document.getElementById('final-indirect').textContent = 
+                `총합: ${totalIndirectDamage.toFixed(2)}배`;
             
             // 태그별 대미지 계산 및 스킬 피해 계수 업데이트
             updateTagDamages(그린헬리오도르효과, baseCoefWithCrit, baseCoefNoCrit);
@@ -9159,8 +9314,8 @@
                 'stat-강타강화', 'stat-연타강화', 'stat-콤보강화', 'stat-광역강화',
                 'stat-스킬위력', 'stat-치명타', 'stat-추가타',
                 'skill-공격력', 'skill-연타피해', 'skill-강타피해', 'skill-광역피해',
-                'skill-콤보피해', 'skill-추가피해', 'skill-지속피해', 'skill-치명타피해', 
-                'skill-치명타확률', 'skill-추가타확률',
+                'skill-콤보피해', 'skill-추가피해', 'skill-지속피해1', 'skill-지속피해2', 'skill-지속피해3',
+                'skill-치명타피해', 'skill-치명타확률', 'skill-추가타확률',
                 'synergy-주는피해', 'synergy-받는피해'
             ];
             
@@ -9320,7 +9475,9 @@
                 광역피해: parseFloat(document.getElementById('skill-광역피해')?.value) || 0,
                 콤보피해: parseFloat(document.getElementById('skill-콤보피해')?.value) || 0,
                 추가피해: parseFloat(document.getElementById('skill-추가피해')?.value) || 0,
-                지속피해: parseFloat(document.getElementById('skill-지속피해')?.value) || 0,
+                지속피해1: parseFloat(document.getElementById('skill-지속피해1')?.value) || 0,
+                지속피해2: parseFloat(document.getElementById('skill-지속피해2')?.value) || 0,
+                지속피해3: parseFloat(document.getElementById('skill-지속피해3')?.value) || 0,
                 치명타피해: parseFloat(document.getElementById('skill-치명타피해')?.value) || 0,
                 치명타확률: parseFloat(document.getElementById('skill-치명타확률')?.value) || 0,
                 추가타확률: parseFloat(document.getElementById('skill-추가타확률')?.value) || 0
@@ -9380,7 +9537,13 @@
                 tagDamage: document.getElementById('calc-tag-damage')?.textContent || '1.00',
                 finalSkill: document.getElementById('final-skill')?.textContent || '1.00배',
                 finalDirect: document.getElementById('final-direct')?.textContent || '1.00배',
-                finalIndirect: document.getElementById('final-indirect')?.textContent || '1.00배'
+                finalIndirect: document.getElementById('final-indirect')?.textContent || '1.00배',
+                skill1: document.getElementById('skill1-damage')?.textContent || '0.00배',
+                skill2: document.getElementById('skill2-damage')?.textContent || '0.00배',
+                skill3: document.getElementById('skill3-damage')?.textContent || '0.00배',
+                skill4: document.getElementById('skill4-damage')?.textContent || '0.00배',
+                skill5: document.getElementById('skill5-damage')?.textContent || '0.00배',
+                skill6: document.getElementById('skill6-damage')?.textContent || '0.00배'
             };
             
             return {
@@ -9409,18 +9572,20 @@
             // selectedRunes 초기화
             selectedRunes = { '무기': [], '방어구': [], '앰블럼': [] };
             
-            // 룬 선택 복원
+            // 룬 선택 복원 (페이지네이션 고려)
             if (setData.runes) {
                 Object.keys(setData.runes).forEach(type => {
                     setData.runes[type].forEach(runeName => {
-                        const checkbox = document.querySelector(`input[type="checkbox"][data-rune-name="${runeName}"]`);
-                        if (checkbox) {
-                            checkbox.checked = true;
+                        // selectedRunes에 추가 (체크박스는 renderCurrentPage에서 자동 체크됨)
+                        if (!selectedRunes[type].includes(runeName)) {
                             selectedRunes[type].push(runeName);
                         }
                     });
                 });
             }
+            
+            // 모든 페이지를 렌더링하여 체크박스 상태 반영
+            renderCurrentPage();
             
             // 체크박스 상태 업데이트 (선택 개수 초과 시 다른 체크박스 비활성화)
             updateCheckboxStates();
@@ -9457,8 +9622,13 @@
                     document.getElementById('skill-콤보피해').value = setData.skills.콤보피해 || 0;
                 if (document.getElementById('skill-추가피해'))
                     document.getElementById('skill-추가피해').value = setData.skills.추가피해 || 0;
-                if (document.getElementById('skill-지속피해'))
-                    document.getElementById('skill-지속피해').value = setData.skills.지속피해 || 0;
+                // 기존 지속피해 데이터 호환성 처리
+                if (document.getElementById('skill-지속피해1'))
+                    document.getElementById('skill-지속피해1').value = setData.skills.지속피해1 || setData.skills.지속피해 || 0;
+                if (document.getElementById('skill-지속피해2'))
+                    document.getElementById('skill-지속피해2').value = setData.skills.지속피해2 || 0;
+                if (document.getElementById('skill-지속피해3'))
+                    document.getElementById('skill-지속피해3').value = setData.skills.지속피해3 || 0;
                 if (document.getElementById('skill-치명타피해'))
                     document.getElementById('skill-치명타피해').value = setData.skills.치명타피해 || 0;
                 if (document.getElementById('skill-치명타확률'))
@@ -9547,8 +9717,35 @@
             
             // UI 업데이트
             updateSelectedCounts();
+            
+            // 모든 페이지의 체크박스 상태를 확실하게 업데이트
+            // 필터를 다시 적용하여 모든 룬 테이블 갱신
+            applyFilters();
+            
+            // 효과 계산 (대미지 배율 포함)
             calculateEffects();
-            recalculateDamage();
+            
+            // 대미지 재계산 강제 실행 (보석 태그 등 모든 입력값 반영)
+            setTimeout(() => {
+                const effectSums = {};
+                Object.keys(selectedRunes).forEach(type => {
+                    selectedRunes[type].forEach(runeName => {
+                        const rune = runeData.find(r => r.name === runeName);
+                        if (!rune) return;
+                        rune.effects.forEach(effect => {
+                            if (!effect.value) return;
+                            const effectName = effect.effect;
+                            const valueMatch = effect.value.match(/(\d+(?:\.\d+)?)/);
+                            const value = valueMatch ? parseFloat(valueMatch[1]) : 0;
+                            if (!effectSums[effectName]) {
+                                effectSums[effectName] = 0;
+                            }
+                            effectSums[effectName] += value;
+                        });
+                    });
+                });
+                calculateDamageMultiplier(effectSums);
+            }, 100);
         }
         
         // 로컬스토리지에서 저장 목록 가져오기
@@ -9687,12 +9884,15 @@
                 return;
             }
             
+            // 이름을 미리 저장 (closeModal에서 null로 초기화되기 전)
+            const loadedName = selectedLoadItem;
+            
             // 모달 먼저 닫고
             closeModal('loadModal');
             
             // 세팅 불러오기
             loadSet(setData);
-            alert(`'${selectedLoadItem}' 세팅을 불러왔습니다.`);
+            alert(`'${loadedName}' 세팅을 불러왔습니다.`);
         }
         
         // 변경 모달 열기
@@ -9740,11 +9940,12 @@
             
             const saveList = getSaveList();
             const currentSet = getCurrentSet();
-            saveList[selectedUpdateItem] = currentSet;
+            const updatedName = selectedUpdateItem;  // 미리 저장
+            saveList[updatedName] = currentSet;
             setSaveList(saveList);
             
-            alert(`'${selectedUpdateItem}' 세팅이 변경되었습니다.`);
             closeModal('updateModal');
+            alert(`'${updatedName}' 세팅이 변경되었습니다.`);
         }
         
         // 삭제 모달 열기
@@ -9791,12 +9992,13 @@
             }
             
             const saveList = getSaveList();
-            delete saveList[selectedDeleteItem];
+            const deletedName = selectedDeleteItem;  // 미리 저장
+            delete saveList[deletedName];
             setSaveList(saveList);
             
-            alert(`'${selectedDeleteItem}' 세팅이 삭제되었습니다.`);
             closeModal('deleteModal');
             updateButtonStates();
+            alert(`'${deletedName}' 세팅이 삭제되었습니다.`);
         }
         
         // ============================================
@@ -9855,6 +10057,9 @@
                 return;
             }
             
+            // 이름을 미리 저장 (closeModal에서 null로 초기화되기 전)
+            const exportedName = selectedExportItem;
+            
             // 파일명 생성: 세팅이름_연도월일시간분.json
             const now = new Date();
             const dateStr = now.getFullYear().toString().slice(-2) + 
@@ -9862,7 +10067,7 @@
                             String(now.getDate()).padStart(2, '0') + 
                             String(now.getHours()).padStart(2, '0') + 
                             String(now.getMinutes()).padStart(2, '0');
-            const fileName = `${selectedExportItem}_${dateStr}.json`;
+            const fileName = `${exportedName}_${dateStr}.json`;
             
             // JSON 파일로 다운로드
             const jsonStr = JSON.stringify(setData, null, 2);
@@ -9877,8 +10082,8 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             
-            alert(`'${selectedExportItem}' 세팅을 ${fileName} 파일로 내보냈습니다.`);
             closeModal('exportModal');
+            alert(`'${exportedName}' 세팅을 ${fileName} 파일로 내보냈습니다.`);
         }
         
         // 드롭 영역 이벤트 설정
@@ -10026,8 +10231,42 @@
             document.querySelector(`#compareList2 .save-item[data-name="${name}"]`).classList.add('selected');
         }
         
+        // 세팅 데이터로부터 대미지 계수 계산 (실시간)
+        function calculateDamageFromSet(setData) {
+            // 임시로 현재 세팅 완전 백업
+            const currentBackup = getCurrentSet();
+            
+            // 비교할 세팅 임시 적용
+            loadSet(setData);
+            
+            // 강제로 계산 대기 (loadSet의 setTimeout + 추가 여유시간)
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    // 계산 결과 추출
+                    const result = {
+                        skill1: document.getElementById('skill1-damage')?.textContent || '0.00배',
+                        skill2: document.getElementById('skill2-damage')?.textContent || '0.00배',
+                        skill3: document.getElementById('skill3-damage')?.textContent || '0.00배',
+                        skill4: document.getElementById('skill4-damage')?.textContent || '0.00배',
+                        skill5: document.getElementById('skill5-damage')?.textContent || '0.00배',
+                        skill6: document.getElementById('skill6-damage')?.textContent || '0.00배',
+                        finalDirect: document.getElementById('final-direct')?.textContent || '총합: 0.00배',
+                        finalIndirect: document.getElementById('final-indirect')?.textContent || '총합: 0.00배'
+                    };
+                    
+                    // 원래 세팅으로 복구
+                    loadSet(currentBackup);
+                    
+                    // 복구 후 다시 대기 (완전 복구 보장)
+                    setTimeout(() => {
+                        resolve(result);
+                    }, 200);
+                }, 300);
+            });
+        }
+        
         // 선택된 세팅 비교
-        function compareSelectedSets() {
+        async function compareSelectedSets() {
             if (!selectedCompareItem1 || !selectedCompareItem2) {
                 alert('비교할 두 개의 세팅을 모두 선택해주세요.');
                 return;
@@ -10039,29 +10278,73 @@
             }
             
             const saveList = getSaveList();
-            const set1 = saveList[selectedCompareItem1];
-            const set2 = saveList[selectedCompareItem2];
+            const set1Data = saveList[selectedCompareItem1];
+            const set2Data = saveList[selectedCompareItem2];
             
-            if (!set1 || !set2) {
+            if (!set1Data || !set2Data) {
                 alert('세팅을 찾을 수 없습니다.');
                 return;
             }
             
+            // 로딩 표시
+            document.getElementById('compareResult').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--accent-primary);">계산 중...</div>';
+            
+            // 실시간 계산으로 정확한 값 추출 (await 사용)
+            const calc1 = await calculateDamageFromSet(set1Data);
+            const calc2 = await calculateDamageFromSet(set2Data);
+            
+            const set1 = { damageCalculation: calc1 };
+            const set2 = { damageCalculation: calc2 };
+            
             // 대미지 배율 비교 (숫자만 추출)
             const extractNumber = (str) => {
-                const match = str.match(/^([\d.]+)배/);
+                if (!str) return 0;
+                const match = str.match(/([\d.]+)배/);
                 return match ? parseFloat(match[1]) : 0;
             };
+            
+            // 기본 계수 추출
+            const skill1 = extractNumber(set1.damageCalculation.skill1);
+            const skill2 = extractNumber(set2.damageCalculation.skill1);
+            
+            const skill1_2 = extractNumber(set1.damageCalculation.skill2);
+            const skill2_2 = extractNumber(set2.damageCalculation.skill2);
+            
+            const skill1_3 = extractNumber(set1.damageCalculation.skill3);
+            const skill2_3 = extractNumber(set2.damageCalculation.skill3);
+            
+            const skill1_4 = extractNumber(set1.damageCalculation.skill4);
+            const skill2_4 = extractNumber(set2.damageCalculation.skill4);
+            
+            const skill1_5 = extractNumber(set1.damageCalculation.skill5);
+            const skill2_5 = extractNumber(set2.damageCalculation.skill5);
+            
+            const skill1_6 = extractNumber(set1.damageCalculation.skill6);
+            const skill2_6 = extractNumber(set2.damageCalculation.skill6);
             
             const damage1Direct = extractNumber(set1.damageCalculation.finalDirect);
             const damage1Indirect = extractNumber(set1.damageCalculation.finalIndirect);
             const damage2Direct = extractNumber(set2.damageCalculation.finalDirect);
             const damage2Indirect = extractNumber(set2.damageCalculation.finalIndirect);
             
-            const diffDirect = damage2Direct - damage1Direct;
-            const diffIndirect = damage2Indirect - damage1Indirect;
-            const diffDirectPercent = damage1Direct !== 0 ? ((diffDirect / damage1Direct) * 100).toFixed(2) : 0;
-            const diffIndirectPercent = damage1Indirect !== 0 ? ((diffIndirect / damage1Indirect) * 100).toFixed(2) : 0;
+            // 비교 함수 (차이, 퍼센트 계산)
+            const compareDamage = (val1, val2) => {
+                const diff = val2 - val1;
+                const diffPercent = val1 !== 0 ? ((diff / val1) * 100).toFixed(2) : 0;
+                return { diff, diffPercent };
+            };
+            
+            const skillDiffs = [
+                compareDamage(skill1, skill2),
+                compareDamage(skill1_2, skill2_2),
+                compareDamage(skill1_3, skill2_3),
+                compareDamage(skill1_4, skill2_4),
+                compareDamage(skill1_5, skill2_5),
+                compareDamage(skill1_6, skill2_6)
+            ];
+            
+            const directDiff = compareDamage(damage1Direct, damage2Direct);
+            const indirectDiff = compareDamage(damage1Indirect, damage2Indirect);
             
             const resultHtml = `
                 <div class="compare-result">
@@ -10069,6 +10352,30 @@
                         <h4>${selectedCompareItem1}</h4>
                         <div class="compare-stats">
                             <div class="compare-stat">
+                                <span>스킬1:</span>
+                                <strong>${set1.damageCalculation.skill1 || '0.00배'}</strong>
+                            </div>
+                            <div class="compare-stat">
+                                <span>스킬2:</span>
+                                <strong>${set1.damageCalculation.skill2 || '0.00배'}</strong>
+                            </div>
+                            <div class="compare-stat">
+                                <span>스킬3:</span>
+                                <strong>${set1.damageCalculation.skill3 || '0.00배'}</strong>
+                            </div>
+                            <div class="compare-stat">
+                                <span>스킬4:</span>
+                                <strong>${set1.damageCalculation.skill4 || '0.00배'}</strong>
+                            </div>
+                            <div class="compare-stat">
+                                <span>스킬5:</span>
+                                <strong>${set1.damageCalculation.skill5 || '0.00배'}</strong>
+                            </div>
+                            <div class="compare-stat">
+                                <span>스킬6:</span>
+                                <strong>${set1.damageCalculation.skill6 || '0.00배'}</strong>
+                            </div>
+                            <div class="compare-stat" style="border-top: 2px solid var(--accent-primary); margin-top: 10px; padding-top: 10px;">
                                 <span>직접 피해:</span>
                                 <strong>${set1.damageCalculation.finalDirect}</strong>
                             </div>
@@ -10083,6 +10390,30 @@
                         <h4>${selectedCompareItem2}</h4>
                         <div class="compare-stats">
                             <div class="compare-stat">
+                                <span>스킬1:</span>
+                                <strong>${set2.damageCalculation.skill1 || '0.00배'}</strong>
+                            </div>
+                            <div class="compare-stat">
+                                <span>스킬2:</span>
+                                <strong>${set2.damageCalculation.skill2 || '0.00배'}</strong>
+                            </div>
+                            <div class="compare-stat">
+                                <span>스킬3:</span>
+                                <strong>${set2.damageCalculation.skill3 || '0.00배'}</strong>
+                            </div>
+                            <div class="compare-stat">
+                                <span>스킬4:</span>
+                                <strong>${set2.damageCalculation.skill4 || '0.00배'}</strong>
+                            </div>
+                            <div class="compare-stat">
+                                <span>스킬5:</span>
+                                <strong>${set2.damageCalculation.skill5 || '0.00배'}</strong>
+                            </div>
+                            <div class="compare-stat">
+                                <span>스킬6:</span>
+                                <strong>${set2.damageCalculation.skill6 || '0.00배'}</strong>
+                            </div>
+                            <div class="compare-stat" style="border-top: 2px solid var(--accent-primary); margin-top: 10px; padding-top: 10px;">
                                 <span>직접 피해:</span>
                                 <strong>${set2.damageCalculation.finalDirect}</strong>
                             </div>
@@ -10093,12 +10424,20 @@
                         </div>
                     </div>
                     
-                    <div class="compare-difference ${diffDirect > 0 ? 'positive' : diffDirect < 0 ? 'negative' : ''}">
-                        <strong>직접 피해 차이:</strong> ${diffDirect > 0 ? '+' : ''}${diffDirect.toFixed(2)}배 (${diffDirectPercent > 0 ? '+' : ''}${diffDirectPercent}%)
+                    <h4 style="margin-top: 20px; color: var(--accent-secondary); border-top: 2px solid var(--border-color); padding-top: 15px;">차이 분석</h4>
+                    
+                    ${skillDiffs.map((diff, idx) => `
+                        <div class="compare-difference ${diff.diff > 0 ? 'positive' : diff.diff < 0 ? 'negative' : ''}" style="margin-top: 8px;">
+                            <strong>스킬${idx + 1} 차이:</strong> ${diff.diff > 0 ? '+' : ''}${diff.diff.toFixed(2)}배 (${diff.diffPercent > 0 ? '+' : ''}${diff.diffPercent}%)
+                        </div>
+                    `).join('')}
+                    
+                    <div class="compare-difference ${directDiff.diff > 0 ? 'positive' : directDiff.diff < 0 ? 'negative' : ''}" style="margin-top: 15px; padding-top: 15px; border-top: 2px solid var(--accent-primary);">
+                        <strong>직접 피해 차이:</strong> ${directDiff.diff > 0 ? '+' : ''}${directDiff.diff.toFixed(2)}배 (${directDiff.diffPercent > 0 ? '+' : ''}${directDiff.diffPercent}%)
                     </div>
                     
-                    <div class="compare-difference ${diffIndirect > 0 ? 'positive' : diffIndirect < 0 ? 'negative' : ''}">
-                        <strong>간접 피해 차이:</strong> ${diffIndirect > 0 ? '+' : ''}${diffIndirect.toFixed(2)}배 (${diffIndirectPercent > 0 ? '+' : ''}${diffIndirectPercent}%)
+                    <div class="compare-difference ${indirectDiff.diff > 0 ? 'positive' : indirectDiff.diff < 0 ? 'negative' : ''}">
+                        <strong>간접 피해 차이:</strong> ${indirectDiff.diff > 0 ? '+' : ''}${indirectDiff.diff.toFixed(2)}배 (${indirectDiff.diffPercent > 0 ? '+' : ''}${indirectDiff.diffPercent}%)
                     </div>
                 </div>
             `;
